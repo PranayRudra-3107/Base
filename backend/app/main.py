@@ -13,7 +13,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=["https://yourdomain.vercel.app", "localhost:3000"],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -26,10 +26,3 @@ app.include_router(documents.router, prefix="/api/documents", tags=["Documents"]
 @app.get("/health")
 def health():
     return {"status": "ok"}
-
-@app.get("/")
-def serve_frontend():
-    frontend_path = os.path.join(os.path.dirname(__file__), "../../frontend/index.html")
-    if os.path.exists(frontend_path):
-        return FileResponse(frontend_path, media_type="text/html")
-    return {"message": "Frontend not found"}
