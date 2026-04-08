@@ -191,6 +191,7 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 </div>
 <div class="toast-container" id="toast-container"></div>
 <script>
+// Use REACT_APP_API_URL environment variable if available, otherwise use current origin
 const API_BASE = window.location.origin;
 const TENANT_ID = 'default';
 let messages = [], documents = [], isLoading = false;
