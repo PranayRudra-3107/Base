@@ -1,6 +1,8 @@
 from fastapi import APIRouter, Header, HTTPException
 from pydantic import BaseModel
 from typing import List
+from app.services.audit_log import write_audit_event
+from app.services.storage import delete_document_analysis
 from app.services.vector_store import list_documents, delete_document
 
 router = APIRouter()
@@ -38,6 +40,12 @@ async def delete_doc(
         count = delete_document(x_tenant_id, document_id)
         if count == 0:
             raise HTTPException(status_code=404, detail="Document not found.")
+        delete_document_analysis(x_tenant_id, document_id)
+        write_audit_event(
+            tenant_id=x_tenant_id,
+            action="document.deleted",
+            details={"document_id": document_id, "chunks_deleted": count},
+        )
         return DeleteResponse(
             message="Document deleted successfully.",
             chunks_deleted=count

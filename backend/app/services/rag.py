@@ -12,6 +12,14 @@ If the context doesn't contain enough information to answer, say so clearly.
 Always be concise, accurate, and cite which document your answer comes from.
 Do not make up information."""
 
+LANGUAGE_NAMES = {
+    "en": "English",
+    "es": "Spanish",
+    "fr": "French",
+    "de": "German",
+    "hi": "Hindi",
+}
+
 
 def build_context(chunks: List[Dict]) -> str:
     context_parts = []
@@ -21,7 +29,7 @@ def build_context(chunks: List[Dict]) -> str:
     return "\n\n---\n\n".join(context_parts)
 
 
-def query_rag(tenant_id: str, question: str, chat_history: List[Dict] = None) -> Dict:
+def query_rag(tenant_id: str, question: str, chat_history: List[Dict] = None, language: str = "en") -> Dict:
     # 1. Retrieve relevant chunks
     chunks = search_chunks(tenant_id, question)
 
@@ -43,6 +51,8 @@ def query_rag(tenant_id: str, question: str, chat_history: List[Dict] = None) ->
         for msg in chat_history[-6:]:  # last 3 exchanges
             messages.append(msg)
 
+    response_language = LANGUAGE_NAMES.get(language, "English")
+
     messages.append({
         "role": "user",
         "content": f"""Context documents:
@@ -50,7 +60,7 @@ def query_rag(tenant_id: str, question: str, chat_history: List[Dict] = None) ->
 
 Question: {question}
 
-Answer based on the context above:"""
+Answer based on the context above. Respond in {response_language}:"""
     })
 
     # 4. Call LLM

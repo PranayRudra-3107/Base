@@ -6,6 +6,9 @@ class Settings(BaseSettings):
     openai_api_key: str = ""
     anthropic_api_key: str = ""
     chroma_persist_dir: str = "./chroma_db"
+    data_dir: str = "./data"
+    document_storage_dir: str = "./data/documents"
+    audit_log_path: str = "./data/audit_log.jsonl"
     embedding_model: str = "text-embedding-3-small"
     llm_model: str = "gpt-4o"
     chunk_size: int = 500

@@ -1,7 +1,8 @@
 import io
+import csv
 import uuid
 from datetime import datetime
-from typing import List, Tuple
+from typing import List, Tuple, Dict, Any
 import pypdf
 from app.core.config import get_settings
 
@@ -30,7 +31,7 @@ def extract_text_from_pdf(file_bytes: bytes) -> str:
     reader = pypdf.PdfReader(io.BytesIO(file_bytes))
     text = ""
     for page in reader.pages:
-        text += page.extract_text() + "\n"
+        text += (page.extract_text() or "") + "\n"
     return text
 
 
@@ -38,17 +39,28 @@ def extract_text_from_txt(file_bytes: bytes) -> str:
     return file_bytes.decode("utf-8", errors="ignore")
 
 
-def process_file(filename: str, file_bytes: bytes) -> Tuple[List[str], List[dict]]:
-    """Extract text from file and return (chunks, metadatas)."""
+def extract_text_from_csv(file_bytes: bytes) -> str:
+    text = extract_text_from_txt(file_bytes)
+    rows = csv.reader(io.StringIO(text))
+    return "\n".join(" | ".join(cell.strip() for cell in row) for row in rows)
+
+
+def extract_text(filename: str, file_bytes: bytes) -> str:
     ext = filename.lower().split(".")[-1]
 
     if ext == "pdf":
-        text = extract_text_from_pdf(file_bytes)
+        return extract_text_from_pdf(file_bytes)
     elif ext in ["txt", "md"]:
-        text = extract_text_from_txt(file_bytes)
+        return extract_text_from_txt(file_bytes)
+    elif ext == "csv":
+        return extract_text_from_csv(file_bytes)
     else:
-        raise ValueError(f"Unsupported file type: .{ext}. Supported: pdf, txt, md")
+        raise ValueError(f"Unsupported file type: .{ext}. Supported: pdf, txt, md, csv")
 
+
+def process_file_details(filename: str, file_bytes: bytes) -> Dict[str, Any]:
+    """Extract text from file and return chunks, metadata, and document details."""
+    text = extract_text(filename, file_bytes)
     if not text.strip():
         raise ValueError("Could not extract text from file.")
 
@@ -67,4 +79,17 @@ def process_file(filename: str, file_bytes: bytes) -> Tuple[List[str], List[dict
         for i in range(len(chunks))
     ]
 
-    return chunks, metadatas
+    return {
+        "document_id": document_id,
+        "filename": filename,
+        "text": text,
+        "chunks": chunks,
+        "metadatas": metadatas,
+        "uploaded_at": uploaded_at,
+    }
+
+
+def process_file(filename: str, file_bytes: bytes) -> Tuple[List[str], List[dict]]:
+    """Extract text from file and return (chunks, metadatas)."""
+    details = process_file_details(filename, file_bytes)
+    return details["chunks"], details["metadatas"]

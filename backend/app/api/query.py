@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Header, HTTPException
 from pydantic import BaseModel
 from typing import List, Optional
+from app.services.audit_log import write_audit_event
 from app.services.rag import query_rag
 
 router = APIRouter()
@@ -14,6 +15,7 @@ class ChatMessage(BaseModel):
 class QueryRequest(BaseModel):
     question: str
     chat_history: Optional[List[ChatMessage]] = []
+    language: str = "en"
 
 
 class Source(BaseModel):
@@ -47,7 +49,17 @@ async def query_documents(
         result = query_rag(
             tenant_id=x_tenant_id,
             question=request.question,
-            chat_history=history
+            chat_history=history,
+            language=request.language,
+        )
+        write_audit_event(
+            tenant_id=x_tenant_id,
+            action="rag.query",
+            details={
+                "question_length": len(request.question),
+                "chunks_used": result.get("chunks_used", 0),
+                "language": request.language,
+            },
         )
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Query failed: {str(e)}")

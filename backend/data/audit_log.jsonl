@@ -1,0 +1,4 @@
+{"timestamp": "2026-05-05T10:21:44.039919", "tenant_id": "default", "actor": "system", "action": "analytics.dashboard.viewed", "details": {}}
+{"timestamp": "2026-05-05T10:21:58.939433", "tenant_id": "default", "actor": "system", "action": "analytics.dashboard.viewed", "details": {}}
+{"timestamp": "2026-05-05T10:21:59.866961", "tenant_id": "default", "actor": "system", "action": "analytics.dashboard.viewed", "details": {}}
+{"timestamp": "2026-05-05T10:22:01.217346", "tenant_id": "default", "actor": "system", "action": "report.exported", "details": {"format": "csv", "rows": 0}}
