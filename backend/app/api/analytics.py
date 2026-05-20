@@ -1,6 +1,9 @@
+import csv
+import io
+
 from fastapi import APIRouter, Header, Response
 
-from app.services.analytics import build_bi_dataset, build_dashboard
+from app.services.analytics import build_bi_dataset, build_dashboard, build_knowledge_graph
 from app.services.audit_log import read_audit_events, write_audit_event
 from app.services.storage import list_document_analyses
 
@@ -9,20 +12,20 @@ router = APIRouter()
 
 @router.get("/dashboard")
 async def dashboard(x_tenant_id: str = Header(default="default")):
-    """Return audit KPIs, chart series, validation issues, and recent audit events."""
+    """Return project health KPIs, chart series, validation issues, and recent events."""
     write_audit_event(x_tenant_id, "analytics.dashboard.viewed")
     return build_dashboard(x_tenant_id)
 
 
 @router.get("/audit-log")
 async def audit_log(x_tenant_id: str = Header(default="default")):
-    """Return recent audit trail events for a tenant."""
+    """Return recent activity events for a tenant."""
     return read_audit_events(x_tenant_id)
 
 
 @router.get("/insights")
 async def insights(x_tenant_id: str = Header(default="default")):
-    """Return generated audit insight cards."""
+    """Return generated project insight cards."""
     dashboard_data = build_dashboard(x_tenant_id)
     write_audit_event(x_tenant_id, "analytics.insights.viewed")
     return dashboard_data["insights"]
@@ -36,39 +39,57 @@ async def anomalies(x_tenant_id: str = Header(default="default")):
     return dashboard_data["anomalies"]
 
 
+@router.get("/knowledge-graph")
+async def knowledge_graph(x_tenant_id: str = Header(default="default")):
+    """Return an Obsidian-style graph of project sources and extracted entities."""
+    graph = build_knowledge_graph(x_tenant_id)
+    write_audit_event(
+        x_tenant_id,
+        "analytics.knowledge_graph.viewed",
+        details={"nodes": graph["stats"]["nodes"], "edges": graph["stats"]["edges"]},
+    )
+    return graph
+
+
 @router.get("/export.csv")
 async def export_csv(x_tenant_id: str = Header(default="default")):
-    """Export extracted audit analytics as CSV."""
+    """Export extracted project intelligence analytics as CSV."""
     rows = list_document_analyses(x_tenant_id)
     headers = [
         "document_id",
         "filename",
         "uploaded_at",
-        "category",
-        "total_amount",
-        "average_amount",
-        "exception_count",
-        "compliance_ratio",
+        "source_type",
+        "project_health_score",
+        "ticket_count",
+        "risk_count",
+        "blocker_count",
+        "decision_count",
+        "metric_signal_count",
+        "total_metric_value",
         "language",
-        "amount_outlier_count",
         "validation_issue_count",
     ]
-    lines = [",".join(headers)]
+    output = io.StringIO()
+    writer = csv.writer(output)
+    writer.writerow(headers)
     for row in rows:
-        values = [
+        health_score = row.get("project_health_score", round((row.get("compliance_ratio", 0) or 0) * 100, 1))
+        writer.writerow([
             row.get("document_id", ""),
-            row.get("filename", "").replace(",", " "),
+            row.get("filename", ""),
             row.get("uploaded_at", ""),
             row.get("category", ""),
-            str(row.get("total_amount", 0)),
-            str(row.get("average_amount", 0)),
-            str(row.get("exception_count", 0)),
-            str(row.get("compliance_ratio", 0)),
+            str(health_score),
+            str(row.get("ticket_count", 0)),
+            str(row.get("risk_count", row.get("exception_count", 0))),
+            str(row.get("blocker_count", 0)),
+            str(row.get("decision_count", 0)),
+            str(row.get("metric_signal_count", len(row.get("amounts", [])))),
+            str(row.get("total_metric_value", row.get("total_amount", 0))),
             (row.get("language") or {}).get("name", "Unknown"),
-            str(len(row.get("amount_outliers", []))),
             str(len(row.get("validation_issues", []))),
-        ]
-        lines.append(",".join(values))
+        ])
 
     write_audit_event(
         x_tenant_id,
@@ -76,9 +97,9 @@ async def export_csv(x_tenant_id: str = Header(default="default")):
         details={"format": "csv", "rows": len(rows)},
     )
     return Response(
-        "\n".join(lines),
+        output.getvalue(),
         media_type="text/csv",
-        headers={"Content-Disposition": "attachment; filename=audit-analytics.csv"},
+        headers={"Content-Disposition": "attachment; filename=project-intelligence.csv"},
     )
 
 

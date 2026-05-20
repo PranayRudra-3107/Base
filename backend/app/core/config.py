@@ -11,6 +11,11 @@ class Settings(BaseSettings):
     audit_log_path: str = "./data/audit_log.jsonl"
     embedding_model: str = "text-embedding-3-small"
     llm_model: str = "gpt-4o"
+    web_search_enabled: bool = True
+    web_search_model: str = "gpt-4o-mini"
+    web_search_tool: str = "web_search"
+    web_search_context_size: str = "medium"
+    web_search_min_relevance: float = 0.2
     chunk_size: int = 500
     chunk_overlap: int = 50
     retrieval_k: int = 5

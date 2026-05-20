@@ -2,7 +2,8 @@ from fastapi import APIRouter, Header, HTTPException
 from pydantic import BaseModel
 from typing import List
 from app.services.audit_log import write_audit_event
-from app.services.storage import delete_document_analysis
+from app.services.projects import touch_project
+from app.services.storage import delete_document_analysis, list_document_analyses
 from app.services.vector_store import list_documents, delete_document
 
 router = APIRouter()
@@ -20,12 +21,34 @@ class DeleteResponse(BaseModel):
     chunks_deleted: int
 
 
+def merge_indexed_documents_with_analyses(indexed_docs: List[dict], analyses: List[dict]) -> List[dict]:
+    docs_by_id = {doc.get("document_id"): doc for doc in indexed_docs}
+
+    for analysis in analyses:
+        document_id = analysis.get("document_id")
+        if not document_id or document_id in docs_by_id:
+            continue
+        docs_by_id[document_id] = {
+            "document_id": document_id,
+            "filename": analysis.get("filename", "unknown"),
+            "uploaded_at": analysis.get("uploaded_at", ""),
+            "chunk_count": analysis.get("chunk_count", 0),
+        }
+
+    return sorted(
+        docs_by_id.values(),
+        key=lambda item: item.get("uploaded_at", ""),
+        reverse=True,
+    )
+
+
 @router.get("/", response_model=List[DocumentInfo])
 async def get_documents(x_tenant_id: str = Header(default="default")):
-    """List all documents indexed for this tenant."""
+    """List all project sources indexed for this tenant."""
     try:
         docs = list_documents(x_tenant_id)
-        return docs
+        analyses = list_document_analyses(x_tenant_id)
+        return merge_indexed_documents_with_analyses(docs, analyses)
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -35,19 +58,20 @@ async def delete_doc(
     document_id: str,
     x_tenant_id: str = Header(default="default")
 ):
-    """Delete a document and all its chunks from the index."""
+    """Delete a project source and all its chunks from the index."""
     try:
         count = delete_document(x_tenant_id, document_id)
-        if count == 0:
+        analysis_deleted = delete_document_analysis(x_tenant_id, document_id)
+        if count == 0 and not analysis_deleted:
             raise HTTPException(status_code=404, detail="Document not found.")
-        delete_document_analysis(x_tenant_id, document_id)
+        touch_project(x_tenant_id)
         write_audit_event(
             tenant_id=x_tenant_id,
             action="document.deleted",
             details={"document_id": document_id, "chunks_deleted": count},
         )
         return DeleteResponse(
-            message="Document deleted successfully.",
+            message="Project source deleted successfully.",
             chunks_deleted=count
         )
     except HTTPException:

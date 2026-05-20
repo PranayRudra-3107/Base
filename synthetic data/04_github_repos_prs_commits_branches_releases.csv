@@ -1,0 +1,34 @@
+repo,event_type,event_id,title_or_message,branch,base_branch,author,date,status,related_work_items,release_tag,notes
+atlas-api,branch,BR-100,Create branch feature/ATLAS-101-checkout-service-skeleton,feature/ATLAS-101-checkout-service-skeleton,main,Jon Bell,2025-05-02,merged,ATLAS-101,,GitHub branch created for checkout service skeleton.
+atlas-api,pull_request,PR-102,Add checkout service skeleton and health endpoint,feature/ATLAS-101-checkout-service-skeleton,main,Jon Bell,2025-05-15,merged,ATLAS-101,,Pull request required two approvals and integration tests.
+atlas-api,commit,COMMIT-a19f4e1,Add /health and /checkout/routes endpoint,main,,Jon Bell,2025-05-16,merged,ATLAS-101,,Commit deployed in v2025.05.0.
+atlas-api,pull_request,PR-104,Add legacy monolith adapter for cart and order read path,feature/ATLAS-102-legacy-adapter,main,Aisha Khan,2025-05-22,merged,ATLAS-102,,Adapter includes contract tests against legacy cart schema.
+atlas-api,pull_request,PR-106,Define payment facade and idempotency keys,feature/ATLAS-103-payment-facade,main,Luca Moretti,2025-05-28,merged,ATLAS-103,,Implemented checkout_id plus attempt_number idempotency.
+atlas-api,release,REL-2025-05,v2025.05.0 checkout service foundation,release/atlas-2025-05,main,Ravi Patel,2025-05-30,released,"ATLAS-101;ATLAS-102;ATLAS-103",v2025.05.0,Release created checkout foundation without customer traffic.
+atlas-api,pull_request,PR-109,Fix coupon timeout fallback for cart totals,hotfix/PD-1001-coupon-timeout,main,Aisha Khan,2025-06-03,merged,"ATLAS-104;PD-1001",v2025.06.1,Hotfix reduced support issue volume.
+atlas-infra,pull_request,PR-111,Create Grafana checkout dashboard and alerts,feature/ATLAS-105-grafana-dashboard,main,Nora Singh,2025-06-11,merged,ATLAS-105,,Dashboard includes traffic p95 p99 error rate uptime CPU memory.
+atlas-api,pull_request,PR-114,Add checkout_order migration and index plan,feature/ATLAS-106-db-migration,main,Samir Rao,2025-06-27,merged,ATLAS-106,,Database migration includes index on checkout_id and created_at.
+atlas-api,pull_request,PR-118,Return retry-safe body for duplicate payment attempts,feature/ATLAS-108-retry-safe-409,main,Luca Moretti,2025-07-02,merged,ATLAS-108,,Resolved confusing 409 response.
+atlas-infra,pull_request,PR-120,Enable GitHub branch protection and required checks,feature/ATLAS-109-branch-protection,main,Jon Bell,2025-07-08,merged,ATLAS-109,,GitHub repos atlas-api and atlas-web require two approvals.
+atlas-worker,pull_request,PR-123,Build shadow comparison worker for order totals,feature/ATLAS-111-shadow-worker,main,Aisha Khan,2025-07-25,merged,ATLAS-111,,Worker compares monolith and Atlas totals.
+atlas-infra,pull_request,PR-125,Route checkout anomalies to Teams channel,feature/ATLAS-112-teams-alerts,main,Nora Singh,2025-07-28,merged,ATLAS-112,,Alerts include decision owner and rollback link.
+atlas-worker,pull_request,PR-128,Reduce replay stream window to fix memory usage,feature/ATLAS-113-worker-memory,main,Samir Rao,2025-08-01,merged,ATLAS-113,,Memory usage reduced from 82 percent to 54 percent.
+atlas-api,pull_request,PR-130,Enable 5 percent shadow traffic route,release/atlas-2025-08,main,Ravi Patel,2025-08-08,merged,ATLAS-114,v2025.08.0,Release route percentage set to 5 percent.
+atlas-api,pull_request,PR-134,Fix tax rounding variance in checkout totals,feature/ATLAS-115-tax-rounding,main,Aisha Khan,2025-08-22,merged,ATLAS-115,,Fix matched monolith tax rounding rules.
+atlas-api,pull_request,PR-137,Enable 25 percent checkout shadow traffic,release/atlas-2025-09,main,Ravi Patel,2025-09-12,merged,ATLAS-116,v2025.09.0,Release promoted traffic after validation.
+atlas-api,pull_request,PR-141,Implement feature flag based checkout routing,feature/ATLAS-119-route-flags,main,Jon Bell,2025-10-03,merged,ATLAS-119,,Routing supports 1 5 25 50 75 100 percentages.
+atlas-api,pull_request,PR-145,Optimize checkout price query and cache path,hotfix/PD-1002-latency,main,Samir Rao,2025-10-28,merged,"ATLAS-121;PD-1002",v2025.10.2,Hotfix reduced p95 latency below 450ms.
+atlas-api,pull_request,PR-148,Add Redis cache warmup before route increases,feature/ATLAS-122-cache-warmup,main,Samir Rao,2025-11-07,merged,ATLAS-122,,Warmup job runs before traffic percentage change.
+atlas-worker,pull_request,PR-151,Dedupe email receipt retry job,feature/ATLAS-124-email-dedupe,main,Aisha Khan,2025-11-26,merged,ATLAS-124,,Email retries use checkout_id and template version.
+atlas-api,pull_request,PR-153,Enable 50 percent production checkout routing,release/atlas-2025-12,main,Ravi Patel,2025-12-05,merged,ATLAS-125,v2025.12.0,Release completed after seven days below 0.4 error rate.
+atlas-api,pull_request,PR-156,Tune database connection pool and slow query timeout,hotfix/PD-1003-db-pool,main,Samir Rao,2025-12-19,merged,"ATLAS-126;PD-1003",v2025.12.2,Hotfix lowered connection usage from 92 percent to 68 percent.
+atlas-infra,pull_request,PR-158,Add read replica for checkout reporting queries,feature/ATLAS-127-read-replica,main,Samir Rao,2026-01-10,merged,ATLAS-127,,Reporting queries moved away from checkout write path.
+atlas-api,pull_request,PR-160,Enable 75 percent checkout routing,release/atlas-2026-01,main,Ravi Patel,2026-01-24,merged,ATLAS-128,v2026.01.0,Monolith fallback remains warm.
+atlas-api,pull_request,PR-163,Reduce inventory timeout retry budget,hotfix/PD-1004-inventory-timeout,main,Jon Bell,2026-02-04,merged,"ATLAS-129;PD-1004",v2026.02.1,Hotfix reduced checkout abandonment.
+atlas-api,pull_request,PR-166,Add inventory timeout circuit breaker,feature/ATLAS-130-circuit-breaker,main,Jon Bell,2026-02-14,merged,ATLAS-130,,Circuit breaker fails fast and lets customers retry.
+atlas-api,pull_request,PR-170,Enable 100 percent checkout routing,release/atlas-2026-03,main,Ravi Patel,2026-03-03,merged,ATLAS-132,v2026.03.0,Major release: Atlas owns all checkout traffic.
+atlas-web,pull_request,PR-173,Make address validation async on mobile Safari,hotfix/PD-1005-mobile-safari,main,Aisha Khan,2026-03-18,merged,"ATLAS-133;PD-1005",v2026.03.2,Hotfix resolved p99 latency spike.
+atlas-api,branch,BR-176,Create branch feature/ATLAS-134-monolith-archive,feature/ATLAS-134-monolith-archive,main,Jon Bell,2026-03-20,open,ATLAS-134,,Branch remains blocked by finance reconciliation.
+atlas-api,pull_request,PR-176,Archive monolith checkout write path,feature/ATLAS-134-monolith-archive,main,Jon Bell,2026-04-18,open,ATLAS-134,,Blocked until ATLAS-136 refund dashboard is resolved.
+atlas-worker,branch,BR-181,Create branch feature/ATLAS-136-refund-reversal-report,feature/ATLAS-136-refund-reversal-report,main,Luca Moretti,2026-04-07,open,ATLAS-136,,Fix branch for refund retry reversal dashboard.
+atlas-infra,release,REL-2026-04,v2026.04.0 handoff stabilization,release/atlas-2026-04,main,Nora Singh,2026-04-30,planned,"ATLAS-135;ATLAS-137",v2026.04.0,Release target includes KT ownership transfer and storage risk alert.

@@ -1,0 +1,27 @@
+week_start,dashboard,service,route_percentage,requests_total,sessions,active_users,traffic_rps_avg,p95_latency_ms,p99_latency_ms,error_rate_pct,uptime_pct,cpu_pct,memory_pct,conversion_pct,anomaly_notes,linked_work_item
+2025-05-05,Grafana checkout traffic dashboard,legacy-monolith,0,812000,204000,142000,18,520,980,0.45,99.92,61,67,3.8,baseline before Atlas traffic,ATLAS-100
+2025-05-19,Grafana checkout traffic dashboard,atlas-api,0,0,0,0,0,0,0,0,100,12,18,0,service skeleton only,ATLAS-101
+2025-06-02,Grafana checkout traffic dashboard,atlas-api,0,94000,23000,16000,4,288,501,0.22,99.96,28,36,3.9,internal replay traffic after coupon fix,ATLAS-104
+2025-06-16,Grafana checkout traffic dashboard,atlas-api,0,126000,31000,21400,6,301,545,0.19,99.97,34,42,3.9,Grafana dashboard live,ATLAS-105
+2025-07-07,Grafana checkout traffic dashboard,atlas-worker,0,188000,45000,29800,9,355,690,0.35,99.94,45,72,3.7,memory issue during shadow replay,ATLAS-113
+2025-07-21,Grafana checkout traffic dashboard,atlas-worker,0,206000,48000,32000,10,318,608,0.24,99.96,40,54,3.8,memory resolved after stream window fix,ATLAS-113
+2025-08-04,Grafana checkout traffic dashboard,atlas-api,5,392000,96000,66500,36,312,612,0.18,99.98,42,58,3.9,5 percent shadow traffic healthy,ATLAS-114
+2025-08-18,Grafana checkout traffic dashboard,atlas-api,5,421000,101000,70400,38,334,650,0.21,99.97,44,59,3.8,tax rounding variance detected in comparison,ATLAS-115
+2025-09-08,Grafana checkout traffic dashboard,atlas-api,25,1035000,248000,171000,91,376,712,0.26,99.96,52,61,3.9,25 percent traffic approved,ATLAS-116
+2025-09-22,Grafana checkout traffic dashboard,atlas-api,25,1098000,263000,182000,96,381,733,0.28,99.95,53,63,3.9,no major anomaly but alert noise from catalog rollout,ATLAS-112
+2025-10-06,Grafana checkout traffic dashboard,atlas-api,50,1812000,433000,298000,158,468,940,0.48,99.91,65,70,3.7,warming route before 50 percent,ATLAS-119
+2025-10-13,Grafana checkout traffic dashboard,atlas-api,50,1986000,475000,324000,174,742,1420,1.2,99.81,78,76,3.1,incident PD-1002 p95 latency and p99 latency spike,ATLAS-121
+2025-10-27,Grafana checkout traffic dashboard,atlas-api,50,1915000,459000,315000,168,428,820,0.36,99.94,61,66,3.8,cache warmup and slow query fix deployed,ATLAS-122
+2025-11-10,Grafana checkout traffic dashboard,atlas-api,50,2050000,491000,336000,178,405,790,0.31,99.95,60,65,3.9,stable after cache warmup,ATLAS-122
+2025-11-24,Grafana checkout traffic dashboard,atlas-api,50,2210000,529000,361000,192,397,771,0.29,99.96,63,66,4.0,release readiness for 50 percent,ATLAS-125
+2025-12-08,Grafana checkout traffic dashboard,atlas-api,50,3350000,802000,552000,291,655,1244,0.95,99.86,81,79,3.2,incident PD-1003 holiday database connections,ATLAS-126
+2025-12-22,Grafana checkout traffic dashboard,atlas-api,50,3015000,721000,496000,263,440,880,0.39,99.93,66,69,3.8,read replica planned for reporting queries,ATLAS-127
+2026-01-05,Grafana checkout traffic dashboard,atlas-api,50,2260000,541000,374000,198,410,801,0.33,99.95,58,64,3.9,new year baseline,ATLAS-127
+2026-01-19,Grafana checkout traffic dashboard,atlas-api,75,2895000,693000,480000,252,398,780,0.32,99.96,64,68,3.9,75 percent traffic healthy,ATLAS-128
+2026-02-02,Grafana checkout traffic dashboard,atlas-api,75,2760000,661000,455000,240,512,1010,1.8,99.78,69,71,2.9,incident PD-1004 inventory reservation timeout,ATLAS-129
+2026-02-16,Grafana checkout traffic dashboard,atlas-api,75,2680000,642000,441000,233,386,720,0.42,99.94,61,66,3.8,circuit breaker load test passed,ATLAS-130
+2026-03-02,Grafana checkout traffic dashboard,atlas-api,100,3520000,843000,582000,306,362,711,0.28,99.97,67,70,4.1,100 percent checkout routing released,ATLAS-132
+2026-03-16,Grafana checkout traffic dashboard,atlas-web,100,3610000,865000,594000,313,455,1190,0.62,99.90,58,63,3.5,incident PD-1005 mobile Safari address validation,ATLAS-133
+2026-03-30,Grafana checkout traffic dashboard,atlas-api,100,3540000,848000,586000,308,348,700,0.24,99.98,62,67,4.2,post-hotfix stable,ATLAS-133
+2026-04-13,Grafana checkout traffic dashboard,atlas-api,100,3660000,877000,603000,318,356,719,0.26,99.97,64,68,4.2,stable but refund dashboard gap remains,ATLAS-136
+2026-04-27,Grafana checkout traffic dashboard,atlas-api,100,3710000,889000,611000,322,365,733,0.27,99.97,65,69,4.1,handoff month stable traffic,ATLAS-135

@@ -14,7 +14,9 @@ def write_audit_event(
     actor: str = "system",
     details: Dict = None,
 ) -> Dict:
-    os.makedirs(os.path.dirname(settings.audit_log_path), exist_ok=True)
+    log_dir = os.path.dirname(settings.audit_log_path)
+    if log_dir:
+        os.makedirs(log_dir, exist_ok=True)
     event = {
         "timestamp": datetime.utcnow().isoformat(),
         "tenant_id": tenant_id,

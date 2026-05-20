@@ -10,8 +10,15 @@ settings = get_settings()
 
 
 def chunk_text(text: str, chunk_size: int = None, overlap: int = None) -> List[str]:
-    chunk_size = chunk_size or settings.chunk_size
-    overlap = overlap or settings.chunk_overlap
+    chunk_size = settings.chunk_size if chunk_size is None else chunk_size
+    overlap = settings.chunk_overlap if overlap is None else overlap
+
+    if chunk_size <= 0:
+        raise ValueError("Chunk size must be greater than zero.")
+    if overlap < 0:
+        raise ValueError("Chunk overlap cannot be negative.")
+    if overlap >= chunk_size:
+        raise ValueError("Chunk overlap must be smaller than chunk size.")
 
     words = text.split()
     chunks = []

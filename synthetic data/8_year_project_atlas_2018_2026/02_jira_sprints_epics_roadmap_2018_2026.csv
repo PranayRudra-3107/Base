@@ -1,0 +1,577 @@
+quarter,start_date,target_date,phase,workstream,owner,status,planned_points,completed_points,open_blockers,roadmap_notes,anchor_issue
+2018-Q2,2018-06-01,2018-06-28,Phase 0 Legacy Stabilization,platform,Elena Petrova,green,67,16,7,"stabilize legacy checkout, map risks, build team rituals; focus on platform; risk: customer readiness.",ATLAS-4815
+2018-Q2,2018-06-01,2018-06-28,Phase 0 Legacy Stabilization,checkout,Mateo Garcia,red,33,3,5,"stabilize legacy checkout, map risks, build team rituals; focus on checkout; risk: dependency drift.",ATLAS-2986
+2018-Q2,2018-06-01,2018-06-28,Phase 0 Legacy Stabilization,payments,Elena Petrova,green,41,19,7,"stabilize legacy checkout, map risks, build team rituals; focus on payments; risk: on-call load.",ATLAS-2377
+2018-Q2,2018-06-01,2018-06-28,Phase 0 Legacy Stabilization,observability,Elena Petrova,amber,72,19,6,"stabilize legacy checkout, map risks, build team rituals; focus on observability; risk: on-call load.",ATLAS-2179
+2018-Q2,2018-06-01,2018-06-28,Phase 0 Legacy Stabilization,data,Victor Silva,red,89,22,0,"stabilize legacy checkout, map risks, build team rituals; focus on data; risk: test data gap.",ATLAS-3199
+2018-Q2,2018-06-01,2018-06-28,Phase 0 Legacy Stabilization,support,Yara Haddad,green,64,4,6,"stabilize legacy checkout, map risks, build team rituals; focus on support; risk: vendor approval.",ATLAS-2401
+2018-Q3,2018-07-01,2018-07-28,Phase 0 Legacy Stabilization,platform,Kim Tan,red,42,11,7,"stabilize legacy checkout, map risks, build team rituals; focus on platform; risk: vendor approval.",ATLAS-4135
+2018-Q3,2018-07-01,2018-07-28,Phase 0 Legacy Stabilization,checkout,Kim Tan,green,82,22,6,"stabilize legacy checkout, map risks, build team rituals; focus on checkout; risk: vendor approval.",ATLAS-3032
+2018-Q3,2018-07-01,2018-07-28,Phase 0 Legacy Stabilization,payments,Mateo Garcia,amber,81,23,5,"stabilize legacy checkout, map risks, build team rituals; focus on payments; risk: test data gap.",ATLAS-1489
+2018-Q3,2018-07-01,2018-07-28,Phase 0 Legacy Stabilization,observability,Jon Bell,green,94,12,0,"stabilize legacy checkout, map risks, build team rituals; focus on observability; risk: test data gap.",ATLAS-4753
+2018-Q3,2018-07-01,2018-07-28,Phase 0 Legacy Stabilization,data,Mateo Garcia,amber,55,15,1,"stabilize legacy checkout, map risks, build team rituals; focus on data; risk: customer readiness.",ATLAS-5282
+2018-Q3,2018-07-01,2018-07-28,Phase 0 Legacy Stabilization,support,Yara Haddad,green,92,6,5,"stabilize legacy checkout, map risks, build team rituals; focus on support; risk: on-call load.",ATLAS-1304
+2018-Q3,2018-08-01,2018-08-28,Phase 0 Legacy Stabilization,platform,Sara Novak,green,41,5,5,"stabilize legacy checkout, map risks, build team rituals; focus on platform; risk: on-call load.",ATLAS-5702
+2018-Q3,2018-08-01,2018-08-28,Phase 0 Legacy Stabilization,checkout,Anika Sharma,amber,21,24,4,"stabilize legacy checkout, map risks, build team rituals; focus on checkout; risk: test data gap.",ATLAS-2581
+2018-Q3,2018-08-01,2018-08-28,Phase 0 Legacy Stabilization,payments,Samir Rao,green,32,21,5,"stabilize legacy checkout, map risks, build team rituals; focus on payments; risk: test data gap.",ATLAS-4750
+2018-Q3,2018-08-01,2018-08-28,Phase 0 Legacy Stabilization,observability,Kim Tan,green,77,15,6,"stabilize legacy checkout, map risks, build team rituals; focus on observability; risk: dependency drift.",ATLAS-1611
+2018-Q3,2018-08-01,2018-08-28,Phase 0 Legacy Stabilization,data,Anika Sharma,green,84,22,3,"stabilize legacy checkout, map risks, build team rituals; focus on data; risk: customer readiness.",ATLAS-5803
+2018-Q3,2018-08-01,2018-08-28,Phase 0 Legacy Stabilization,support,Yara Haddad,green,90,4,4,"stabilize legacy checkout, map risks, build team rituals; focus on support; risk: dependency drift.",ATLAS-3970
+2018-Q3,2018-09-01,2018-09-28,Phase 0 Legacy Stabilization,platform,Anika Sharma,amber,94,9,5,"stabilize legacy checkout, map risks, build team rituals; focus on platform; risk: on-call load.",ATLAS-5430
+2018-Q3,2018-09-01,2018-09-28,Phase 0 Legacy Stabilization,checkout,Harper Lee,green,50,22,0,"stabilize legacy checkout, map risks, build team rituals; focus on checkout; risk: schema migration.",ATLAS-4956
+2018-Q3,2018-09-01,2018-09-28,Phase 0 Legacy Stabilization,payments,Sara Novak,amber,53,10,2,"stabilize legacy checkout, map risks, build team rituals; focus on payments; risk: on-call load.",ATLAS-4169
+2018-Q3,2018-09-01,2018-09-28,Phase 0 Legacy Stabilization,observability,Grace Kim,green,37,23,5,"stabilize legacy checkout, map risks, build team rituals; focus on observability; risk: schema migration.",ATLAS-1237
+2018-Q3,2018-09-01,2018-09-28,Phase 0 Legacy Stabilization,data,Anika Sharma,amber,53,18,4,"stabilize legacy checkout, map risks, build team rituals; focus on data; risk: vendor approval.",ATLAS-5046
+2018-Q3,2018-09-01,2018-09-28,Phase 0 Legacy Stabilization,support,Yara Haddad,amber,23,19,6,"stabilize legacy checkout, map risks, build team rituals; focus on support; risk: dependency drift.",ATLAS-2545
+2018-Q4,2018-10-01,2018-10-28,Phase 0 Legacy Stabilization,platform,Jon Bell,amber,48,22,2,"stabilize legacy checkout, map risks, build team rituals; focus on platform; risk: on-call load.",ATLAS-2026
+2018-Q4,2018-10-01,2018-10-28,Phase 0 Legacy Stabilization,checkout,Yara Haddad,amber,22,6,5,"stabilize legacy checkout, map risks, build team rituals; focus on checkout; risk: customer readiness.",ATLAS-1866
+2018-Q4,2018-10-01,2018-10-28,Phase 0 Legacy Stabilization,payments,Ravi Patel,green,36,9,7,"stabilize legacy checkout, map risks, build team rituals; focus on payments; risk: vendor approval.",ATLAS-3556
+2018-Q4,2018-10-01,2018-10-28,Phase 0 Legacy Stabilization,observability,Yara Haddad,amber,35,9,8,"stabilize legacy checkout, map risks, build team rituals; focus on observability; risk: on-call load.",ATLAS-3282
+2018-Q4,2018-10-01,2018-10-28,Phase 0 Legacy Stabilization,data,Aisha Khan,red,35,21,3,"stabilize legacy checkout, map risks, build team rituals; focus on data; risk: customer readiness.",ATLAS-1628
+2018-Q4,2018-10-01,2018-10-28,Phase 0 Legacy Stabilization,support,Elena Petrova,amber,40,4,2,"stabilize legacy checkout, map risks, build team rituals; focus on support; risk: on-call load.",ATLAS-2554
+2018-Q4,2018-11-01,2018-11-28,Phase 0 Legacy Stabilization,platform,Priya Nair,red,22,16,6,"stabilize legacy checkout, map risks, build team rituals; focus on platform; risk: schema migration.",ATLAS-2909
+2018-Q4,2018-11-01,2018-11-28,Phase 0 Legacy Stabilization,checkout,Noah Evans,green,81,13,1,"stabilize legacy checkout, map risks, build team rituals; focus on checkout; risk: on-call load.",ATLAS-4359
+2018-Q4,2018-11-01,2018-11-28,Phase 0 Legacy Stabilization,payments,Iris Wang,amber,49,21,4,"stabilize legacy checkout, map risks, build team rituals; focus on payments; risk: test data gap.",ATLAS-5281
+2018-Q4,2018-11-01,2018-11-28,Phase 0 Legacy Stabilization,observability,Owen Brooks,amber,92,17,3,"stabilize legacy checkout, map risks, build team rituals; focus on observability; risk: schema migration.",ATLAS-5707
+2018-Q4,2018-11-01,2018-11-28,Phase 0 Legacy Stabilization,data,Ravi Patel,amber,85,24,5,"stabilize legacy checkout, map risks, build team rituals; focus on data; risk: schema migration.",ATLAS-2246
+2018-Q4,2018-11-01,2018-11-28,Phase 0 Legacy Stabilization,support,Grace Kim,green,92,11,8,"stabilize legacy checkout, map risks, build team rituals; focus on support; risk: capacity risk.",ATLAS-5575
+2018-Q4,2018-12-01,2018-12-28,Phase 0 Legacy Stabilization,platform,Samir Rao,green,42,8,7,"stabilize legacy checkout, map risks, build team rituals; focus on platform; risk: capacity risk.",ATLAS-5161
+2018-Q4,2018-12-01,2018-12-28,Phase 0 Legacy Stabilization,checkout,Sara Novak,amber,64,4,0,"stabilize legacy checkout, map risks, build team rituals; focus on checkout; risk: customer readiness.",ATLAS-2312
+2018-Q4,2018-12-01,2018-12-28,Phase 0 Legacy Stabilization,payments,Victor Silva,amber,66,18,4,"stabilize legacy checkout, map risks, build team rituals; focus on payments; risk: customer readiness.",ATLAS-1463
+2018-Q4,2018-12-01,2018-12-28,Phase 0 Legacy Stabilization,observability,Ravi Patel,red,41,18,2,"stabilize legacy checkout, map risks, build team rituals; focus on observability; risk: test data gap.",ATLAS-1802
+2018-Q4,2018-12-01,2018-12-28,Phase 0 Legacy Stabilization,data,Mateo Garcia,red,80,5,7,"stabilize legacy checkout, map risks, build team rituals; focus on data; risk: customer readiness.",ATLAS-4230
+2018-Q4,2018-12-01,2018-12-28,Phase 0 Legacy Stabilization,support,Yara Haddad,amber,57,12,1,"stabilize legacy checkout, map risks, build team rituals; focus on support; risk: capacity risk.",ATLAS-4572
+2019-Q1,2019-01-01,2019-01-28,Phase 1 Service Extraction,platform,Nora Singh,amber,44,24,4,"extract cart, pricing, tax, and payment facades; focus on platform; risk: dependency drift.",ATLAS-1707
+2019-Q1,2019-01-01,2019-01-28,Phase 1 Service Extraction,checkout,Harper Lee,red,33,4,7,"extract cart, pricing, tax, and payment facades; focus on checkout; risk: customer readiness.",ATLAS-2584
+2019-Q1,2019-01-01,2019-01-28,Phase 1 Service Extraction,payments,Samir Rao,red,47,12,1,"extract cart, pricing, tax, and payment facades; focus on payments; risk: vendor approval.",ATLAS-2174
+2019-Q1,2019-01-01,2019-01-28,Phase 1 Service Extraction,observability,Ben Carter,red,91,16,1,"extract cart, pricing, tax, and payment facades; focus on observability; risk: on-call load.",ATLAS-5856
+2019-Q1,2019-01-01,2019-01-28,Phase 1 Service Extraction,data,Owen Brooks,amber,47,16,8,"extract cart, pricing, tax, and payment facades; focus on data; risk: dependency drift.",ATLAS-1651
+2019-Q1,2019-01-01,2019-01-28,Phase 1 Service Extraction,support,Harper Lee,amber,77,22,5,"extract cart, pricing, tax, and payment facades; focus on support; risk: test data gap.",ATLAS-4542
+2019-Q1,2019-02-01,2019-02-28,Phase 1 Service Extraction,platform,Dmitri Volkov,red,92,19,7,"extract cart, pricing, tax, and payment facades; focus on platform; risk: capacity risk.",ATLAS-4528
+2019-Q1,2019-02-01,2019-02-28,Phase 1 Service Extraction,checkout,Sara Novak,amber,86,11,2,"extract cart, pricing, tax, and payment facades; focus on checkout; risk: customer readiness.",ATLAS-5762
+2019-Q1,2019-02-01,2019-02-28,Phase 1 Service Extraction,payments,Priya Nair,amber,85,24,8,"extract cart, pricing, tax, and payment facades; focus on payments; risk: dependency drift.",ATLAS-3257
+2019-Q1,2019-02-01,2019-02-28,Phase 1 Service Extraction,observability,Ben Carter,amber,64,22,1,"extract cart, pricing, tax, and payment facades; focus on observability; risk: vendor approval.",ATLAS-3607
+2019-Q1,2019-02-01,2019-02-28,Phase 1 Service Extraction,data,Jon Bell,amber,47,3,4,"extract cart, pricing, tax, and payment facades; focus on data; risk: customer readiness.",ATLAS-1333
+2019-Q1,2019-02-01,2019-02-28,Phase 1 Service Extraction,support,Ben Carter,red,47,19,1,"extract cart, pricing, tax, and payment facades; focus on support; risk: vendor approval.",ATLAS-5611
+2019-Q1,2019-03-01,2019-03-28,Phase 1 Service Extraction,platform,Ben Carter,red,89,12,6,"extract cart, pricing, tax, and payment facades; focus on platform; risk: customer readiness.",ATLAS-6042
+2019-Q1,2019-03-01,2019-03-28,Phase 1 Service Extraction,checkout,Elena Petrova,green,67,9,2,"extract cart, pricing, tax, and payment facades; focus on checkout; risk: schema migration.",ATLAS-4512
+2019-Q1,2019-03-01,2019-03-28,Phase 1 Service Extraction,payments,Grace Kim,red,36,9,3,"extract cart, pricing, tax, and payment facades; focus on payments; risk: dependency drift.",ATLAS-5685
+2019-Q1,2019-03-01,2019-03-28,Phase 1 Service Extraction,observability,Nora Singh,red,44,19,2,"extract cart, pricing, tax, and payment facades; focus on observability; risk: test data gap.",ATLAS-4567
+2019-Q1,2019-03-01,2019-03-28,Phase 1 Service Extraction,data,Nora Singh,green,31,8,4,"extract cart, pricing, tax, and payment facades; focus on data; risk: on-call load.",ATLAS-3939
+2019-Q1,2019-03-01,2019-03-28,Phase 1 Service Extraction,support,Aisha Khan,red,93,10,1,"extract cart, pricing, tax, and payment facades; focus on support; risk: capacity risk.",ATLAS-4824
+2019-Q2,2019-04-01,2019-04-28,Phase 1 Service Extraction,platform,Harper Lee,amber,91,23,2,"extract cart, pricing, tax, and payment facades; focus on platform; risk: vendor approval.",ATLAS-5825
+2019-Q2,2019-04-01,2019-04-28,Phase 1 Service Extraction,checkout,Harper Lee,amber,75,3,7,"extract cart, pricing, tax, and payment facades; focus on checkout; risk: vendor approval.",ATLAS-4553
+2019-Q2,2019-04-01,2019-04-28,Phase 1 Service Extraction,payments,Dmitri Volkov,green,51,9,7,"extract cart, pricing, tax, and payment facades; focus on payments; risk: customer readiness.",ATLAS-3521
+2019-Q2,2019-04-01,2019-04-28,Phase 1 Service Extraction,observability,Maya Chen,amber,29,12,6,"extract cart, pricing, tax, and payment facades; focus on observability; risk: on-call load.",ATLAS-4786
+2019-Q2,2019-04-01,2019-04-28,Phase 1 Service Extraction,data,Fatima Noor,red,41,11,5,"extract cart, pricing, tax, and payment facades; focus on data; risk: schema migration.",ATLAS-1863
+2019-Q2,2019-04-01,2019-04-28,Phase 1 Service Extraction,support,Samir Rao,red,46,22,6,"extract cart, pricing, tax, and payment facades; focus on support; risk: capacity risk.",ATLAS-3399
+2019-Q2,2019-05-01,2019-05-28,Phase 1 Service Extraction,platform,Fatima Noor,red,23,24,7,"extract cart, pricing, tax, and payment facades; focus on platform; risk: on-call load.",ATLAS-3784
+2019-Q2,2019-05-01,2019-05-28,Phase 1 Service Extraction,checkout,Elena Petrova,green,35,17,6,"extract cart, pricing, tax, and payment facades; focus on checkout; risk: customer readiness.",ATLAS-1394
+2019-Q2,2019-05-01,2019-05-28,Phase 1 Service Extraction,payments,Dmitri Volkov,amber,67,14,7,"extract cart, pricing, tax, and payment facades; focus on payments; risk: dependency drift.",ATLAS-5979
+2019-Q2,2019-05-01,2019-05-28,Phase 1 Service Extraction,observability,Ravi Patel,green,19,24,8,"extract cart, pricing, tax, and payment facades; focus on observability; risk: on-call load.",ATLAS-5850
+2019-Q2,2019-05-01,2019-05-28,Phase 1 Service Extraction,data,Theo Martin,green,27,13,2,"extract cart, pricing, tax, and payment facades; focus on data; risk: on-call load.",ATLAS-3178
+2019-Q2,2019-05-01,2019-05-28,Phase 1 Service Extraction,support,Priya Nair,amber,30,21,7,"extract cart, pricing, tax, and payment facades; focus on support; risk: schema migration.",ATLAS-5913
+2019-Q2,2019-06-01,2019-06-28,Phase 1 Service Extraction,platform,Yara Haddad,amber,92,24,5,"extract cart, pricing, tax, and payment facades; focus on platform; risk: on-call load.",ATLAS-2659
+2019-Q2,2019-06-01,2019-06-28,Phase 1 Service Extraction,checkout,Samir Rao,red,60,13,2,"extract cart, pricing, tax, and payment facades; focus on checkout; risk: vendor approval.",ATLAS-4559
+2019-Q2,2019-06-01,2019-06-28,Phase 1 Service Extraction,payments,Priya Nair,green,37,24,8,"extract cart, pricing, tax, and payment facades; focus on payments; risk: dependency drift.",ATLAS-1332
+2019-Q2,2019-06-01,2019-06-28,Phase 1 Service Extraction,observability,Nora Singh,amber,69,16,6,"extract cart, pricing, tax, and payment facades; focus on observability; risk: on-call load.",ATLAS-1924
+2019-Q2,2019-06-01,2019-06-28,Phase 1 Service Extraction,data,Luca Moretti,green,54,11,7,"extract cart, pricing, tax, and payment facades; focus on data; risk: capacity risk.",ATLAS-2541
+2019-Q2,2019-06-01,2019-06-28,Phase 1 Service Extraction,support,Grace Kim,red,38,5,3,"extract cart, pricing, tax, and payment facades; focus on support; risk: customer readiness.",ATLAS-5418
+2019-Q3,2019-07-01,2019-07-28,Phase 1 Service Extraction,platform,Priya Nair,green,76,5,6,"extract cart, pricing, tax, and payment facades; focus on platform; risk: test data gap.",ATLAS-4013
+2019-Q3,2019-07-01,2019-07-28,Phase 1 Service Extraction,checkout,Nora Singh,amber,23,24,7,"extract cart, pricing, tax, and payment facades; focus on checkout; risk: vendor approval.",ATLAS-1332
+2019-Q3,2019-07-01,2019-07-28,Phase 1 Service Extraction,payments,Kim Tan,green,18,19,2,"extract cart, pricing, tax, and payment facades; focus on payments; risk: customer readiness.",ATLAS-2246
+2019-Q3,2019-07-01,2019-07-28,Phase 1 Service Extraction,observability,Iris Wang,red,30,3,6,"extract cart, pricing, tax, and payment facades; focus on observability; risk: customer readiness.",ATLAS-3217
+2019-Q3,2019-07-01,2019-07-28,Phase 1 Service Extraction,data,Grace Kim,red,35,9,6,"extract cart, pricing, tax, and payment facades; focus on data; risk: schema migration.",ATLAS-2135
+2019-Q3,2019-07-01,2019-07-28,Phase 1 Service Extraction,support,Samir Rao,amber,67,7,6,"extract cart, pricing, tax, and payment facades; focus on support; risk: schema migration.",ATLAS-3999
+2019-Q3,2019-08-01,2019-08-28,Phase 1 Service Extraction,platform,Yara Haddad,green,71,12,6,"extract cart, pricing, tax, and payment facades; focus on platform; risk: on-call load.",ATLAS-1288
+2019-Q3,2019-08-01,2019-08-28,Phase 1 Service Extraction,checkout,Fatima Noor,green,66,8,3,"extract cart, pricing, tax, and payment facades; focus on checkout; risk: capacity risk.",ATLAS-3692
+2019-Q3,2019-08-01,2019-08-28,Phase 1 Service Extraction,payments,Yara Haddad,red,29,15,1,"extract cart, pricing, tax, and payment facades; focus on payments; risk: vendor approval.",ATLAS-4023
+2019-Q3,2019-08-01,2019-08-28,Phase 1 Service Extraction,observability,Noah Evans,amber,70,3,6,"extract cart, pricing, tax, and payment facades; focus on observability; risk: on-call load.",ATLAS-2447
+2019-Q3,2019-08-01,2019-08-28,Phase 1 Service Extraction,data,Yara Haddad,amber,55,8,0,"extract cart, pricing, tax, and payment facades; focus on data; risk: test data gap.",ATLAS-5497
+2019-Q3,2019-08-01,2019-08-28,Phase 1 Service Extraction,support,Yara Haddad,red,45,8,2,"extract cart, pricing, tax, and payment facades; focus on support; risk: dependency drift.",ATLAS-5962
+2019-Q3,2019-09-01,2019-09-28,Phase 1 Service Extraction,platform,Luca Moretti,amber,33,6,1,"extract cart, pricing, tax, and payment facades; focus on platform; risk: on-call load.",ATLAS-5488
+2019-Q3,2019-09-01,2019-09-28,Phase 1 Service Extraction,checkout,Ravi Patel,amber,58,21,1,"extract cart, pricing, tax, and payment facades; focus on checkout; risk: customer readiness.",ATLAS-5167
+2019-Q3,2019-09-01,2019-09-28,Phase 1 Service Extraction,payments,Anika Sharma,amber,91,16,1,"extract cart, pricing, tax, and payment facades; focus on payments; risk: vendor approval.",ATLAS-5146
+2019-Q3,2019-09-01,2019-09-28,Phase 1 Service Extraction,observability,Owen Brooks,green,81,20,5,"extract cart, pricing, tax, and payment facades; focus on observability; risk: dependency drift.",ATLAS-2926
+2019-Q3,2019-09-01,2019-09-28,Phase 1 Service Extraction,data,Kim Tan,green,58,23,4,"extract cart, pricing, tax, and payment facades; focus on data; risk: vendor approval.",ATLAS-2206
+2019-Q3,2019-09-01,2019-09-28,Phase 1 Service Extraction,support,Jon Bell,green,44,23,8,"extract cart, pricing, tax, and payment facades; focus on support; risk: test data gap.",ATLAS-1918
+2019-Q4,2019-10-01,2019-10-28,Phase 1 Service Extraction,platform,Theo Martin,red,25,7,3,"extract cart, pricing, tax, and payment facades; focus on platform; risk: capacity risk.",ATLAS-1178
+2019-Q4,2019-10-01,2019-10-28,Phase 1 Service Extraction,checkout,Kim Tan,amber,87,8,4,"extract cart, pricing, tax, and payment facades; focus on checkout; risk: dependency drift.",ATLAS-1165
+2019-Q4,2019-10-01,2019-10-28,Phase 1 Service Extraction,payments,Samir Rao,red,65,24,6,"extract cart, pricing, tax, and payment facades; focus on payments; risk: dependency drift.",ATLAS-2647
+2019-Q4,2019-10-01,2019-10-28,Phase 1 Service Extraction,observability,Theo Martin,red,74,5,5,"extract cart, pricing, tax, and payment facades; focus on observability; risk: test data gap.",ATLAS-5136
+2019-Q4,2019-10-01,2019-10-28,Phase 1 Service Extraction,data,Luca Moretti,amber,42,18,2,"extract cart, pricing, tax, and payment facades; focus on data; risk: on-call load.",ATLAS-1621
+2019-Q4,2019-10-01,2019-10-28,Phase 1 Service Extraction,support,Aisha Khan,red,52,14,5,"extract cart, pricing, tax, and payment facades; focus on support; risk: dependency drift.",ATLAS-5497
+2019-Q4,2019-11-01,2019-11-28,Phase 1 Service Extraction,platform,Mateo Garcia,green,33,19,0,"extract cart, pricing, tax, and payment facades; focus on platform; risk: on-call load.",ATLAS-2569
+2019-Q4,2019-11-01,2019-11-28,Phase 1 Service Extraction,checkout,Ravi Patel,amber,53,4,7,"extract cart, pricing, tax, and payment facades; focus on checkout; risk: dependency drift.",ATLAS-4301
+2019-Q4,2019-11-01,2019-11-28,Phase 1 Service Extraction,payments,Owen Brooks,red,58,17,0,"extract cart, pricing, tax, and payment facades; focus on payments; risk: dependency drift.",ATLAS-1710
+2019-Q4,2019-11-01,2019-11-28,Phase 1 Service Extraction,observability,Victor Silva,red,71,11,7,"extract cart, pricing, tax, and payment facades; focus on observability; risk: schema migration.",ATLAS-5917
+2019-Q4,2019-11-01,2019-11-28,Phase 1 Service Extraction,data,Elena Petrova,amber,40,18,7,"extract cart, pricing, tax, and payment facades; focus on data; risk: schema migration.",ATLAS-2256
+2019-Q4,2019-11-01,2019-11-28,Phase 1 Service Extraction,support,Victor Silva,amber,81,4,3,"extract cart, pricing, tax, and payment facades; focus on support; risk: capacity risk.",ATLAS-4698
+2019-Q4,2019-12-01,2019-12-28,Phase 1 Service Extraction,platform,Luca Moretti,amber,39,22,6,"extract cart, pricing, tax, and payment facades; focus on platform; risk: schema migration.",ATLAS-3966
+2019-Q4,2019-12-01,2019-12-28,Phase 1 Service Extraction,checkout,Dmitri Volkov,green,63,21,3,"extract cart, pricing, tax, and payment facades; focus on checkout; risk: schema migration.",ATLAS-2037
+2019-Q4,2019-12-01,2019-12-28,Phase 1 Service Extraction,payments,Victor Silva,red,73,10,2,"extract cart, pricing, tax, and payment facades; focus on payments; risk: test data gap.",ATLAS-4897
+2019-Q4,2019-12-01,2019-12-28,Phase 1 Service Extraction,observability,Iris Wang,green,59,17,6,"extract cart, pricing, tax, and payment facades; focus on observability; risk: customer readiness.",ATLAS-3475
+2019-Q4,2019-12-01,2019-12-28,Phase 1 Service Extraction,data,Priya Nair,red,69,4,3,"extract cart, pricing, tax, and payment facades; focus on data; risk: capacity risk.",ATLAS-4013
+2019-Q4,2019-12-01,2019-12-28,Phase 1 Service Extraction,support,Grace Kim,amber,33,17,5,"extract cart, pricing, tax, and payment facades; focus on support; risk: on-call load.",ATLAS-2538
+2020-Q1,2020-01-01,2020-01-28,Phase 2 Cloud Migration,platform,Harper Lee,red,22,22,6,move workloads to Kubernetes and managed databases; focus on platform; risk: schema migration.,ATLAS-1562
+2020-Q1,2020-01-01,2020-01-28,Phase 2 Cloud Migration,checkout,Theo Martin,amber,90,8,1,move workloads to Kubernetes and managed databases; focus on checkout; risk: vendor approval.,ATLAS-3948
+2020-Q1,2020-01-01,2020-01-28,Phase 2 Cloud Migration,payments,Luca Moretti,red,76,3,3,move workloads to Kubernetes and managed databases; focus on payments; risk: capacity risk.,ATLAS-5702
+2020-Q1,2020-01-01,2020-01-28,Phase 2 Cloud Migration,observability,Harper Lee,green,92,19,7,move workloads to Kubernetes and managed databases; focus on observability; risk: customer readiness.,ATLAS-2971
+2020-Q1,2020-01-01,2020-01-28,Phase 2 Cloud Migration,data,Priya Nair,green,37,9,5,move workloads to Kubernetes and managed databases; focus on data; risk: vendor approval.,ATLAS-2103
+2020-Q1,2020-01-01,2020-01-28,Phase 2 Cloud Migration,support,Theo Martin,red,32,13,4,move workloads to Kubernetes and managed databases; focus on support; risk: test data gap.,ATLAS-1862
+2020-Q1,2020-02-01,2020-02-28,Phase 2 Cloud Migration,platform,Samir Rao,green,26,21,4,move workloads to Kubernetes and managed databases; focus on platform; risk: schema migration.,ATLAS-4327
+2020-Q1,2020-02-01,2020-02-28,Phase 2 Cloud Migration,checkout,Anika Sharma,amber,34,12,2,move workloads to Kubernetes and managed databases; focus on checkout; risk: vendor approval.,ATLAS-3559
+2020-Q1,2020-02-01,2020-02-28,Phase 2 Cloud Migration,payments,Ben Carter,green,63,16,8,move workloads to Kubernetes and managed databases; focus on payments; risk: test data gap.,ATLAS-3376
+2020-Q1,2020-02-01,2020-02-28,Phase 2 Cloud Migration,observability,Samir Rao,green,70,24,8,move workloads to Kubernetes and managed databases; focus on observability; risk: dependency drift.,ATLAS-1422
+2020-Q1,2020-02-01,2020-02-28,Phase 2 Cloud Migration,data,Ben Carter,amber,37,19,1,move workloads to Kubernetes and managed databases; focus on data; risk: on-call load.,ATLAS-5593
+2020-Q1,2020-02-01,2020-02-28,Phase 2 Cloud Migration,support,Maya Chen,amber,32,9,1,move workloads to Kubernetes and managed databases; focus on support; risk: customer readiness.,ATLAS-1106
+2020-Q1,2020-03-01,2020-03-28,Phase 2 Cloud Migration,platform,Fatima Noor,green,55,22,1,move workloads to Kubernetes and managed databases; focus on platform; risk: vendor approval.,ATLAS-5792
+2020-Q1,2020-03-01,2020-03-28,Phase 2 Cloud Migration,checkout,Maya Chen,red,40,13,7,move workloads to Kubernetes and managed databases; focus on checkout; risk: dependency drift.,ATLAS-1593
+2020-Q1,2020-03-01,2020-03-28,Phase 2 Cloud Migration,payments,Victor Silva,green,30,11,1,move workloads to Kubernetes and managed databases; focus on payments; risk: on-call load.,ATLAS-2002
+2020-Q1,2020-03-01,2020-03-28,Phase 2 Cloud Migration,observability,Noah Evans,red,23,15,7,move workloads to Kubernetes and managed databases; focus on observability; risk: vendor approval.,ATLAS-1064
+2020-Q1,2020-03-01,2020-03-28,Phase 2 Cloud Migration,data,Iris Wang,amber,30,23,1,move workloads to Kubernetes and managed databases; focus on data; risk: on-call load.,ATLAS-5042
+2020-Q1,2020-03-01,2020-03-28,Phase 2 Cloud Migration,support,Dmitri Volkov,amber,90,22,0,move workloads to Kubernetes and managed databases; focus on support; risk: vendor approval.,ATLAS-5757
+2020-Q2,2020-04-01,2020-04-28,Phase 2 Cloud Migration,platform,Kim Tan,amber,67,13,8,move workloads to Kubernetes and managed databases; focus on platform; risk: dependency drift.,ATLAS-4533
+2020-Q2,2020-04-01,2020-04-28,Phase 2 Cloud Migration,checkout,Kim Tan,amber,96,21,5,move workloads to Kubernetes and managed databases; focus on checkout; risk: customer readiness.,ATLAS-5967
+2020-Q2,2020-04-01,2020-04-28,Phase 2 Cloud Migration,payments,Owen Brooks,amber,38,3,4,move workloads to Kubernetes and managed databases; focus on payments; risk: capacity risk.,ATLAS-6062
+2020-Q2,2020-04-01,2020-04-28,Phase 2 Cloud Migration,observability,Nora Singh,amber,24,5,0,move workloads to Kubernetes and managed databases; focus on observability; risk: capacity risk.,ATLAS-2579
+2020-Q2,2020-04-01,2020-04-28,Phase 2 Cloud Migration,data,Samir Rao,red,33,14,4,move workloads to Kubernetes and managed databases; focus on data; risk: test data gap.,ATLAS-4315
+2020-Q2,2020-04-01,2020-04-28,Phase 2 Cloud Migration,support,Samir Rao,green,88,24,6,move workloads to Kubernetes and managed databases; focus on support; risk: on-call load.,ATLAS-2406
+2020-Q2,2020-05-01,2020-05-28,Phase 2 Cloud Migration,platform,Nora Singh,green,22,17,7,move workloads to Kubernetes and managed databases; focus on platform; risk: schema migration.,ATLAS-6149
+2020-Q2,2020-05-01,2020-05-28,Phase 2 Cloud Migration,checkout,Luca Moretti,green,70,22,0,move workloads to Kubernetes and managed databases; focus on checkout; risk: capacity risk.,ATLAS-6121
+2020-Q2,2020-05-01,2020-05-28,Phase 2 Cloud Migration,payments,Owen Brooks,amber,53,11,2,move workloads to Kubernetes and managed databases; focus on payments; risk: test data gap.,ATLAS-4797
+2020-Q2,2020-05-01,2020-05-28,Phase 2 Cloud Migration,observability,Owen Brooks,amber,42,14,2,move workloads to Kubernetes and managed databases; focus on observability; risk: vendor approval.,ATLAS-5468
+2020-Q2,2020-05-01,2020-05-28,Phase 2 Cloud Migration,data,Anika Sharma,green,47,14,3,move workloads to Kubernetes and managed databases; focus on data; risk: customer readiness.,ATLAS-3841
+2020-Q2,2020-05-01,2020-05-28,Phase 2 Cloud Migration,support,Aisha Khan,red,79,9,7,move workloads to Kubernetes and managed databases; focus on support; risk: schema migration.,ATLAS-3532
+2020-Q2,2020-06-01,2020-06-28,Phase 2 Cloud Migration,platform,Priya Nair,green,27,9,2,move workloads to Kubernetes and managed databases; focus on platform; risk: test data gap.,ATLAS-3282
+2020-Q2,2020-06-01,2020-06-28,Phase 2 Cloud Migration,checkout,Grace Kim,green,52,15,2,move workloads to Kubernetes and managed databases; focus on checkout; risk: schema migration.,ATLAS-3863
+2020-Q2,2020-06-01,2020-06-28,Phase 2 Cloud Migration,payments,Victor Silva,red,18,19,7,move workloads to Kubernetes and managed databases; focus on payments; risk: customer readiness.,ATLAS-3441
+2020-Q2,2020-06-01,2020-06-28,Phase 2 Cloud Migration,observability,Fatima Noor,red,74,13,7,move workloads to Kubernetes and managed databases; focus on observability; risk: dependency drift.,ATLAS-4109
+2020-Q2,2020-06-01,2020-06-28,Phase 2 Cloud Migration,data,Kim Tan,green,25,20,7,move workloads to Kubernetes and managed databases; focus on data; risk: customer readiness.,ATLAS-3793
+2020-Q2,2020-06-01,2020-06-28,Phase 2 Cloud Migration,support,Fatima Noor,red,85,6,5,move workloads to Kubernetes and managed databases; focus on support; risk: test data gap.,ATLAS-1745
+2020-Q3,2020-07-01,2020-07-28,Phase 2 Cloud Migration,platform,Samir Rao,red,38,18,3,move workloads to Kubernetes and managed databases; focus on platform; risk: vendor approval.,ATLAS-2677
+2020-Q3,2020-07-01,2020-07-28,Phase 2 Cloud Migration,checkout,Owen Brooks,red,29,8,8,move workloads to Kubernetes and managed databases; focus on checkout; risk: on-call load.,ATLAS-4785
+2020-Q3,2020-07-01,2020-07-28,Phase 2 Cloud Migration,payments,Samir Rao,green,75,8,6,move workloads to Kubernetes and managed databases; focus on payments; risk: on-call load.,ATLAS-3571
+2020-Q3,2020-07-01,2020-07-28,Phase 2 Cloud Migration,observability,Iris Wang,amber,82,9,3,move workloads to Kubernetes and managed databases; focus on observability; risk: schema migration.,ATLAS-1489
+2020-Q3,2020-07-01,2020-07-28,Phase 2 Cloud Migration,data,Aisha Khan,green,50,19,8,move workloads to Kubernetes and managed databases; focus on data; risk: test data gap.,ATLAS-5780
+2020-Q3,2020-07-01,2020-07-28,Phase 2 Cloud Migration,support,Samir Rao,amber,92,12,6,move workloads to Kubernetes and managed databases; focus on support; risk: customer readiness.,ATLAS-4390
+2020-Q3,2020-08-01,2020-08-28,Phase 2 Cloud Migration,platform,Owen Brooks,red,37,3,8,move workloads to Kubernetes and managed databases; focus on platform; risk: schema migration.,ATLAS-1466
+2020-Q3,2020-08-01,2020-08-28,Phase 2 Cloud Migration,checkout,Sara Novak,red,52,19,7,move workloads to Kubernetes and managed databases; focus on checkout; risk: vendor approval.,ATLAS-2085
+2020-Q3,2020-08-01,2020-08-28,Phase 2 Cloud Migration,payments,Harper Lee,amber,34,7,4,move workloads to Kubernetes and managed databases; focus on payments; risk: schema migration.,ATLAS-5132
+2020-Q3,2020-08-01,2020-08-28,Phase 2 Cloud Migration,observability,Aisha Khan,red,69,23,4,move workloads to Kubernetes and managed databases; focus on observability; risk: dependency drift.,ATLAS-3604
+2020-Q3,2020-08-01,2020-08-28,Phase 2 Cloud Migration,data,Noah Evans,amber,35,8,8,move workloads to Kubernetes and managed databases; focus on data; risk: schema migration.,ATLAS-4557
+2020-Q3,2020-08-01,2020-08-28,Phase 2 Cloud Migration,support,Yara Haddad,red,67,23,2,move workloads to Kubernetes and managed databases; focus on support; risk: dependency drift.,ATLAS-2349
+2020-Q3,2020-09-01,2020-09-28,Phase 2 Cloud Migration,platform,Samir Rao,red,66,3,0,move workloads to Kubernetes and managed databases; focus on platform; risk: schema migration.,ATLAS-5176
+2020-Q3,2020-09-01,2020-09-28,Phase 2 Cloud Migration,checkout,Mateo Garcia,amber,66,19,0,move workloads to Kubernetes and managed databases; focus on checkout; risk: vendor approval.,ATLAS-4591
+2020-Q3,2020-09-01,2020-09-28,Phase 2 Cloud Migration,payments,Owen Brooks,green,22,5,7,move workloads to Kubernetes and managed databases; focus on payments; risk: vendor approval.,ATLAS-4934
+2020-Q3,2020-09-01,2020-09-28,Phase 2 Cloud Migration,observability,Owen Brooks,amber,74,21,5,move workloads to Kubernetes and managed databases; focus on observability; risk: capacity risk.,ATLAS-2615
+2020-Q3,2020-09-01,2020-09-28,Phase 2 Cloud Migration,data,Aisha Khan,amber,30,14,4,move workloads to Kubernetes and managed databases; focus on data; risk: on-call load.,ATLAS-3069
+2020-Q3,2020-09-01,2020-09-28,Phase 2 Cloud Migration,support,Victor Silva,amber,40,3,4,move workloads to Kubernetes and managed databases; focus on support; risk: test data gap.,ATLAS-4459
+2020-Q4,2020-10-01,2020-10-28,Phase 2 Cloud Migration,platform,Ravi Patel,green,48,14,7,move workloads to Kubernetes and managed databases; focus on platform; risk: capacity risk.,ATLAS-2449
+2020-Q4,2020-10-01,2020-10-28,Phase 2 Cloud Migration,checkout,Luca Moretti,amber,88,5,6,move workloads to Kubernetes and managed databases; focus on checkout; risk: on-call load.,ATLAS-5845
+2020-Q4,2020-10-01,2020-10-28,Phase 2 Cloud Migration,payments,Fatima Noor,red,56,19,3,move workloads to Kubernetes and managed databases; focus on payments; risk: on-call load.,ATLAS-5632
+2020-Q4,2020-10-01,2020-10-28,Phase 2 Cloud Migration,observability,Maya Chen,green,68,19,3,move workloads to Kubernetes and managed databases; focus on observability; risk: schema migration.,ATLAS-1617
+2020-Q4,2020-10-01,2020-10-28,Phase 2 Cloud Migration,data,Aisha Khan,green,53,11,1,move workloads to Kubernetes and managed databases; focus on data; risk: capacity risk.,ATLAS-4110
+2020-Q4,2020-10-01,2020-10-28,Phase 2 Cloud Migration,support,Anika Sharma,green,35,17,3,move workloads to Kubernetes and managed databases; focus on support; risk: test data gap.,ATLAS-3744
+2020-Q4,2020-11-01,2020-11-28,Phase 2 Cloud Migration,platform,Grace Kim,red,23,4,7,move workloads to Kubernetes and managed databases; focus on platform; risk: test data gap.,ATLAS-1242
+2020-Q4,2020-11-01,2020-11-28,Phase 2 Cloud Migration,checkout,Fatima Noor,amber,22,15,3,move workloads to Kubernetes and managed databases; focus on checkout; risk: capacity risk.,ATLAS-5686
+2020-Q4,2020-11-01,2020-11-28,Phase 2 Cloud Migration,payments,Sara Novak,green,36,10,8,move workloads to Kubernetes and managed databases; focus on payments; risk: on-call load.,ATLAS-4479
+2020-Q4,2020-11-01,2020-11-28,Phase 2 Cloud Migration,observability,Ravi Patel,amber,55,7,8,move workloads to Kubernetes and managed databases; focus on observability; risk: dependency drift.,ATLAS-4109
+2020-Q4,2020-11-01,2020-11-28,Phase 2 Cloud Migration,data,Luca Moretti,amber,34,3,5,move workloads to Kubernetes and managed databases; focus on data; risk: dependency drift.,ATLAS-3279
+2020-Q4,2020-11-01,2020-11-28,Phase 2 Cloud Migration,support,Harper Lee,red,79,11,6,move workloads to Kubernetes and managed databases; focus on support; risk: customer readiness.,ATLAS-2899
+2020-Q4,2020-12-01,2020-12-28,Phase 2 Cloud Migration,platform,Mateo Garcia,amber,66,21,4,move workloads to Kubernetes and managed databases; focus on platform; risk: test data gap.,ATLAS-2899
+2020-Q4,2020-12-01,2020-12-28,Phase 2 Cloud Migration,checkout,Noah Evans,green,64,23,1,move workloads to Kubernetes and managed databases; focus on checkout; risk: capacity risk.,ATLAS-3829
+2020-Q4,2020-12-01,2020-12-28,Phase 2 Cloud Migration,payments,Jon Bell,green,46,22,1,move workloads to Kubernetes and managed databases; focus on payments; risk: dependency drift.,ATLAS-3070
+2020-Q4,2020-12-01,2020-12-28,Phase 2 Cloud Migration,observability,Jon Bell,red,57,7,4,move workloads to Kubernetes and managed databases; focus on observability; risk: on-call load.,ATLAS-3103
+2020-Q4,2020-12-01,2020-12-28,Phase 2 Cloud Migration,data,Dmitri Volkov,amber,61,10,6,move workloads to Kubernetes and managed databases; focus on data; risk: on-call load.,ATLAS-3693
+2020-Q4,2020-12-01,2020-12-28,Phase 2 Cloud Migration,support,Owen Brooks,red,95,23,3,move workloads to Kubernetes and managed databases; focus on support; risk: capacity risk.,ATLAS-4358
+2021-Q1,2021-01-01,2021-01-28,Phase 3 Global Checkout,platform,Harper Lee,red,47,13,3,"add localization, tax rules, currency, and fraud checks; focus on platform; risk: test data gap.",ATLAS-2856
+2021-Q1,2021-01-01,2021-01-28,Phase 3 Global Checkout,checkout,Fatima Noor,amber,86,11,8,"add localization, tax rules, currency, and fraud checks; focus on checkout; risk: test data gap.",ATLAS-5576
+2021-Q1,2021-01-01,2021-01-28,Phase 3 Global Checkout,payments,Priya Nair,amber,33,24,1,"add localization, tax rules, currency, and fraud checks; focus on payments; risk: on-call load.",ATLAS-4970
+2021-Q1,2021-01-01,2021-01-28,Phase 3 Global Checkout,observability,Fatima Noor,green,42,3,4,"add localization, tax rules, currency, and fraud checks; focus on observability; risk: vendor approval.",ATLAS-5542
+2021-Q1,2021-01-01,2021-01-28,Phase 3 Global Checkout,data,Victor Silva,green,36,13,1,"add localization, tax rules, currency, and fraud checks; focus on data; risk: dependency drift.",ATLAS-3263
+2021-Q1,2021-01-01,2021-01-28,Phase 3 Global Checkout,support,Noah Evans,green,44,7,3,"add localization, tax rules, currency, and fraud checks; focus on support; risk: schema migration.",ATLAS-3266
+2021-Q1,2021-02-01,2021-02-28,Phase 3 Global Checkout,platform,Fatima Noor,amber,43,17,4,"add localization, tax rules, currency, and fraud checks; focus on platform; risk: customer readiness.",ATLAS-3302
+2021-Q1,2021-02-01,2021-02-28,Phase 3 Global Checkout,checkout,Sara Novak,red,77,15,6,"add localization, tax rules, currency, and fraud checks; focus on checkout; risk: vendor approval.",ATLAS-1415
+2021-Q1,2021-02-01,2021-02-28,Phase 3 Global Checkout,payments,Luca Moretti,green,80,11,5,"add localization, tax rules, currency, and fraud checks; focus on payments; risk: customer readiness.",ATLAS-1967
+2021-Q1,2021-02-01,2021-02-28,Phase 3 Global Checkout,observability,Dmitri Volkov,green,36,4,4,"add localization, tax rules, currency, and fraud checks; focus on observability; risk: on-call load.",ATLAS-5927
+2021-Q1,2021-02-01,2021-02-28,Phase 3 Global Checkout,data,Theo Martin,amber,18,8,5,"add localization, tax rules, currency, and fraud checks; focus on data; risk: customer readiness.",ATLAS-1092
+2021-Q1,2021-02-01,2021-02-28,Phase 3 Global Checkout,support,Fatima Noor,red,76,10,4,"add localization, tax rules, currency, and fraud checks; focus on support; risk: on-call load.",ATLAS-6027
+2021-Q1,2021-03-01,2021-03-28,Phase 3 Global Checkout,platform,Iris Wang,amber,69,22,8,"add localization, tax rules, currency, and fraud checks; focus on platform; risk: on-call load.",ATLAS-2061
+2021-Q1,2021-03-01,2021-03-28,Phase 3 Global Checkout,checkout,Luca Moretti,amber,50,21,5,"add localization, tax rules, currency, and fraud checks; focus on checkout; risk: schema migration.",ATLAS-1891
+2021-Q1,2021-03-01,2021-03-28,Phase 3 Global Checkout,payments,Priya Nair,red,94,17,8,"add localization, tax rules, currency, and fraud checks; focus on payments; risk: vendor approval.",ATLAS-2451
+2021-Q1,2021-03-01,2021-03-28,Phase 3 Global Checkout,observability,Theo Martin,amber,61,7,0,"add localization, tax rules, currency, and fraud checks; focus on observability; risk: on-call load.",ATLAS-4862
+2021-Q1,2021-03-01,2021-03-28,Phase 3 Global Checkout,data,Harper Lee,red,62,9,7,"add localization, tax rules, currency, and fraud checks; focus on data; risk: dependency drift.",ATLAS-3224
+2021-Q1,2021-03-01,2021-03-28,Phase 3 Global Checkout,support,Mateo Garcia,red,90,23,6,"add localization, tax rules, currency, and fraud checks; focus on support; risk: test data gap.",ATLAS-6120
+2021-Q2,2021-04-01,2021-04-28,Phase 3 Global Checkout,platform,Ben Carter,green,78,17,1,"add localization, tax rules, currency, and fraud checks; focus on platform; risk: capacity risk.",ATLAS-6113
+2021-Q2,2021-04-01,2021-04-28,Phase 3 Global Checkout,checkout,Fatima Noor,red,65,15,2,"add localization, tax rules, currency, and fraud checks; focus on checkout; risk: dependency drift.",ATLAS-1256
+2021-Q2,2021-04-01,2021-04-28,Phase 3 Global Checkout,payments,Yara Haddad,green,31,13,1,"add localization, tax rules, currency, and fraud checks; focus on payments; risk: dependency drift.",ATLAS-6085
+2021-Q2,2021-04-01,2021-04-28,Phase 3 Global Checkout,observability,Elena Petrova,green,42,17,5,"add localization, tax rules, currency, and fraud checks; focus on observability; risk: vendor approval.",ATLAS-4092
+2021-Q2,2021-04-01,2021-04-28,Phase 3 Global Checkout,data,Sara Novak,green,34,15,8,"add localization, tax rules, currency, and fraud checks; focus on data; risk: dependency drift.",ATLAS-1077
+2021-Q2,2021-04-01,2021-04-28,Phase 3 Global Checkout,support,Sara Novak,red,30,18,5,"add localization, tax rules, currency, and fraud checks; focus on support; risk: capacity risk.",ATLAS-1699
+2021-Q2,2021-05-01,2021-05-28,Phase 3 Global Checkout,platform,Maya Chen,red,42,24,8,"add localization, tax rules, currency, and fraud checks; focus on platform; risk: customer readiness.",ATLAS-6004
+2021-Q2,2021-05-01,2021-05-28,Phase 3 Global Checkout,checkout,Iris Wang,green,57,5,5,"add localization, tax rules, currency, and fraud checks; focus on checkout; risk: test data gap.",ATLAS-4505
+2021-Q2,2021-05-01,2021-05-28,Phase 3 Global Checkout,payments,Theo Martin,green,40,9,3,"add localization, tax rules, currency, and fraud checks; focus on payments; risk: dependency drift.",ATLAS-3496
+2021-Q2,2021-05-01,2021-05-28,Phase 3 Global Checkout,observability,Mateo Garcia,red,59,4,6,"add localization, tax rules, currency, and fraud checks; focus on observability; risk: dependency drift.",ATLAS-2358
+2021-Q2,2021-05-01,2021-05-28,Phase 3 Global Checkout,data,Sara Novak,amber,56,4,5,"add localization, tax rules, currency, and fraud checks; focus on data; risk: on-call load.",ATLAS-4114
+2021-Q2,2021-05-01,2021-05-28,Phase 3 Global Checkout,support,Aisha Khan,amber,91,17,0,"add localization, tax rules, currency, and fraud checks; focus on support; risk: dependency drift.",ATLAS-2467
+2021-Q2,2021-06-01,2021-06-28,Phase 3 Global Checkout,platform,Grace Kim,red,47,23,3,"add localization, tax rules, currency, and fraud checks; focus on platform; risk: schema migration.",ATLAS-4983
+2021-Q2,2021-06-01,2021-06-28,Phase 3 Global Checkout,checkout,Ravi Patel,green,34,18,1,"add localization, tax rules, currency, and fraud checks; focus on checkout; risk: vendor approval.",ATLAS-4400
+2021-Q2,2021-06-01,2021-06-28,Phase 3 Global Checkout,payments,Elena Petrova,green,23,12,0,"add localization, tax rules, currency, and fraud checks; focus on payments; risk: dependency drift.",ATLAS-4555
+2021-Q2,2021-06-01,2021-06-28,Phase 3 Global Checkout,observability,Ben Carter,amber,21,10,4,"add localization, tax rules, currency, and fraud checks; focus on observability; risk: vendor approval.",ATLAS-1392
+2021-Q2,2021-06-01,2021-06-28,Phase 3 Global Checkout,data,Dmitri Volkov,red,48,10,0,"add localization, tax rules, currency, and fraud checks; focus on data; risk: capacity risk.",ATLAS-5856
+2021-Q2,2021-06-01,2021-06-28,Phase 3 Global Checkout,support,Elena Petrova,green,45,4,1,"add localization, tax rules, currency, and fraud checks; focus on support; risk: schema migration.",ATLAS-5581
+2021-Q3,2021-07-01,2021-07-28,Phase 3 Global Checkout,platform,Luca Moretti,green,73,5,4,"add localization, tax rules, currency, and fraud checks; focus on platform; risk: customer readiness.",ATLAS-2494
+2021-Q3,2021-07-01,2021-07-28,Phase 3 Global Checkout,checkout,Ravi Patel,green,22,5,0,"add localization, tax rules, currency, and fraud checks; focus on checkout; risk: schema migration.",ATLAS-2769
+2021-Q3,2021-07-01,2021-07-28,Phase 3 Global Checkout,payments,Samir Rao,amber,64,3,6,"add localization, tax rules, currency, and fraud checks; focus on payments; risk: dependency drift.",ATLAS-3056
+2021-Q3,2021-07-01,2021-07-28,Phase 3 Global Checkout,observability,Ben Carter,red,81,5,1,"add localization, tax rules, currency, and fraud checks; focus on observability; risk: vendor approval.",ATLAS-5204
+2021-Q3,2021-07-01,2021-07-28,Phase 3 Global Checkout,data,Samir Rao,green,38,12,4,"add localization, tax rules, currency, and fraud checks; focus on data; risk: on-call load.",ATLAS-4150
+2021-Q3,2021-07-01,2021-07-28,Phase 3 Global Checkout,support,Yara Haddad,amber,95,10,3,"add localization, tax rules, currency, and fraud checks; focus on support; risk: on-call load.",ATLAS-4255
+2021-Q3,2021-08-01,2021-08-28,Phase 3 Global Checkout,platform,Luca Moretti,green,52,23,1,"add localization, tax rules, currency, and fraud checks; focus on platform; risk: vendor approval.",ATLAS-4877
+2021-Q3,2021-08-01,2021-08-28,Phase 3 Global Checkout,checkout,Sara Novak,red,49,17,0,"add localization, tax rules, currency, and fraud checks; focus on checkout; risk: dependency drift.",ATLAS-3959
+2021-Q3,2021-08-01,2021-08-28,Phase 3 Global Checkout,payments,Fatima Noor,red,30,13,7,"add localization, tax rules, currency, and fraud checks; focus on payments; risk: capacity risk.",ATLAS-5647
+2021-Q3,2021-08-01,2021-08-28,Phase 3 Global Checkout,observability,Samir Rao,red,48,11,0,"add localization, tax rules, currency, and fraud checks; focus on observability; risk: customer readiness.",ATLAS-5590
+2021-Q3,2021-08-01,2021-08-28,Phase 3 Global Checkout,data,Jon Bell,green,40,14,2,"add localization, tax rules, currency, and fraud checks; focus on data; risk: customer readiness.",ATLAS-3539
+2021-Q3,2021-08-01,2021-08-28,Phase 3 Global Checkout,support,Victor Silva,amber,69,14,5,"add localization, tax rules, currency, and fraud checks; focus on support; risk: schema migration.",ATLAS-3412
+2021-Q3,2021-09-01,2021-09-28,Phase 3 Global Checkout,platform,Harper Lee,green,59,14,3,"add localization, tax rules, currency, and fraud checks; focus on platform; risk: dependency drift.",ATLAS-1548
+2021-Q3,2021-09-01,2021-09-28,Phase 3 Global Checkout,checkout,Anika Sharma,green,57,5,3,"add localization, tax rules, currency, and fraud checks; focus on checkout; risk: customer readiness.",ATLAS-4136
+2021-Q3,2021-09-01,2021-09-28,Phase 3 Global Checkout,payments,Fatima Noor,green,76,20,8,"add localization, tax rules, currency, and fraud checks; focus on payments; risk: on-call load.",ATLAS-2112
+2021-Q3,2021-09-01,2021-09-28,Phase 3 Global Checkout,observability,Nora Singh,red,61,7,4,"add localization, tax rules, currency, and fraud checks; focus on observability; risk: dependency drift.",ATLAS-5180
+2021-Q3,2021-09-01,2021-09-28,Phase 3 Global Checkout,data,Samir Rao,amber,77,16,5,"add localization, tax rules, currency, and fraud checks; focus on data; risk: vendor approval.",ATLAS-4475
+2021-Q3,2021-09-01,2021-09-28,Phase 3 Global Checkout,support,Fatima Noor,amber,72,12,6,"add localization, tax rules, currency, and fraud checks; focus on support; risk: customer readiness.",ATLAS-2616
+2021-Q4,2021-10-01,2021-10-28,Phase 3 Global Checkout,platform,Yara Haddad,red,95,4,0,"add localization, tax rules, currency, and fraud checks; focus on platform; risk: dependency drift.",ATLAS-3994
+2021-Q4,2021-10-01,2021-10-28,Phase 3 Global Checkout,checkout,Anika Sharma,green,75,16,3,"add localization, tax rules, currency, and fraud checks; focus on checkout; risk: customer readiness.",ATLAS-2763
+2021-Q4,2021-10-01,2021-10-28,Phase 3 Global Checkout,payments,Nora Singh,red,58,6,2,"add localization, tax rules, currency, and fraud checks; focus on payments; risk: on-call load.",ATLAS-4500
+2021-Q4,2021-10-01,2021-10-28,Phase 3 Global Checkout,observability,Anika Sharma,red,44,10,0,"add localization, tax rules, currency, and fraud checks; focus on observability; risk: vendor approval.",ATLAS-2655
+2021-Q4,2021-10-01,2021-10-28,Phase 3 Global Checkout,data,Sara Novak,red,25,10,3,"add localization, tax rules, currency, and fraud checks; focus on data; risk: test data gap.",ATLAS-4183
+2021-Q4,2021-10-01,2021-10-28,Phase 3 Global Checkout,support,Ravi Patel,green,44,12,1,"add localization, tax rules, currency, and fraud checks; focus on support; risk: capacity risk.",ATLAS-3542
+2021-Q4,2021-11-01,2021-11-28,Phase 3 Global Checkout,platform,Victor Silva,green,57,11,6,"add localization, tax rules, currency, and fraud checks; focus on platform; risk: vendor approval.",ATLAS-3073
+2021-Q4,2021-11-01,2021-11-28,Phase 3 Global Checkout,checkout,Nora Singh,red,23,24,4,"add localization, tax rules, currency, and fraud checks; focus on checkout; risk: customer readiness.",ATLAS-3878
+2021-Q4,2021-11-01,2021-11-28,Phase 3 Global Checkout,payments,Sara Novak,red,27,20,2,"add localization, tax rules, currency, and fraud checks; focus on payments; risk: test data gap.",ATLAS-4035
+2021-Q4,2021-11-01,2021-11-28,Phase 3 Global Checkout,observability,Elena Petrova,amber,63,5,2,"add localization, tax rules, currency, and fraud checks; focus on observability; risk: schema migration.",ATLAS-1404
+2021-Q4,2021-11-01,2021-11-28,Phase 3 Global Checkout,data,Mateo Garcia,amber,50,19,6,"add localization, tax rules, currency, and fraud checks; focus on data; risk: customer readiness.",ATLAS-2831
+2021-Q4,2021-11-01,2021-11-28,Phase 3 Global Checkout,support,Noah Evans,amber,95,8,6,"add localization, tax rules, currency, and fraud checks; focus on support; risk: schema migration.",ATLAS-4586
+2021-Q4,2021-12-01,2021-12-28,Phase 3 Global Checkout,platform,Anika Sharma,red,68,24,5,"add localization, tax rules, currency, and fraud checks; focus on platform; risk: dependency drift.",ATLAS-3595
+2021-Q4,2021-12-01,2021-12-28,Phase 3 Global Checkout,checkout,Nora Singh,amber,50,12,2,"add localization, tax rules, currency, and fraud checks; focus on checkout; risk: customer readiness.",ATLAS-5101
+2021-Q4,2021-12-01,2021-12-28,Phase 3 Global Checkout,payments,Samir Rao,red,79,14,5,"add localization, tax rules, currency, and fraud checks; focus on payments; risk: test data gap.",ATLAS-3035
+2021-Q4,2021-12-01,2021-12-28,Phase 3 Global Checkout,observability,Owen Brooks,green,83,13,1,"add localization, tax rules, currency, and fraud checks; focus on observability; risk: vendor approval.",ATLAS-4965
+2021-Q4,2021-12-01,2021-12-28,Phase 3 Global Checkout,data,Mateo Garcia,red,54,3,5,"add localization, tax rules, currency, and fraud checks; focus on data; risk: customer readiness.",ATLAS-4380
+2021-Q4,2021-12-01,2021-12-28,Phase 3 Global Checkout,support,Fatima Noor,red,75,10,2,"add localization, tax rules, currency, and fraud checks; focus on support; risk: on-call load.",ATLAS-4852
+2022-Q1,2022-01-01,2022-01-28,Phase 4 Loyalty and Personalization,platform,Ravi Patel,amber,32,24,5,"connect loyalty, promotions, and segmentation; focus on platform; risk: on-call load.",ATLAS-2348
+2022-Q1,2022-01-01,2022-01-28,Phase 4 Loyalty and Personalization,checkout,Priya Nair,amber,90,12,0,"connect loyalty, promotions, and segmentation; focus on checkout; risk: schema migration.",ATLAS-3747
+2022-Q1,2022-01-01,2022-01-28,Phase 4 Loyalty and Personalization,payments,Elena Petrova,green,34,12,6,"connect loyalty, promotions, and segmentation; focus on payments; risk: capacity risk.",ATLAS-2712
+2022-Q1,2022-01-01,2022-01-28,Phase 4 Loyalty and Personalization,observability,Victor Silva,red,27,13,0,"connect loyalty, promotions, and segmentation; focus on observability; risk: schema migration.",ATLAS-1722
+2022-Q1,2022-01-01,2022-01-28,Phase 4 Loyalty and Personalization,data,Yara Haddad,red,65,14,4,"connect loyalty, promotions, and segmentation; focus on data; risk: customer readiness.",ATLAS-3068
+2022-Q1,2022-01-01,2022-01-28,Phase 4 Loyalty and Personalization,support,Grace Kim,red,22,16,1,"connect loyalty, promotions, and segmentation; focus on support; risk: vendor approval.",ATLAS-3577
+2022-Q1,2022-02-01,2022-02-28,Phase 4 Loyalty and Personalization,platform,Aisha Khan,red,22,13,1,"connect loyalty, promotions, and segmentation; focus on platform; risk: dependency drift.",ATLAS-4558
+2022-Q1,2022-02-01,2022-02-28,Phase 4 Loyalty and Personalization,checkout,Victor Silva,red,42,18,8,"connect loyalty, promotions, and segmentation; focus on checkout; risk: on-call load.",ATLAS-3884
+2022-Q1,2022-02-01,2022-02-28,Phase 4 Loyalty and Personalization,payments,Maya Chen,red,49,15,1,"connect loyalty, promotions, and segmentation; focus on payments; risk: on-call load.",ATLAS-1927
+2022-Q1,2022-02-01,2022-02-28,Phase 4 Loyalty and Personalization,observability,Yara Haddad,amber,70,3,6,"connect loyalty, promotions, and segmentation; focus on observability; risk: dependency drift.",ATLAS-3150
+2022-Q1,2022-02-01,2022-02-28,Phase 4 Loyalty and Personalization,data,Harper Lee,amber,28,24,8,"connect loyalty, promotions, and segmentation; focus on data; risk: capacity risk.",ATLAS-4893
+2022-Q1,2022-02-01,2022-02-28,Phase 4 Loyalty and Personalization,support,Ben Carter,green,34,20,5,"connect loyalty, promotions, and segmentation; focus on support; risk: customer readiness.",ATLAS-4840
+2022-Q1,2022-03-01,2022-03-28,Phase 4 Loyalty and Personalization,platform,Sara Novak,green,95,22,6,"connect loyalty, promotions, and segmentation; focus on platform; risk: customer readiness.",ATLAS-2789
+2022-Q1,2022-03-01,2022-03-28,Phase 4 Loyalty and Personalization,checkout,Iris Wang,green,76,18,4,"connect loyalty, promotions, and segmentation; focus on checkout; risk: customer readiness.",ATLAS-5511
+2022-Q1,2022-03-01,2022-03-28,Phase 4 Loyalty and Personalization,payments,Dmitri Volkov,green,85,19,2,"connect loyalty, promotions, and segmentation; focus on payments; risk: customer readiness.",ATLAS-2113
+2022-Q1,2022-03-01,2022-03-28,Phase 4 Loyalty and Personalization,observability,Noah Evans,amber,31,10,2,"connect loyalty, promotions, and segmentation; focus on observability; risk: customer readiness.",ATLAS-3926
+2022-Q1,2022-03-01,2022-03-28,Phase 4 Loyalty and Personalization,data,Priya Nair,amber,87,3,7,"connect loyalty, promotions, and segmentation; focus on data; risk: dependency drift.",ATLAS-5790
+2022-Q1,2022-03-01,2022-03-28,Phase 4 Loyalty and Personalization,support,Fatima Noor,amber,87,5,6,"connect loyalty, promotions, and segmentation; focus on support; risk: customer readiness.",ATLAS-3089
+2022-Q2,2022-04-01,2022-04-28,Phase 4 Loyalty and Personalization,platform,Ravi Patel,amber,34,16,6,"connect loyalty, promotions, and segmentation; focus on platform; risk: vendor approval.",ATLAS-3083
+2022-Q2,2022-04-01,2022-04-28,Phase 4 Loyalty and Personalization,checkout,Jon Bell,green,77,18,6,"connect loyalty, promotions, and segmentation; focus on checkout; risk: on-call load.",ATLAS-4372
+2022-Q2,2022-04-01,2022-04-28,Phase 4 Loyalty and Personalization,payments,Samir Rao,green,57,12,3,"connect loyalty, promotions, and segmentation; focus on payments; risk: customer readiness.",ATLAS-4136
+2022-Q2,2022-04-01,2022-04-28,Phase 4 Loyalty and Personalization,observability,Maya Chen,red,30,22,0,"connect loyalty, promotions, and segmentation; focus on observability; risk: on-call load.",ATLAS-5687
+2022-Q2,2022-04-01,2022-04-28,Phase 4 Loyalty and Personalization,data,Victor Silva,green,18,22,7,"connect loyalty, promotions, and segmentation; focus on data; risk: vendor approval.",ATLAS-2435
+2022-Q2,2022-04-01,2022-04-28,Phase 4 Loyalty and Personalization,support,Theo Martin,green,64,19,0,"connect loyalty, promotions, and segmentation; focus on support; risk: dependency drift.",ATLAS-5564
+2022-Q2,2022-05-01,2022-05-28,Phase 4 Loyalty and Personalization,platform,Maya Chen,green,52,10,4,"connect loyalty, promotions, and segmentation; focus on platform; risk: on-call load.",ATLAS-2278
+2022-Q2,2022-05-01,2022-05-28,Phase 4 Loyalty and Personalization,checkout,Jon Bell,red,58,13,5,"connect loyalty, promotions, and segmentation; focus on checkout; risk: dependency drift.",ATLAS-5792
+2022-Q2,2022-05-01,2022-05-28,Phase 4 Loyalty and Personalization,payments,Jon Bell,green,80,10,3,"connect loyalty, promotions, and segmentation; focus on payments; risk: dependency drift.",ATLAS-1023
+2022-Q2,2022-05-01,2022-05-28,Phase 4 Loyalty and Personalization,observability,Ravi Patel,amber,75,14,3,"connect loyalty, promotions, and segmentation; focus on observability; risk: vendor approval.",ATLAS-3647
+2022-Q2,2022-05-01,2022-05-28,Phase 4 Loyalty and Personalization,data,Anika Sharma,red,70,13,7,"connect loyalty, promotions, and segmentation; focus on data; risk: dependency drift.",ATLAS-3705
+2022-Q2,2022-05-01,2022-05-28,Phase 4 Loyalty and Personalization,support,Fatima Noor,green,56,10,4,"connect loyalty, promotions, and segmentation; focus on support; risk: customer readiness.",ATLAS-2516
+2022-Q2,2022-06-01,2022-06-28,Phase 4 Loyalty and Personalization,platform,Maya Chen,green,86,6,7,"connect loyalty, promotions, and segmentation; focus on platform; risk: schema migration.",ATLAS-1376
+2022-Q2,2022-06-01,2022-06-28,Phase 4 Loyalty and Personalization,checkout,Maya Chen,red,59,10,6,"connect loyalty, promotions, and segmentation; focus on checkout; risk: vendor approval.",ATLAS-5620
+2022-Q2,2022-06-01,2022-06-28,Phase 4 Loyalty and Personalization,payments,Sara Novak,red,47,23,4,"connect loyalty, promotions, and segmentation; focus on payments; risk: on-call load.",ATLAS-3143
+2022-Q2,2022-06-01,2022-06-28,Phase 4 Loyalty and Personalization,observability,Yara Haddad,green,49,12,7,"connect loyalty, promotions, and segmentation; focus on observability; risk: on-call load.",ATLAS-1389
+2022-Q2,2022-06-01,2022-06-28,Phase 4 Loyalty and Personalization,data,Nora Singh,green,78,16,2,"connect loyalty, promotions, and segmentation; focus on data; risk: dependency drift.",ATLAS-5102
+2022-Q2,2022-06-01,2022-06-28,Phase 4 Loyalty and Personalization,support,Sara Novak,red,75,7,1,"connect loyalty, promotions, and segmentation; focus on support; risk: on-call load.",ATLAS-1862
+2022-Q3,2022-07-01,2022-07-28,Phase 4 Loyalty and Personalization,platform,Dmitri Volkov,amber,47,7,2,"connect loyalty, promotions, and segmentation; focus on platform; risk: vendor approval.",ATLAS-2008
+2022-Q3,2022-07-01,2022-07-28,Phase 4 Loyalty and Personalization,checkout,Noah Evans,amber,80,18,0,"connect loyalty, promotions, and segmentation; focus on checkout; risk: schema migration.",ATLAS-3471
+2022-Q3,2022-07-01,2022-07-28,Phase 4 Loyalty and Personalization,payments,Kim Tan,amber,90,11,5,"connect loyalty, promotions, and segmentation; focus on payments; risk: dependency drift.",ATLAS-1228
+2022-Q3,2022-07-01,2022-07-28,Phase 4 Loyalty and Personalization,observability,Fatima Noor,amber,30,12,4,"connect loyalty, promotions, and segmentation; focus on observability; risk: vendor approval.",ATLAS-5713
+2022-Q3,2022-07-01,2022-07-28,Phase 4 Loyalty and Personalization,data,Ben Carter,green,38,7,8,"connect loyalty, promotions, and segmentation; focus on data; risk: capacity risk.",ATLAS-5708
+2022-Q3,2022-07-01,2022-07-28,Phase 4 Loyalty and Personalization,support,Ben Carter,green,46,22,6,"connect loyalty, promotions, and segmentation; focus on support; risk: on-call load.",ATLAS-4097
+2022-Q3,2022-08-01,2022-08-28,Phase 4 Loyalty and Personalization,platform,Iris Wang,green,23,20,4,"connect loyalty, promotions, and segmentation; focus on platform; risk: vendor approval.",ATLAS-5191
+2022-Q3,2022-08-01,2022-08-28,Phase 4 Loyalty and Personalization,checkout,Kim Tan,green,90,3,8,"connect loyalty, promotions, and segmentation; focus on checkout; risk: vendor approval.",ATLAS-2696
+2022-Q3,2022-08-01,2022-08-28,Phase 4 Loyalty and Personalization,payments,Nora Singh,red,58,12,2,"connect loyalty, promotions, and segmentation; focus on payments; risk: capacity risk.",ATLAS-4885
+2022-Q3,2022-08-01,2022-08-28,Phase 4 Loyalty and Personalization,observability,Yara Haddad,amber,81,17,2,"connect loyalty, promotions, and segmentation; focus on observability; risk: dependency drift.",ATLAS-2157
+2022-Q3,2022-08-01,2022-08-28,Phase 4 Loyalty and Personalization,data,Maya Chen,green,90,5,2,"connect loyalty, promotions, and segmentation; focus on data; risk: customer readiness.",ATLAS-4647
+2022-Q3,2022-08-01,2022-08-28,Phase 4 Loyalty and Personalization,support,Owen Brooks,green,67,21,6,"connect loyalty, promotions, and segmentation; focus on support; risk: capacity risk.",ATLAS-5426
+2022-Q3,2022-09-01,2022-09-28,Phase 4 Loyalty and Personalization,platform,Luca Moretti,green,72,13,5,"connect loyalty, promotions, and segmentation; focus on platform; risk: on-call load.",ATLAS-3647
+2022-Q3,2022-09-01,2022-09-28,Phase 4 Loyalty and Personalization,checkout,Noah Evans,amber,24,10,8,"connect loyalty, promotions, and segmentation; focus on checkout; risk: vendor approval.",ATLAS-2482
+2022-Q3,2022-09-01,2022-09-28,Phase 4 Loyalty and Personalization,payments,Grace Kim,green,76,18,4,"connect loyalty, promotions, and segmentation; focus on payments; risk: capacity risk.",ATLAS-1837
+2022-Q3,2022-09-01,2022-09-28,Phase 4 Loyalty and Personalization,observability,Luca Moretti,green,33,19,4,"connect loyalty, promotions, and segmentation; focus on observability; risk: dependency drift.",ATLAS-4981
+2022-Q3,2022-09-01,2022-09-28,Phase 4 Loyalty and Personalization,data,Iris Wang,amber,19,18,5,"connect loyalty, promotions, and segmentation; focus on data; risk: test data gap.",ATLAS-6127
+2022-Q3,2022-09-01,2022-09-28,Phase 4 Loyalty and Personalization,support,Victor Silva,red,86,24,3,"connect loyalty, promotions, and segmentation; focus on support; risk: dependency drift.",ATLAS-3812
+2022-Q4,2022-10-01,2022-10-28,Phase 4 Loyalty and Personalization,platform,Mateo Garcia,green,92,13,2,"connect loyalty, promotions, and segmentation; focus on platform; risk: dependency drift.",ATLAS-5442
+2022-Q4,2022-10-01,2022-10-28,Phase 4 Loyalty and Personalization,checkout,Jon Bell,amber,96,17,5,"connect loyalty, promotions, and segmentation; focus on checkout; risk: customer readiness.",ATLAS-2872
+2022-Q4,2022-10-01,2022-10-28,Phase 4 Loyalty and Personalization,payments,Kim Tan,green,21,5,3,"connect loyalty, promotions, and segmentation; focus on payments; risk: on-call load.",ATLAS-3027
+2022-Q4,2022-10-01,2022-10-28,Phase 4 Loyalty and Personalization,observability,Aisha Khan,green,89,24,4,"connect loyalty, promotions, and segmentation; focus on observability; risk: on-call load.",ATLAS-3790
+2022-Q4,2022-10-01,2022-10-28,Phase 4 Loyalty and Personalization,data,Priya Nair,green,89,21,7,"connect loyalty, promotions, and segmentation; focus on data; risk: on-call load.",ATLAS-3356
+2022-Q4,2022-10-01,2022-10-28,Phase 4 Loyalty and Personalization,support,Ravi Patel,amber,72,3,4,"connect loyalty, promotions, and segmentation; focus on support; risk: dependency drift.",ATLAS-5425
+2022-Q4,2022-11-01,2022-11-28,Phase 4 Loyalty and Personalization,platform,Owen Brooks,red,23,6,7,"connect loyalty, promotions, and segmentation; focus on platform; risk: dependency drift.",ATLAS-1369
+2022-Q4,2022-11-01,2022-11-28,Phase 4 Loyalty and Personalization,checkout,Maya Chen,amber,38,24,7,"connect loyalty, promotions, and segmentation; focus on checkout; risk: customer readiness.",ATLAS-1460
+2022-Q4,2022-11-01,2022-11-28,Phase 4 Loyalty and Personalization,payments,Ben Carter,amber,79,6,7,"connect loyalty, promotions, and segmentation; focus on payments; risk: dependency drift.",ATLAS-1499
+2022-Q4,2022-11-01,2022-11-28,Phase 4 Loyalty and Personalization,observability,Aisha Khan,green,34,6,4,"connect loyalty, promotions, and segmentation; focus on observability; risk: dependency drift.",ATLAS-3643
+2022-Q4,2022-11-01,2022-11-28,Phase 4 Loyalty and Personalization,data,Fatima Noor,amber,31,19,8,"connect loyalty, promotions, and segmentation; focus on data; risk: customer readiness.",ATLAS-1823
+2022-Q4,2022-11-01,2022-11-28,Phase 4 Loyalty and Personalization,support,Sara Novak,red,66,19,3,"connect loyalty, promotions, and segmentation; focus on support; risk: schema migration.",ATLAS-2569
+2022-Q4,2022-12-01,2022-12-28,Phase 4 Loyalty and Personalization,platform,Grace Kim,red,25,18,8,"connect loyalty, promotions, and segmentation; focus on platform; risk: schema migration.",ATLAS-1867
+2022-Q4,2022-12-01,2022-12-28,Phase 4 Loyalty and Personalization,checkout,Nora Singh,red,26,22,7,"connect loyalty, promotions, and segmentation; focus on checkout; risk: test data gap.",ATLAS-2713
+2022-Q4,2022-12-01,2022-12-28,Phase 4 Loyalty and Personalization,payments,Aisha Khan,amber,80,17,6,"connect loyalty, promotions, and segmentation; focus on payments; risk: test data gap.",ATLAS-5399
+2022-Q4,2022-12-01,2022-12-28,Phase 4 Loyalty and Personalization,observability,Theo Martin,amber,49,8,3,"connect loyalty, promotions, and segmentation; focus on observability; risk: test data gap.",ATLAS-4604
+2022-Q4,2022-12-01,2022-12-28,Phase 4 Loyalty and Personalization,data,Fatima Noor,amber,92,22,7,"connect loyalty, promotions, and segmentation; focus on data; risk: dependency drift.",ATLAS-5247
+2022-Q4,2022-12-01,2022-12-28,Phase 4 Loyalty and Personalization,support,Theo Martin,green,47,22,6,"connect loyalty, promotions, and segmentation; focus on support; risk: on-call load.",ATLAS-2728
+2023-Q1,2023-01-01,2023-01-28,Phase 5 Resilience and Observability,platform,Jon Bell,green,91,19,4,"burn down incidents, improve SLOs, add tracing; focus on platform; risk: on-call load.",ATLAS-5424
+2023-Q1,2023-01-01,2023-01-28,Phase 5 Resilience and Observability,checkout,Anika Sharma,red,38,10,5,"burn down incidents, improve SLOs, add tracing; focus on checkout; risk: customer readiness.",ATLAS-3556
+2023-Q1,2023-01-01,2023-01-28,Phase 5 Resilience and Observability,payments,Owen Brooks,amber,44,8,7,"burn down incidents, improve SLOs, add tracing; focus on payments; risk: customer readiness.",ATLAS-1330
+2023-Q1,2023-01-01,2023-01-28,Phase 5 Resilience and Observability,observability,Victor Silva,red,27,7,7,"burn down incidents, improve SLOs, add tracing; focus on observability; risk: customer readiness.",ATLAS-3794
+2023-Q1,2023-01-01,2023-01-28,Phase 5 Resilience and Observability,data,Ravi Patel,amber,58,15,0,"burn down incidents, improve SLOs, add tracing; focus on data; risk: on-call load.",ATLAS-4914
+2023-Q1,2023-01-01,2023-01-28,Phase 5 Resilience and Observability,support,Nora Singh,amber,96,4,5,"burn down incidents, improve SLOs, add tracing; focus on support; risk: schema migration.",ATLAS-1653
+2023-Q1,2023-02-01,2023-02-28,Phase 5 Resilience and Observability,platform,Luca Moretti,red,75,21,4,"burn down incidents, improve SLOs, add tracing; focus on platform; risk: test data gap.",ATLAS-2203
+2023-Q1,2023-02-01,2023-02-28,Phase 5 Resilience and Observability,checkout,Grace Kim,amber,27,16,7,"burn down incidents, improve SLOs, add tracing; focus on checkout; risk: customer readiness.",ATLAS-1164
+2023-Q1,2023-02-01,2023-02-28,Phase 5 Resilience and Observability,payments,Kim Tan,green,24,18,7,"burn down incidents, improve SLOs, add tracing; focus on payments; risk: capacity risk.",ATLAS-1995
+2023-Q1,2023-02-01,2023-02-28,Phase 5 Resilience and Observability,observability,Theo Martin,amber,24,3,0,"burn down incidents, improve SLOs, add tracing; focus on observability; risk: customer readiness.",ATLAS-2694
+2023-Q1,2023-02-01,2023-02-28,Phase 5 Resilience and Observability,data,Elena Petrova,green,87,12,0,"burn down incidents, improve SLOs, add tracing; focus on data; risk: customer readiness.",ATLAS-4137
+2023-Q1,2023-02-01,2023-02-28,Phase 5 Resilience and Observability,support,Ravi Patel,amber,21,5,4,"burn down incidents, improve SLOs, add tracing; focus on support; risk: schema migration.",ATLAS-4071
+2023-Q1,2023-03-01,2023-03-28,Phase 5 Resilience and Observability,platform,Dmitri Volkov,green,47,21,8,"burn down incidents, improve SLOs, add tracing; focus on platform; risk: vendor approval.",ATLAS-2020
+2023-Q1,2023-03-01,2023-03-28,Phase 5 Resilience and Observability,checkout,Iris Wang,red,82,11,6,"burn down incidents, improve SLOs, add tracing; focus on checkout; risk: capacity risk.",ATLAS-1450
+2023-Q1,2023-03-01,2023-03-28,Phase 5 Resilience and Observability,payments,Harper Lee,amber,69,7,8,"burn down incidents, improve SLOs, add tracing; focus on payments; risk: schema migration.",ATLAS-3511
+2023-Q1,2023-03-01,2023-03-28,Phase 5 Resilience and Observability,observability,Nora Singh,amber,33,20,2,"burn down incidents, improve SLOs, add tracing; focus on observability; risk: schema migration.",ATLAS-1692
+2023-Q1,2023-03-01,2023-03-28,Phase 5 Resilience and Observability,data,Ravi Patel,red,80,22,6,"burn down incidents, improve SLOs, add tracing; focus on data; risk: schema migration.",ATLAS-1853
+2023-Q1,2023-03-01,2023-03-28,Phase 5 Resilience and Observability,support,Luca Moretti,amber,51,18,4,"burn down incidents, improve SLOs, add tracing; focus on support; risk: dependency drift.",ATLAS-5509
+2023-Q2,2023-04-01,2023-04-28,Phase 5 Resilience and Observability,platform,Priya Nair,amber,25,17,3,"burn down incidents, improve SLOs, add tracing; focus on platform; risk: capacity risk.",ATLAS-2977
+2023-Q2,2023-04-01,2023-04-28,Phase 5 Resilience and Observability,checkout,Samir Rao,red,90,24,4,"burn down incidents, improve SLOs, add tracing; focus on checkout; risk: dependency drift.",ATLAS-3049
+2023-Q2,2023-04-01,2023-04-28,Phase 5 Resilience and Observability,payments,Iris Wang,green,25,12,1,"burn down incidents, improve SLOs, add tracing; focus on payments; risk: on-call load.",ATLAS-5400
+2023-Q2,2023-04-01,2023-04-28,Phase 5 Resilience and Observability,observability,Maya Chen,green,95,17,1,"burn down incidents, improve SLOs, add tracing; focus on observability; risk: on-call load.",ATLAS-3671
+2023-Q2,2023-04-01,2023-04-28,Phase 5 Resilience and Observability,data,Luca Moretti,amber,26,5,8,"burn down incidents, improve SLOs, add tracing; focus on data; risk: capacity risk.",ATLAS-1726
+2023-Q2,2023-04-01,2023-04-28,Phase 5 Resilience and Observability,support,Anika Sharma,red,94,23,2,"burn down incidents, improve SLOs, add tracing; focus on support; risk: test data gap.",ATLAS-4582
+2023-Q2,2023-05-01,2023-05-28,Phase 5 Resilience and Observability,platform,Kim Tan,amber,75,7,8,"burn down incidents, improve SLOs, add tracing; focus on platform; risk: on-call load.",ATLAS-1447
+2023-Q2,2023-05-01,2023-05-28,Phase 5 Resilience and Observability,checkout,Nora Singh,red,35,18,0,"burn down incidents, improve SLOs, add tracing; focus on checkout; risk: schema migration.",ATLAS-6080
+2023-Q2,2023-05-01,2023-05-28,Phase 5 Resilience and Observability,payments,Aisha Khan,green,36,9,3,"burn down incidents, improve SLOs, add tracing; focus on payments; risk: test data gap.",ATLAS-2354
+2023-Q2,2023-05-01,2023-05-28,Phase 5 Resilience and Observability,observability,Luca Moretti,amber,26,21,1,"burn down incidents, improve SLOs, add tracing; focus on observability; risk: customer readiness.",ATLAS-3014
+2023-Q2,2023-05-01,2023-05-28,Phase 5 Resilience and Observability,data,Aisha Khan,amber,95,12,6,"burn down incidents, improve SLOs, add tracing; focus on data; risk: on-call load.",ATLAS-2798
+2023-Q2,2023-05-01,2023-05-28,Phase 5 Resilience and Observability,support,Dmitri Volkov,red,81,3,3,"burn down incidents, improve SLOs, add tracing; focus on support; risk: schema migration.",ATLAS-3304
+2023-Q2,2023-06-01,2023-06-28,Phase 5 Resilience and Observability,platform,Ben Carter,green,30,6,7,"burn down incidents, improve SLOs, add tracing; focus on platform; risk: schema migration.",ATLAS-3061
+2023-Q2,2023-06-01,2023-06-28,Phase 5 Resilience and Observability,checkout,Fatima Noor,amber,44,9,7,"burn down incidents, improve SLOs, add tracing; focus on checkout; risk: vendor approval.",ATLAS-1440
+2023-Q2,2023-06-01,2023-06-28,Phase 5 Resilience and Observability,payments,Sara Novak,green,72,18,6,"burn down incidents, improve SLOs, add tracing; focus on payments; risk: schema migration.",ATLAS-1340
+2023-Q2,2023-06-01,2023-06-28,Phase 5 Resilience and Observability,observability,Iris Wang,green,31,10,4,"burn down incidents, improve SLOs, add tracing; focus on observability; risk: schema migration.",ATLAS-1230
+2023-Q2,2023-06-01,2023-06-28,Phase 5 Resilience and Observability,data,Kim Tan,green,66,20,6,"burn down incidents, improve SLOs, add tracing; focus on data; risk: on-call load.",ATLAS-1020
+2023-Q2,2023-06-01,2023-06-28,Phase 5 Resilience and Observability,support,Anika Sharma,amber,29,17,0,"burn down incidents, improve SLOs, add tracing; focus on support; risk: vendor approval.",ATLAS-5511
+2023-Q3,2023-07-01,2023-07-28,Phase 5 Resilience and Observability,platform,Dmitri Volkov,amber,83,15,7,"burn down incidents, improve SLOs, add tracing; focus on platform; risk: test data gap.",ATLAS-6061
+2023-Q3,2023-07-01,2023-07-28,Phase 5 Resilience and Observability,checkout,Maya Chen,amber,64,8,1,"burn down incidents, improve SLOs, add tracing; focus on checkout; risk: capacity risk.",ATLAS-5666
+2023-Q3,2023-07-01,2023-07-28,Phase 5 Resilience and Observability,payments,Harper Lee,amber,70,20,2,"burn down incidents, improve SLOs, add tracing; focus on payments; risk: schema migration.",ATLAS-1610
+2023-Q3,2023-07-01,2023-07-28,Phase 5 Resilience and Observability,observability,Elena Petrova,green,73,15,0,"burn down incidents, improve SLOs, add tracing; focus on observability; risk: customer readiness.",ATLAS-1648
+2023-Q3,2023-07-01,2023-07-28,Phase 5 Resilience and Observability,data,Owen Brooks,green,59,22,2,"burn down incidents, improve SLOs, add tracing; focus on data; risk: capacity risk.",ATLAS-1326
+2023-Q3,2023-07-01,2023-07-28,Phase 5 Resilience and Observability,support,Iris Wang,amber,81,20,5,"burn down incidents, improve SLOs, add tracing; focus on support; risk: dependency drift.",ATLAS-1308
+2023-Q3,2023-08-01,2023-08-28,Phase 5 Resilience and Observability,platform,Nora Singh,green,94,22,4,"burn down incidents, improve SLOs, add tracing; focus on platform; risk: schema migration.",ATLAS-3062
+2023-Q3,2023-08-01,2023-08-28,Phase 5 Resilience and Observability,checkout,Ben Carter,red,90,19,4,"burn down incidents, improve SLOs, add tracing; focus on checkout; risk: dependency drift.",ATLAS-3888
+2023-Q3,2023-08-01,2023-08-28,Phase 5 Resilience and Observability,payments,Victor Silva,red,73,21,7,"burn down incidents, improve SLOs, add tracing; focus on payments; risk: schema migration.",ATLAS-4195
+2023-Q3,2023-08-01,2023-08-28,Phase 5 Resilience and Observability,observability,Grace Kim,amber,57,22,2,"burn down incidents, improve SLOs, add tracing; focus on observability; risk: test data gap.",ATLAS-6182
+2023-Q3,2023-08-01,2023-08-28,Phase 5 Resilience and Observability,data,Jon Bell,red,57,12,7,"burn down incidents, improve SLOs, add tracing; focus on data; risk: dependency drift.",ATLAS-3794
+2023-Q3,2023-08-01,2023-08-28,Phase 5 Resilience and Observability,support,Iris Wang,green,69,3,5,"burn down incidents, improve SLOs, add tracing; focus on support; risk: capacity risk.",ATLAS-4050
+2023-Q3,2023-09-01,2023-09-28,Phase 5 Resilience and Observability,platform,Priya Nair,red,42,4,7,"burn down incidents, improve SLOs, add tracing; focus on platform; risk: vendor approval.",ATLAS-3380
+2023-Q3,2023-09-01,2023-09-28,Phase 5 Resilience and Observability,checkout,Grace Kim,green,22,12,7,"burn down incidents, improve SLOs, add tracing; focus on checkout; risk: dependency drift.",ATLAS-2294
+2023-Q3,2023-09-01,2023-09-28,Phase 5 Resilience and Observability,payments,Anika Sharma,amber,56,13,6,"burn down incidents, improve SLOs, add tracing; focus on payments; risk: customer readiness.",ATLAS-2868
+2023-Q3,2023-09-01,2023-09-28,Phase 5 Resilience and Observability,observability,Harper Lee,green,72,18,6,"burn down incidents, improve SLOs, add tracing; focus on observability; risk: capacity risk.",ATLAS-3040
+2023-Q3,2023-09-01,2023-09-28,Phase 5 Resilience and Observability,data,Theo Martin,green,53,4,5,"burn down incidents, improve SLOs, add tracing; focus on data; risk: on-call load.",ATLAS-5247
+2023-Q3,2023-09-01,2023-09-28,Phase 5 Resilience and Observability,support,Grace Kim,green,94,7,6,"burn down incidents, improve SLOs, add tracing; focus on support; risk: customer readiness.",ATLAS-2857
+2023-Q4,2023-10-01,2023-10-28,Phase 5 Resilience and Observability,platform,Dmitri Volkov,amber,28,20,2,"burn down incidents, improve SLOs, add tracing; focus on platform; risk: schema migration.",ATLAS-1092
+2023-Q4,2023-10-01,2023-10-28,Phase 5 Resilience and Observability,checkout,Aisha Khan,amber,88,15,8,"burn down incidents, improve SLOs, add tracing; focus on checkout; risk: on-call load.",ATLAS-4610
+2023-Q4,2023-10-01,2023-10-28,Phase 5 Resilience and Observability,payments,Elena Petrova,red,95,15,8,"burn down incidents, improve SLOs, add tracing; focus on payments; risk: capacity risk.",ATLAS-1284
+2023-Q4,2023-10-01,2023-10-28,Phase 5 Resilience and Observability,observability,Jon Bell,amber,96,24,0,"burn down incidents, improve SLOs, add tracing; focus on observability; risk: test data gap.",ATLAS-5414
+2023-Q4,2023-10-01,2023-10-28,Phase 5 Resilience and Observability,data,Aisha Khan,amber,52,20,4,"burn down incidents, improve SLOs, add tracing; focus on data; risk: capacity risk.",ATLAS-5871
+2023-Q4,2023-10-01,2023-10-28,Phase 5 Resilience and Observability,support,Owen Brooks,green,71,18,4,"burn down incidents, improve SLOs, add tracing; focus on support; risk: schema migration.",ATLAS-4418
+2023-Q4,2023-11-01,2023-11-28,Phase 5 Resilience and Observability,platform,Ben Carter,green,67,9,8,"burn down incidents, improve SLOs, add tracing; focus on platform; risk: test data gap.",ATLAS-3979
+2023-Q4,2023-11-01,2023-11-28,Phase 5 Resilience and Observability,checkout,Owen Brooks,amber,50,17,8,"burn down incidents, improve SLOs, add tracing; focus on checkout; risk: dependency drift.",ATLAS-2745
+2023-Q4,2023-11-01,2023-11-28,Phase 5 Resilience and Observability,payments,Aisha Khan,green,83,7,1,"burn down incidents, improve SLOs, add tracing; focus on payments; risk: capacity risk.",ATLAS-1128
+2023-Q4,2023-11-01,2023-11-28,Phase 5 Resilience and Observability,observability,Anika Sharma,red,82,3,6,"burn down incidents, improve SLOs, add tracing; focus on observability; risk: on-call load.",ATLAS-1239
+2023-Q4,2023-11-01,2023-11-28,Phase 5 Resilience and Observability,data,Priya Nair,amber,80,13,4,"burn down incidents, improve SLOs, add tracing; focus on data; risk: customer readiness.",ATLAS-1867
+2023-Q4,2023-11-01,2023-11-28,Phase 5 Resilience and Observability,support,Luca Moretti,green,40,18,5,"burn down incidents, improve SLOs, add tracing; focus on support; risk: schema migration.",ATLAS-2845
+2023-Q4,2023-12-01,2023-12-28,Phase 5 Resilience and Observability,platform,Mateo Garcia,green,78,11,4,"burn down incidents, improve SLOs, add tracing; focus on platform; risk: vendor approval.",ATLAS-2081
+2023-Q4,2023-12-01,2023-12-28,Phase 5 Resilience and Observability,checkout,Iris Wang,amber,78,5,6,"burn down incidents, improve SLOs, add tracing; focus on checkout; risk: capacity risk.",ATLAS-1494
+2023-Q4,2023-12-01,2023-12-28,Phase 5 Resilience and Observability,payments,Nora Singh,red,47,5,7,"burn down incidents, improve SLOs, add tracing; focus on payments; risk: capacity risk.",ATLAS-1678
+2023-Q4,2023-12-01,2023-12-28,Phase 5 Resilience and Observability,observability,Samir Rao,amber,44,23,3,"burn down incidents, improve SLOs, add tracing; focus on observability; risk: schema migration.",ATLAS-1417
+2023-Q4,2023-12-01,2023-12-28,Phase 5 Resilience and Observability,data,Samir Rao,green,87,3,3,"burn down incidents, improve SLOs, add tracing; focus on data; risk: vendor approval.",ATLAS-1540
+2023-Q4,2023-12-01,2023-12-28,Phase 5 Resilience and Observability,support,Grace Kim,red,70,24,5,"burn down incidents, improve SLOs, add tracing; focus on support; risk: test data gap.",ATLAS-5059
+2024-Q1,2024-01-01,2024-01-28,Phase 6 Order Orchestration,platform,Aisha Khan,amber,53,5,8,orchestrate inventory reservation and async order ledger; focus on platform; risk: schema migration.,ATLAS-2183
+2024-Q1,2024-01-01,2024-01-28,Phase 6 Order Orchestration,checkout,Ben Carter,amber,18,22,0,orchestrate inventory reservation and async order ledger; focus on checkout; risk: vendor approval.,ATLAS-1831
+2024-Q1,2024-01-01,2024-01-28,Phase 6 Order Orchestration,payments,Sara Novak,amber,37,20,5,orchestrate inventory reservation and async order ledger; focus on payments; risk: customer readiness.,ATLAS-3045
+2024-Q1,2024-01-01,2024-01-28,Phase 6 Order Orchestration,observability,Theo Martin,green,31,21,4,orchestrate inventory reservation and async order ledger; focus on observability; risk: customer readiness.,ATLAS-4232
+2024-Q1,2024-01-01,2024-01-28,Phase 6 Order Orchestration,data,Nora Singh,amber,63,18,2,orchestrate inventory reservation and async order ledger; focus on data; risk: customer readiness.,ATLAS-4743
+2024-Q1,2024-01-01,2024-01-28,Phase 6 Order Orchestration,support,Fatima Noor,green,19,22,8,orchestrate inventory reservation and async order ledger; focus on support; risk: schema migration.,ATLAS-1843
+2024-Q1,2024-02-01,2024-02-28,Phase 6 Order Orchestration,platform,Anika Sharma,green,68,18,3,orchestrate inventory reservation and async order ledger; focus on platform; risk: test data gap.,ATLAS-3552
+2024-Q1,2024-02-01,2024-02-28,Phase 6 Order Orchestration,checkout,Theo Martin,amber,91,9,1,orchestrate inventory reservation and async order ledger; focus on checkout; risk: test data gap.,ATLAS-5554
+2024-Q1,2024-02-01,2024-02-28,Phase 6 Order Orchestration,payments,Kim Tan,amber,50,12,7,orchestrate inventory reservation and async order ledger; focus on payments; risk: vendor approval.,ATLAS-5194
+2024-Q1,2024-02-01,2024-02-28,Phase 6 Order Orchestration,observability,Jon Bell,amber,65,5,5,orchestrate inventory reservation and async order ledger; focus on observability; risk: dependency drift.,ATLAS-6004
+2024-Q1,2024-02-01,2024-02-28,Phase 6 Order Orchestration,data,Samir Rao,red,45,12,7,orchestrate inventory reservation and async order ledger; focus on data; risk: on-call load.,ATLAS-4308
+2024-Q1,2024-02-01,2024-02-28,Phase 6 Order Orchestration,support,Grace Kim,green,60,18,1,orchestrate inventory reservation and async order ledger; focus on support; risk: capacity risk.,ATLAS-3930
+2024-Q1,2024-03-01,2024-03-28,Phase 6 Order Orchestration,platform,Fatima Noor,green,93,8,1,orchestrate inventory reservation and async order ledger; focus on platform; risk: schema migration.,ATLAS-5539
+2024-Q1,2024-03-01,2024-03-28,Phase 6 Order Orchestration,checkout,Anika Sharma,red,23,14,3,orchestrate inventory reservation and async order ledger; focus on checkout; risk: dependency drift.,ATLAS-2665
+2024-Q1,2024-03-01,2024-03-28,Phase 6 Order Orchestration,payments,Noah Evans,green,52,3,0,orchestrate inventory reservation and async order ledger; focus on payments; risk: customer readiness.,ATLAS-3113
+2024-Q1,2024-03-01,2024-03-28,Phase 6 Order Orchestration,observability,Nora Singh,red,55,9,8,orchestrate inventory reservation and async order ledger; focus on observability; risk: schema migration.,ATLAS-2276
+2024-Q1,2024-03-01,2024-03-28,Phase 6 Order Orchestration,data,Elena Petrova,amber,29,22,7,orchestrate inventory reservation and async order ledger; focus on data; risk: test data gap.,ATLAS-4717
+2024-Q1,2024-03-01,2024-03-28,Phase 6 Order Orchestration,support,Nora Singh,green,27,5,3,orchestrate inventory reservation and async order ledger; focus on support; risk: dependency drift.,ATLAS-2343
+2024-Q2,2024-04-01,2024-04-28,Phase 6 Order Orchestration,platform,Priya Nair,green,33,23,0,orchestrate inventory reservation and async order ledger; focus on platform; risk: capacity risk.,ATLAS-3947
+2024-Q2,2024-04-01,2024-04-28,Phase 6 Order Orchestration,checkout,Luca Moretti,amber,59,3,7,orchestrate inventory reservation and async order ledger; focus on checkout; risk: customer readiness.,ATLAS-4794
+2024-Q2,2024-04-01,2024-04-28,Phase 6 Order Orchestration,payments,Priya Nair,amber,34,8,0,orchestrate inventory reservation and async order ledger; focus on payments; risk: capacity risk.,ATLAS-2498
+2024-Q2,2024-04-01,2024-04-28,Phase 6 Order Orchestration,observability,Jon Bell,green,57,8,2,orchestrate inventory reservation and async order ledger; focus on observability; risk: on-call load.,ATLAS-5240
+2024-Q2,2024-04-01,2024-04-28,Phase 6 Order Orchestration,data,Owen Brooks,red,64,11,6,orchestrate inventory reservation and async order ledger; focus on data; risk: vendor approval.,ATLAS-4981
+2024-Q2,2024-04-01,2024-04-28,Phase 6 Order Orchestration,support,Dmitri Volkov,red,94,13,7,orchestrate inventory reservation and async order ledger; focus on support; risk: test data gap.,ATLAS-4623
+2024-Q2,2024-05-01,2024-05-28,Phase 6 Order Orchestration,platform,Nora Singh,red,71,4,7,orchestrate inventory reservation and async order ledger; focus on platform; risk: customer readiness.,ATLAS-4651
+2024-Q2,2024-05-01,2024-05-28,Phase 6 Order Orchestration,checkout,Elena Petrova,amber,61,10,4,orchestrate inventory reservation and async order ledger; focus on checkout; risk: customer readiness.,ATLAS-5573
+2024-Q2,2024-05-01,2024-05-28,Phase 6 Order Orchestration,payments,Kim Tan,amber,34,24,6,orchestrate inventory reservation and async order ledger; focus on payments; risk: on-call load.,ATLAS-2502
+2024-Q2,2024-05-01,2024-05-28,Phase 6 Order Orchestration,observability,Iris Wang,amber,73,15,6,orchestrate inventory reservation and async order ledger; focus on observability; risk: customer readiness.,ATLAS-4509
+2024-Q2,2024-05-01,2024-05-28,Phase 6 Order Orchestration,data,Iris Wang,red,84,6,4,orchestrate inventory reservation and async order ledger; focus on data; risk: capacity risk.,ATLAS-4762
+2024-Q2,2024-05-01,2024-05-28,Phase 6 Order Orchestration,support,Dmitri Volkov,red,54,3,6,orchestrate inventory reservation and async order ledger; focus on support; risk: on-call load.,ATLAS-2505
+2024-Q2,2024-06-01,2024-06-28,Phase 6 Order Orchestration,platform,Theo Martin,red,89,8,1,orchestrate inventory reservation and async order ledger; focus on platform; risk: on-call load.,ATLAS-5887
+2024-Q2,2024-06-01,2024-06-28,Phase 6 Order Orchestration,checkout,Maya Chen,red,26,16,4,orchestrate inventory reservation and async order ledger; focus on checkout; risk: dependency drift.,ATLAS-4783
+2024-Q2,2024-06-01,2024-06-28,Phase 6 Order Orchestration,payments,Theo Martin,green,95,17,1,orchestrate inventory reservation and async order ledger; focus on payments; risk: on-call load.,ATLAS-5907
+2024-Q2,2024-06-01,2024-06-28,Phase 6 Order Orchestration,observability,Maya Chen,amber,33,20,1,orchestrate inventory reservation and async order ledger; focus on observability; risk: schema migration.,ATLAS-4072
+2024-Q2,2024-06-01,2024-06-28,Phase 6 Order Orchestration,data,Mateo Garcia,green,73,14,4,orchestrate inventory reservation and async order ledger; focus on data; risk: dependency drift.,ATLAS-2477
+2024-Q2,2024-06-01,2024-06-28,Phase 6 Order Orchestration,support,Elena Petrova,green,29,15,0,orchestrate inventory reservation and async order ledger; focus on support; risk: capacity risk.,ATLAS-6109
+2024-Q3,2024-07-01,2024-07-28,Phase 6 Order Orchestration,platform,Kim Tan,green,91,15,8,orchestrate inventory reservation and async order ledger; focus on platform; risk: vendor approval.,ATLAS-5075
+2024-Q3,2024-07-01,2024-07-28,Phase 6 Order Orchestration,checkout,Ben Carter,amber,67,18,2,orchestrate inventory reservation and async order ledger; focus on checkout; risk: schema migration.,ATLAS-2215
+2024-Q3,2024-07-01,2024-07-28,Phase 6 Order Orchestration,payments,Grace Kim,red,87,16,2,orchestrate inventory reservation and async order ledger; focus on payments; risk: vendor approval.,ATLAS-1352
+2024-Q3,2024-07-01,2024-07-28,Phase 6 Order Orchestration,observability,Owen Brooks,red,20,4,7,orchestrate inventory reservation and async order ledger; focus on observability; risk: vendor approval.,ATLAS-5835
+2024-Q3,2024-07-01,2024-07-28,Phase 6 Order Orchestration,data,Ravi Patel,amber,83,13,0,orchestrate inventory reservation and async order ledger; focus on data; risk: dependency drift.,ATLAS-5992
+2024-Q3,2024-07-01,2024-07-28,Phase 6 Order Orchestration,support,Samir Rao,red,60,23,1,orchestrate inventory reservation and async order ledger; focus on support; risk: customer readiness.,ATLAS-5895
+2024-Q3,2024-08-01,2024-08-28,Phase 6 Order Orchestration,platform,Kim Tan,amber,79,14,3,orchestrate inventory reservation and async order ledger; focus on platform; risk: on-call load.,ATLAS-1443
+2024-Q3,2024-08-01,2024-08-28,Phase 6 Order Orchestration,checkout,Theo Martin,red,71,17,5,orchestrate inventory reservation and async order ledger; focus on checkout; risk: customer readiness.,ATLAS-2276
+2024-Q3,2024-08-01,2024-08-28,Phase 6 Order Orchestration,payments,Noah Evans,green,28,6,6,orchestrate inventory reservation and async order ledger; focus on payments; risk: dependency drift.,ATLAS-3381
+2024-Q3,2024-08-01,2024-08-28,Phase 6 Order Orchestration,observability,Ravi Patel,green,78,16,3,orchestrate inventory reservation and async order ledger; focus on observability; risk: on-call load.,ATLAS-4526
+2024-Q3,2024-08-01,2024-08-28,Phase 6 Order Orchestration,data,Harper Lee,amber,63,20,5,orchestrate inventory reservation and async order ledger; focus on data; risk: test data gap.,ATLAS-2921
+2024-Q3,2024-08-01,2024-08-28,Phase 6 Order Orchestration,support,Luca Moretti,green,77,18,8,orchestrate inventory reservation and async order ledger; focus on support; risk: dependency drift.,ATLAS-4857
+2024-Q3,2024-09-01,2024-09-28,Phase 6 Order Orchestration,platform,Victor Silva,red,53,17,5,orchestrate inventory reservation and async order ledger; focus on platform; risk: dependency drift.,ATLAS-4888
+2024-Q3,2024-09-01,2024-09-28,Phase 6 Order Orchestration,checkout,Jon Bell,red,42,19,1,orchestrate inventory reservation and async order ledger; focus on checkout; risk: schema migration.,ATLAS-1007
+2024-Q3,2024-09-01,2024-09-28,Phase 6 Order Orchestration,payments,Samir Rao,amber,42,4,3,orchestrate inventory reservation and async order ledger; focus on payments; risk: dependency drift.,ATLAS-3137
+2024-Q3,2024-09-01,2024-09-28,Phase 6 Order Orchestration,observability,Owen Brooks,amber,24,23,8,orchestrate inventory reservation and async order ledger; focus on observability; risk: on-call load.,ATLAS-3951
+2024-Q3,2024-09-01,2024-09-28,Phase 6 Order Orchestration,data,Nora Singh,amber,28,8,2,orchestrate inventory reservation and async order ledger; focus on data; risk: on-call load.,ATLAS-2770
+2024-Q3,2024-09-01,2024-09-28,Phase 6 Order Orchestration,support,Samir Rao,green,63,11,3,orchestrate inventory reservation and async order ledger; focus on support; risk: schema migration.,ATLAS-5445
+2024-Q4,2024-10-01,2024-10-28,Phase 6 Order Orchestration,platform,Aisha Khan,amber,75,7,0,orchestrate inventory reservation and async order ledger; focus on platform; risk: schema migration.,ATLAS-2933
+2024-Q4,2024-10-01,2024-10-28,Phase 6 Order Orchestration,checkout,Owen Brooks,amber,83,17,4,orchestrate inventory reservation and async order ledger; focus on checkout; risk: vendor approval.,ATLAS-2930
+2024-Q4,2024-10-01,2024-10-28,Phase 6 Order Orchestration,payments,Theo Martin,amber,30,18,4,orchestrate inventory reservation and async order ledger; focus on payments; risk: schema migration.,ATLAS-5123
+2024-Q4,2024-10-01,2024-10-28,Phase 6 Order Orchestration,observability,Anika Sharma,red,29,6,8,orchestrate inventory reservation and async order ledger; focus on observability; risk: vendor approval.,ATLAS-5412
+2024-Q4,2024-10-01,2024-10-28,Phase 6 Order Orchestration,data,Elena Petrova,red,26,12,7,orchestrate inventory reservation and async order ledger; focus on data; risk: vendor approval.,ATLAS-3142
+2024-Q4,2024-10-01,2024-10-28,Phase 6 Order Orchestration,support,Aisha Khan,amber,79,13,1,orchestrate inventory reservation and async order ledger; focus on support; risk: schema migration.,ATLAS-1087
+2024-Q4,2024-11-01,2024-11-28,Phase 6 Order Orchestration,platform,Yara Haddad,green,56,18,6,orchestrate inventory reservation and async order ledger; focus on platform; risk: customer readiness.,ATLAS-1661
+2024-Q4,2024-11-01,2024-11-28,Phase 6 Order Orchestration,checkout,Jon Bell,amber,38,16,3,orchestrate inventory reservation and async order ledger; focus on checkout; risk: customer readiness.,ATLAS-5878
+2024-Q4,2024-11-01,2024-11-28,Phase 6 Order Orchestration,payments,Maya Chen,red,70,24,7,orchestrate inventory reservation and async order ledger; focus on payments; risk: schema migration.,ATLAS-3174
+2024-Q4,2024-11-01,2024-11-28,Phase 6 Order Orchestration,observability,Maya Chen,amber,87,9,3,orchestrate inventory reservation and async order ledger; focus on observability; risk: customer readiness.,ATLAS-1405
+2024-Q4,2024-11-01,2024-11-28,Phase 6 Order Orchestration,data,Harper Lee,green,57,23,0,orchestrate inventory reservation and async order ledger; focus on data; risk: on-call load.,ATLAS-3929
+2024-Q4,2024-11-01,2024-11-28,Phase 6 Order Orchestration,support,Fatima Noor,amber,51,5,6,orchestrate inventory reservation and async order ledger; focus on support; risk: on-call load.,ATLAS-3196
+2024-Q4,2024-12-01,2024-12-28,Phase 6 Order Orchestration,platform,Sara Novak,green,73,15,7,orchestrate inventory reservation and async order ledger; focus on platform; risk: schema migration.,ATLAS-2727
+2024-Q4,2024-12-01,2024-12-28,Phase 6 Order Orchestration,checkout,Theo Martin,green,34,5,1,orchestrate inventory reservation and async order ledger; focus on checkout; risk: vendor approval.,ATLAS-3315
+2024-Q4,2024-12-01,2024-12-28,Phase 6 Order Orchestration,payments,Victor Silva,red,28,6,2,orchestrate inventory reservation and async order ledger; focus on payments; risk: dependency drift.,ATLAS-2561
+2024-Q4,2024-12-01,2024-12-28,Phase 6 Order Orchestration,observability,Ravi Patel,red,55,23,8,orchestrate inventory reservation and async order ledger; focus on observability; risk: vendor approval.,ATLAS-3466
+2024-Q4,2024-12-01,2024-12-28,Phase 6 Order Orchestration,data,Luca Moretti,amber,94,17,7,orchestrate inventory reservation and async order ledger; focus on data; risk: vendor approval.,ATLAS-3272
+2024-Q4,2024-12-01,2024-12-28,Phase 6 Order Orchestration,support,Victor Silva,amber,50,21,7,orchestrate inventory reservation and async order ledger; focus on support; risk: customer readiness.,ATLAS-2060
+2025-Q1,2025-01-01,2025-01-28,Phase 7 Checkout Cutover,platform,Dmitri Volkov,amber,75,9,5,route traffic to Atlas and deprecate monolith paths; focus on platform; risk: customer readiness.,ATLAS-5730
+2025-Q1,2025-01-01,2025-01-28,Phase 7 Checkout Cutover,checkout,Owen Brooks,amber,87,18,8,route traffic to Atlas and deprecate monolith paths; focus on checkout; risk: vendor approval.,ATLAS-5244
+2025-Q1,2025-01-01,2025-01-28,Phase 7 Checkout Cutover,payments,Jon Bell,red,81,21,2,route traffic to Atlas and deprecate monolith paths; focus on payments; risk: vendor approval.,ATLAS-6089
+2025-Q1,2025-01-01,2025-01-28,Phase 7 Checkout Cutover,observability,Theo Martin,green,86,20,8,route traffic to Atlas and deprecate monolith paths; focus on observability; risk: test data gap.,ATLAS-1369
+2025-Q1,2025-01-01,2025-01-28,Phase 7 Checkout Cutover,data,Ben Carter,red,84,24,2,route traffic to Atlas and deprecate monolith paths; focus on data; risk: vendor approval.,ATLAS-4976
+2025-Q1,2025-01-01,2025-01-28,Phase 7 Checkout Cutover,support,Harper Lee,red,48,4,6,route traffic to Atlas and deprecate monolith paths; focus on support; risk: capacity risk.,ATLAS-5453
+2025-Q1,2025-02-01,2025-02-28,Phase 7 Checkout Cutover,platform,Aisha Khan,amber,34,6,8,route traffic to Atlas and deprecate monolith paths; focus on platform; risk: vendor approval.,ATLAS-1351
+2025-Q1,2025-02-01,2025-02-28,Phase 7 Checkout Cutover,checkout,Owen Brooks,green,51,17,2,route traffic to Atlas and deprecate monolith paths; focus on checkout; risk: customer readiness.,ATLAS-1246
+2025-Q1,2025-02-01,2025-02-28,Phase 7 Checkout Cutover,payments,Mateo Garcia,amber,46,11,7,route traffic to Atlas and deprecate monolith paths; focus on payments; risk: customer readiness.,ATLAS-3347
+2025-Q1,2025-02-01,2025-02-28,Phase 7 Checkout Cutover,observability,Ben Carter,red,79,13,6,route traffic to Atlas and deprecate monolith paths; focus on observability; risk: test data gap.,ATLAS-1156
+2025-Q1,2025-02-01,2025-02-28,Phase 7 Checkout Cutover,data,Dmitri Volkov,green,31,13,1,route traffic to Atlas and deprecate monolith paths; focus on data; risk: capacity risk.,ATLAS-2166
+2025-Q1,2025-02-01,2025-02-28,Phase 7 Checkout Cutover,support,Grace Kim,amber,35,7,4,route traffic to Atlas and deprecate monolith paths; focus on support; risk: dependency drift.,ATLAS-2386
+2025-Q1,2025-03-01,2025-03-28,Phase 7 Checkout Cutover,platform,Theo Martin,green,80,19,1,route traffic to Atlas and deprecate monolith paths; focus on platform; risk: on-call load.,ATLAS-4823
+2025-Q1,2025-03-01,2025-03-28,Phase 7 Checkout Cutover,checkout,Nora Singh,green,52,4,0,route traffic to Atlas and deprecate monolith paths; focus on checkout; risk: capacity risk.,ATLAS-4300
+2025-Q1,2025-03-01,2025-03-28,Phase 7 Checkout Cutover,payments,Theo Martin,red,65,9,1,route traffic to Atlas and deprecate monolith paths; focus on payments; risk: on-call load.,ATLAS-4257
+2025-Q1,2025-03-01,2025-03-28,Phase 7 Checkout Cutover,observability,Theo Martin,amber,49,19,8,route traffic to Atlas and deprecate monolith paths; focus on observability; risk: schema migration.,ATLAS-2175
+2025-Q1,2025-03-01,2025-03-28,Phase 7 Checkout Cutover,data,Dmitri Volkov,green,78,9,8,route traffic to Atlas and deprecate monolith paths; focus on data; risk: customer readiness.,ATLAS-2457
+2025-Q1,2025-03-01,2025-03-28,Phase 7 Checkout Cutover,support,Mateo Garcia,amber,21,20,2,route traffic to Atlas and deprecate monolith paths; focus on support; risk: dependency drift.,ATLAS-6155
+2025-Q2,2025-04-01,2025-04-28,Phase 7 Checkout Cutover,platform,Kim Tan,amber,56,5,2,route traffic to Atlas and deprecate monolith paths; focus on platform; risk: schema migration.,ATLAS-3421
+2025-Q2,2025-04-01,2025-04-28,Phase 7 Checkout Cutover,checkout,Grace Kim,amber,94,17,1,route traffic to Atlas and deprecate monolith paths; focus on checkout; risk: schema migration.,ATLAS-2469
+2025-Q2,2025-04-01,2025-04-28,Phase 7 Checkout Cutover,payments,Samir Rao,green,53,23,2,route traffic to Atlas and deprecate monolith paths; focus on payments; risk: customer readiness.,ATLAS-6053
+2025-Q2,2025-04-01,2025-04-28,Phase 7 Checkout Cutover,observability,Fatima Noor,green,50,8,7,route traffic to Atlas and deprecate monolith paths; focus on observability; risk: schema migration.,ATLAS-1967
+2025-Q2,2025-04-01,2025-04-28,Phase 7 Checkout Cutover,data,Owen Brooks,green,54,12,7,route traffic to Atlas and deprecate monolith paths; focus on data; risk: vendor approval.,ATLAS-5028
+2025-Q2,2025-04-01,2025-04-28,Phase 7 Checkout Cutover,support,Jon Bell,amber,86,14,3,route traffic to Atlas and deprecate monolith paths; focus on support; risk: dependency drift.,ATLAS-4205
+2025-Q2,2025-05-01,2025-05-28,Phase 7 Checkout Cutover,platform,Maya Chen,red,43,20,3,route traffic to Atlas and deprecate monolith paths; focus on platform; risk: customer readiness.,ATLAS-4166
+2025-Q2,2025-05-01,2025-05-28,Phase 7 Checkout Cutover,checkout,Anika Sharma,green,83,16,1,route traffic to Atlas and deprecate monolith paths; focus on checkout; risk: on-call load.,ATLAS-2819
+2025-Q2,2025-05-01,2025-05-28,Phase 7 Checkout Cutover,payments,Luca Moretti,amber,67,17,3,route traffic to Atlas and deprecate monolith paths; focus on payments; risk: dependency drift.,ATLAS-6012
+2025-Q2,2025-05-01,2025-05-28,Phase 7 Checkout Cutover,observability,Owen Brooks,green,43,6,1,route traffic to Atlas and deprecate monolith paths; focus on observability; risk: vendor approval.,ATLAS-3996
+2025-Q2,2025-05-01,2025-05-28,Phase 7 Checkout Cutover,data,Aisha Khan,amber,73,7,3,route traffic to Atlas and deprecate monolith paths; focus on data; risk: customer readiness.,ATLAS-5951
+2025-Q2,2025-05-01,2025-05-28,Phase 7 Checkout Cutover,support,Theo Martin,amber,93,4,3,route traffic to Atlas and deprecate monolith paths; focus on support; risk: customer readiness.,ATLAS-2465
+2025-Q2,2025-06-01,2025-06-28,Phase 7 Checkout Cutover,platform,Kim Tan,red,55,13,8,route traffic to Atlas and deprecate monolith paths; focus on platform; risk: test data gap.,ATLAS-3951
+2025-Q2,2025-06-01,2025-06-28,Phase 7 Checkout Cutover,checkout,Grace Kim,green,42,17,4,route traffic to Atlas and deprecate monolith paths; focus on checkout; risk: customer readiness.,ATLAS-1810
+2025-Q2,2025-06-01,2025-06-28,Phase 7 Checkout Cutover,payments,Victor Silva,amber,50,3,5,route traffic to Atlas and deprecate monolith paths; focus on payments; risk: schema migration.,ATLAS-1471
+2025-Q2,2025-06-01,2025-06-28,Phase 7 Checkout Cutover,observability,Kim Tan,red,82,3,5,route traffic to Atlas and deprecate monolith paths; focus on observability; risk: test data gap.,ATLAS-3367
+2025-Q2,2025-06-01,2025-06-28,Phase 7 Checkout Cutover,data,Sara Novak,green,50,12,3,route traffic to Atlas and deprecate monolith paths; focus on data; risk: test data gap.,ATLAS-3444
+2025-Q2,2025-06-01,2025-06-28,Phase 7 Checkout Cutover,support,Theo Martin,green,38,6,5,route traffic to Atlas and deprecate monolith paths; focus on support; risk: dependency drift.,ATLAS-6131
+2025-Q3,2025-07-01,2025-07-28,Phase 7 Checkout Cutover,platform,Mateo Garcia,amber,63,3,7,route traffic to Atlas and deprecate monolith paths; focus on platform; risk: capacity risk.,ATLAS-2399
+2025-Q3,2025-07-01,2025-07-28,Phase 7 Checkout Cutover,checkout,Fatima Noor,red,50,17,2,route traffic to Atlas and deprecate monolith paths; focus on checkout; risk: dependency drift.,ATLAS-2858
+2025-Q3,2025-07-01,2025-07-28,Phase 7 Checkout Cutover,payments,Mateo Garcia,green,31,16,6,route traffic to Atlas and deprecate monolith paths; focus on payments; risk: dependency drift.,ATLAS-5910
+2025-Q3,2025-07-01,2025-07-28,Phase 7 Checkout Cutover,observability,Jon Bell,red,86,15,1,route traffic to Atlas and deprecate monolith paths; focus on observability; risk: vendor approval.,ATLAS-2496
+2025-Q3,2025-07-01,2025-07-28,Phase 7 Checkout Cutover,data,Luca Moretti,red,48,24,0,route traffic to Atlas and deprecate monolith paths; focus on data; risk: schema migration.,ATLAS-3512
+2025-Q3,2025-07-01,2025-07-28,Phase 7 Checkout Cutover,support,Sara Novak,red,52,13,3,route traffic to Atlas and deprecate monolith paths; focus on support; risk: customer readiness.,ATLAS-6065
+2025-Q3,2025-08-01,2025-08-28,Phase 7 Checkout Cutover,platform,Maya Chen,amber,92,4,7,route traffic to Atlas and deprecate monolith paths; focus on platform; risk: on-call load.,ATLAS-3785
+2025-Q3,2025-08-01,2025-08-28,Phase 7 Checkout Cutover,checkout,Jon Bell,green,84,17,4,route traffic to Atlas and deprecate monolith paths; focus on checkout; risk: capacity risk.,ATLAS-4158
+2025-Q3,2025-08-01,2025-08-28,Phase 7 Checkout Cutover,payments,Dmitri Volkov,red,82,21,2,route traffic to Atlas and deprecate monolith paths; focus on payments; risk: dependency drift.,ATLAS-3659
+2025-Q3,2025-08-01,2025-08-28,Phase 7 Checkout Cutover,observability,Ben Carter,amber,75,19,1,route traffic to Atlas and deprecate monolith paths; focus on observability; risk: capacity risk.,ATLAS-5875
+2025-Q3,2025-08-01,2025-08-28,Phase 7 Checkout Cutover,data,Nora Singh,red,91,8,3,route traffic to Atlas and deprecate monolith paths; focus on data; risk: schema migration.,ATLAS-3348
+2025-Q3,2025-08-01,2025-08-28,Phase 7 Checkout Cutover,support,Owen Brooks,amber,20,22,2,route traffic to Atlas and deprecate monolith paths; focus on support; risk: test data gap.,ATLAS-4573
+2025-Q3,2025-09-01,2025-09-28,Phase 7 Checkout Cutover,platform,Noah Evans,amber,78,23,0,route traffic to Atlas and deprecate monolith paths; focus on platform; risk: schema migration.,ATLAS-2773
+2025-Q3,2025-09-01,2025-09-28,Phase 7 Checkout Cutover,checkout,Theo Martin,amber,64,3,7,route traffic to Atlas and deprecate monolith paths; focus on checkout; risk: schema migration.,ATLAS-2285
+2025-Q3,2025-09-01,2025-09-28,Phase 7 Checkout Cutover,payments,Mateo Garcia,green,22,5,4,route traffic to Atlas and deprecate monolith paths; focus on payments; risk: vendor approval.,ATLAS-3758
+2025-Q3,2025-09-01,2025-09-28,Phase 7 Checkout Cutover,observability,Anika Sharma,red,63,16,1,route traffic to Atlas and deprecate monolith paths; focus on observability; risk: dependency drift.,ATLAS-2575
+2025-Q3,2025-09-01,2025-09-28,Phase 7 Checkout Cutover,data,Elena Petrova,red,65,14,2,route traffic to Atlas and deprecate monolith paths; focus on data; risk: on-call load.,ATLAS-4540
+2025-Q3,2025-09-01,2025-09-28,Phase 7 Checkout Cutover,support,Sara Novak,green,74,20,0,route traffic to Atlas and deprecate monolith paths; focus on support; risk: capacity risk.,ATLAS-3631
+2025-Q4,2025-10-01,2025-10-28,Phase 7 Checkout Cutover,platform,Owen Brooks,green,57,4,6,route traffic to Atlas and deprecate monolith paths; focus on platform; risk: test data gap.,ATLAS-2208
+2025-Q4,2025-10-01,2025-10-28,Phase 7 Checkout Cutover,checkout,Iris Wang,red,24,5,1,route traffic to Atlas and deprecate monolith paths; focus on checkout; risk: customer readiness.,ATLAS-4530
+2025-Q4,2025-10-01,2025-10-28,Phase 7 Checkout Cutover,payments,Grace Kim,red,59,24,0,route traffic to Atlas and deprecate monolith paths; focus on payments; risk: vendor approval.,ATLAS-3706
+2025-Q4,2025-10-01,2025-10-28,Phase 7 Checkout Cutover,observability,Aisha Khan,green,26,7,0,route traffic to Atlas and deprecate monolith paths; focus on observability; risk: on-call load.,ATLAS-2459
+2025-Q4,2025-10-01,2025-10-28,Phase 7 Checkout Cutover,data,Elena Petrova,green,33,19,5,route traffic to Atlas and deprecate monolith paths; focus on data; risk: customer readiness.,ATLAS-4346
+2025-Q4,2025-10-01,2025-10-28,Phase 7 Checkout Cutover,support,Aisha Khan,red,56,24,4,route traffic to Atlas and deprecate monolith paths; focus on support; risk: on-call load.,ATLAS-2414
+2025-Q4,2025-11-01,2025-11-28,Phase 7 Checkout Cutover,platform,Luca Moretti,amber,86,10,2,route traffic to Atlas and deprecate monolith paths; focus on platform; risk: on-call load.,ATLAS-4069
+2025-Q4,2025-11-01,2025-11-28,Phase 7 Checkout Cutover,checkout,Maya Chen,green,80,21,1,route traffic to Atlas and deprecate monolith paths; focus on checkout; risk: test data gap.,ATLAS-2470
+2025-Q4,2025-11-01,2025-11-28,Phase 7 Checkout Cutover,payments,Victor Silva,green,26,20,6,route traffic to Atlas and deprecate monolith paths; focus on payments; risk: capacity risk.,ATLAS-4797
+2025-Q4,2025-11-01,2025-11-28,Phase 7 Checkout Cutover,observability,Kim Tan,amber,59,20,8,route traffic to Atlas and deprecate monolith paths; focus on observability; risk: schema migration.,ATLAS-3213
+2025-Q4,2025-11-01,2025-11-28,Phase 7 Checkout Cutover,data,Owen Brooks,green,54,12,7,route traffic to Atlas and deprecate monolith paths; focus on data; risk: vendor approval.,ATLAS-4685
+2025-Q4,2025-11-01,2025-11-28,Phase 7 Checkout Cutover,support,Dmitri Volkov,amber,56,22,2,route traffic to Atlas and deprecate monolith paths; focus on support; risk: test data gap.,ATLAS-4435
+2025-Q4,2025-12-01,2025-12-28,Phase 7 Checkout Cutover,platform,Elena Petrova,amber,95,18,2,route traffic to Atlas and deprecate monolith paths; focus on platform; risk: test data gap.,ATLAS-1321
+2025-Q4,2025-12-01,2025-12-28,Phase 7 Checkout Cutover,checkout,Jon Bell,green,55,15,7,route traffic to Atlas and deprecate monolith paths; focus on checkout; risk: dependency drift.,ATLAS-2509
+2025-Q4,2025-12-01,2025-12-28,Phase 7 Checkout Cutover,payments,Nora Singh,red,23,24,7,route traffic to Atlas and deprecate monolith paths; focus on payments; risk: test data gap.,ATLAS-4522
+2025-Q4,2025-12-01,2025-12-28,Phase 7 Checkout Cutover,observability,Theo Martin,red,85,16,8,route traffic to Atlas and deprecate monolith paths; focus on observability; risk: capacity risk.,ATLAS-2288
+2025-Q4,2025-12-01,2025-12-28,Phase 7 Checkout Cutover,data,Noah Evans,green,42,3,7,route traffic to Atlas and deprecate monolith paths; focus on data; risk: capacity risk.,ATLAS-4494
+2025-Q4,2025-12-01,2025-12-28,Phase 7 Checkout Cutover,support,Theo Martin,amber,87,4,0,route traffic to Atlas and deprecate monolith paths; focus on support; risk: dependency drift.,ATLAS-4996
+2026-Q1,2026-01-01,2026-01-28,Phase 8 Scale and Handoff,platform,Mateo Garcia,green,34,4,0,"prepare KT, reduce toil, close migration gaps; focus on platform; risk: customer readiness.",ATLAS-4582
+2026-Q1,2026-01-01,2026-01-28,Phase 8 Scale and Handoff,checkout,Victor Silva,green,22,20,4,"prepare KT, reduce toil, close migration gaps; focus on checkout; risk: dependency drift.",ATLAS-3370
+2026-Q1,2026-01-01,2026-01-28,Phase 8 Scale and Handoff,payments,Yara Haddad,red,26,10,2,"prepare KT, reduce toil, close migration gaps; focus on payments; risk: dependency drift.",ATLAS-2587
+2026-Q1,2026-01-01,2026-01-28,Phase 8 Scale and Handoff,observability,Ben Carter,amber,42,24,0,"prepare KT, reduce toil, close migration gaps; focus on observability; risk: on-call load.",ATLAS-5735
+2026-Q1,2026-01-01,2026-01-28,Phase 8 Scale and Handoff,data,Harper Lee,amber,82,18,5,"prepare KT, reduce toil, close migration gaps; focus on data; risk: schema migration.",ATLAS-4027
+2026-Q1,2026-01-01,2026-01-28,Phase 8 Scale and Handoff,support,Owen Brooks,red,92,3,3,"prepare KT, reduce toil, close migration gaps; focus on support; risk: capacity risk.",ATLAS-5072
+2026-Q1,2026-02-01,2026-02-28,Phase 8 Scale and Handoff,platform,Ben Carter,green,58,7,5,"prepare KT, reduce toil, close migration gaps; focus on platform; risk: on-call load.",ATLAS-4273
+2026-Q1,2026-02-01,2026-02-28,Phase 8 Scale and Handoff,checkout,Ben Carter,red,80,14,4,"prepare KT, reduce toil, close migration gaps; focus on checkout; risk: schema migration.",ATLAS-3790
+2026-Q1,2026-02-01,2026-02-28,Phase 8 Scale and Handoff,payments,Priya Nair,red,92,20,3,"prepare KT, reduce toil, close migration gaps; focus on payments; risk: dependency drift.",ATLAS-5572
+2026-Q1,2026-02-01,2026-02-28,Phase 8 Scale and Handoff,observability,Jon Bell,amber,19,10,0,"prepare KT, reduce toil, close migration gaps; focus on observability; risk: on-call load.",ATLAS-2798
+2026-Q1,2026-02-01,2026-02-28,Phase 8 Scale and Handoff,data,Harper Lee,red,24,15,0,"prepare KT, reduce toil, close migration gaps; focus on data; risk: on-call load.",ATLAS-4796
+2026-Q1,2026-02-01,2026-02-28,Phase 8 Scale and Handoff,support,Yara Haddad,red,75,3,1,"prepare KT, reduce toil, close migration gaps; focus on support; risk: test data gap.",ATLAS-3762
+2026-Q1,2026-03-01,2026-03-28,Phase 8 Scale and Handoff,platform,Owen Brooks,amber,32,12,0,"prepare KT, reduce toil, close migration gaps; focus on platform; risk: capacity risk.",ATLAS-2668
+2026-Q1,2026-03-01,2026-03-28,Phase 8 Scale and Handoff,checkout,Maya Chen,red,67,10,0,"prepare KT, reduce toil, close migration gaps; focus on checkout; risk: dependency drift.",ATLAS-4761
+2026-Q1,2026-03-01,2026-03-28,Phase 8 Scale and Handoff,payments,Fatima Noor,green,63,24,3,"prepare KT, reduce toil, close migration gaps; focus on payments; risk: customer readiness.",ATLAS-3556
+2026-Q1,2026-03-01,2026-03-28,Phase 8 Scale and Handoff,observability,Kim Tan,red,32,19,4,"prepare KT, reduce toil, close migration gaps; focus on observability; risk: schema migration.",ATLAS-4283
+2026-Q1,2026-03-01,2026-03-28,Phase 8 Scale and Handoff,data,Priya Nair,amber,23,3,6,"prepare KT, reduce toil, close migration gaps; focus on data; risk: test data gap.",ATLAS-4636
+2026-Q1,2026-03-01,2026-03-28,Phase 8 Scale and Handoff,support,Fatima Noor,amber,56,14,4,"prepare KT, reduce toil, close migration gaps; focus on support; risk: vendor approval.",ATLAS-3181
+2026-Q2,2026-04-01,2026-04-28,Phase 8 Scale and Handoff,platform,Victor Silva,green,92,9,8,"prepare KT, reduce toil, close migration gaps; focus on platform; risk: schema migration.",ATLAS-4756
+2026-Q2,2026-04-01,2026-04-28,Phase 8 Scale and Handoff,checkout,Elena Petrova,green,50,3,3,"prepare KT, reduce toil, close migration gaps; focus on checkout; risk: vendor approval.",ATLAS-2588
+2026-Q2,2026-04-01,2026-04-28,Phase 8 Scale and Handoff,payments,Noah Evans,red,62,11,4,"prepare KT, reduce toil, close migration gaps; focus on payments; risk: test data gap.",ATLAS-5449
+2026-Q2,2026-04-01,2026-04-28,Phase 8 Scale and Handoff,observability,Nora Singh,green,96,6,6,"prepare KT, reduce toil, close migration gaps; focus on observability; risk: dependency drift.",ATLAS-5982
+2026-Q2,2026-04-01,2026-04-28,Phase 8 Scale and Handoff,data,Theo Martin,green,36,13,3,"prepare KT, reduce toil, close migration gaps; focus on data; risk: test data gap.",ATLAS-3164
+2026-Q2,2026-04-01,2026-04-28,Phase 8 Scale and Handoff,support,Mateo Garcia,green,87,11,4,"prepare KT, reduce toil, close migration gaps; focus on support; risk: test data gap.",ATLAS-4752
+2026-Q2,2026-05-01,2026-05-15,Phase 8 Scale and Handoff,platform,Sara Novak,red,46,15,4,"prepare KT, reduce toil, close migration gaps; focus on platform; risk: vendor approval.",ATLAS-1717
+2026-Q2,2026-05-01,2026-05-15,Phase 8 Scale and Handoff,checkout,Aisha Khan,red,24,7,7,"prepare KT, reduce toil, close migration gaps; focus on checkout; risk: capacity risk.",ATLAS-1315
+2026-Q2,2026-05-01,2026-05-15,Phase 8 Scale and Handoff,payments,Yara Haddad,red,43,9,4,"prepare KT, reduce toil, close migration gaps; focus on payments; risk: vendor approval.",ATLAS-4460
+2026-Q2,2026-05-01,2026-05-15,Phase 8 Scale and Handoff,observability,Noah Evans,green,42,6,6,"prepare KT, reduce toil, close migration gaps; focus on observability; risk: test data gap.",ATLAS-5753
+2026-Q2,2026-05-01,2026-05-15,Phase 8 Scale and Handoff,data,Priya Nair,red,61,7,8,"prepare KT, reduce toil, close migration gaps; focus on data; risk: customer readiness.",ATLAS-2156
+2026-Q2,2026-05-01,2026-05-15,Phase 8 Scale and Handoff,support,Maya Chen,amber,92,6,1,"prepare KT, reduce toil, close migration gaps; focus on support; risk: test data gap.",ATLAS-3811

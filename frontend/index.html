@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Base - Audit Analytics AI Platform</title>
+<title>Base - Project Intelligence & KT Copilot</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -19,12 +19,52 @@
 html, body { height: 100%; background: var(--bg); color: var(--text); font-family: var(--sans); }
 button, textarea, input { font: inherit; }
 button { cursor: pointer; }
-#app { display: flex; height: 100vh; overflow: hidden; }
+#app { display: none; height: 100vh; overflow: hidden; }
+#app.active { display: flex; }
+.project-hub { display: none; min-height: 100vh; overflow: auto; background: var(--bg); }
+.project-hub.active { display: block; }
+.project-shell { max-width: 1120px; margin: 0 auto; padding: 32px 24px 44px; }
+.project-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+.project-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.project-brand .logo-mark { flex-shrink: 0; }
+.project-create { display: grid; grid-template-columns: minmax(220px, 1fr) minmax(280px, 1.4fr) auto; gap: 10px; align-items: end; margin-bottom: 24px; }
+.project-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
+.project-card { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; display: grid; gap: 14px; min-height: 210px; }
+.project-card:hover { border-color: var(--accent); }
+.project-card-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.project-card h2 { font-size: 17px; line-height: 1.25; }
+.project-card-desc { color: var(--text-dim); font-size: 13px; line-height: 1.5; min-height: 38px; }
+.project-stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.project-stat { background: var(--surface2); border: 1px solid var(--border); border-radius: var(--radius); padding: 9px; min-height: 58px; }
+.project-stat span { display: block; color: var(--text-muted); font-size: 10px; font-family: var(--mono); text-transform: uppercase; }
+.project-stat strong { display: block; margin-top: 7px; font-family: var(--display); font-size: 18px; }
+.project-card-actions { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: auto; }
+.project-updated { color: var(--text-muted); font-family: var(--mono); font-size: 10px; }
 .sidebar { width: var(--sidebar-w); min-width: var(--sidebar-w); background: var(--surface); border-right: 1px solid var(--border); display: flex; flex-direction: column; overflow: hidden; }
 .sidebar-logo { padding: 24px 20px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; }
-.logo-mark { width: 32px; height: 32px; background: var(--accent); border-radius: 8px; display: grid; place-items: center; font-family: var(--display); font-weight: 800; color: #fff; }
+.logo-mark { width: 32px; height: 32px; background: linear-gradient(135deg, #5b6af7, #2dd4bf); border-radius: 8px; display: grid; place-items: center; font-family: var(--display); font-weight: 800; color: #fff; position: relative; overflow: visible; box-shadow: 0 0 0 1px rgba(255,255,255,.08), 0 12px 28px rgba(91,106,247,.24); animation: logo-pop .9s cubic-bezier(.18,.89,.28,1.22) both; isolation: isolate; text-shadow: 0 1px 8px rgba(0,0,0,.26); }
+.logo-mark::before { content: ""; position: absolute; inset: -9px; border: 1px solid rgba(45,212,191,.42); border-radius: 14px; opacity: 0; transform: scale(.58); animation: logo-ring 1.15s ease-out .12s both; }
+.logo-mark::after { content: ""; position: absolute; inset: 0; border-radius: inherit; background: linear-gradient(100deg, transparent 30%, rgba(255,255,255,.48) 50%, transparent 70%); background-size: 230% 100%; background-position: 170% 0; animation: logo-sheen 1.05s ease-out .24s both; pointer-events: none; }
 .logo-text { font-family: var(--display); font-weight: 700; font-size: 18px; }
 .logo-badge { margin-left: auto; font-family: var(--mono); font-size: 9px; color: var(--teal); border: 1px solid rgba(45,212,191,0.35); padding: 2px 6px; border-radius: 4px; }
+@keyframes logo-pop {
+  0% { opacity: 0; transform: translateY(8px) scale(.74) rotate(-8deg); filter: saturate(.6) blur(2px); }
+  56% { opacity: 1; transform: translateY(-2px) scale(1.08) rotate(2deg); filter: saturate(1.18) blur(0); }
+  100% { opacity: 1; transform: translateY(0) scale(1) rotate(0); filter: saturate(1); }
+}
+@keyframes logo-ring {
+  0% { opacity: 0; transform: scale(.58); }
+  22% { opacity: .86; }
+  100% { opacity: 0; transform: scale(1.26); }
+}
+@keyframes logo-sheen {
+  0% { opacity: 0; background-position: 170% 0; }
+  24% { opacity: .85; }
+  100% { opacity: 0; background-position: -130% 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .logo-mark, .logo-mark::before, .logo-mark::after { animation: none; }
+}
 .sidebar-nav { padding: 16px 12px; display: flex; flex-direction: column; gap: 2px; }
 .nav-label { font-family: var(--mono); font-size: 10px; color: var(--text-muted); letter-spacing: 1px; padding: 8px 8px 4px; text-transform: uppercase; }
 .nav-btn { display: flex; align-items: center; gap: 10px; padding: 9px 12px; border-radius: var(--radius); border: none; background: transparent; color: var(--text-dim); font-size: 14px; text-align: left; width: 100%; }
@@ -69,6 +109,86 @@ h3 { font-size: 14px; }
 .panel { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
 .toolbar { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
 .select { background: var(--surface2); color: var(--text); border: 1px solid var(--border2); border-radius: var(--radius); padding: 6px 9px; font-size: 12px; }
+.field-label { display: block; font-family: var(--mono); font-size: 11px; color: var(--text-muted); margin: 14px 0 6px; text-transform: uppercase; }
+.text-field { width: 100%; background: var(--surface2); color: var(--text); border: 1px solid var(--border2); border-radius: var(--radius); padding: 10px 12px; outline: none; }
+.text-field:focus { border-color: var(--accent); }
+.large-text { min-height: 120px; resize: vertical; line-height: 1.5; }
+.kt-output { margin-top: 12px; white-space: pre-wrap; line-height: 1.7; color: var(--text); }
+.rich-output { white-space: normal; overflow-wrap: anywhere; }
+.rich-output p { margin: 0 0 10px; }
+.rich-output p:last-child { margin-bottom: 0; }
+.rich-output h1, .rich-output h2, .rich-output h3 { margin: 14px 0 8px; color: var(--text); font-family: var(--display); line-height: 1.25; }
+.rich-output h1:first-child, .rich-output h2:first-child, .rich-output h3:first-child { margin-top: 0; }
+.rich-output h1 { font-size: 20px; }
+.rich-output h2 { font-size: 17px; }
+.rich-output h3 { font-size: 15px; }
+.rich-output ul, .rich-output ol { margin: 6px 0 12px; padding-left: 20px; display: grid; gap: 5px; }
+.rich-output li { padding-left: 2px; }
+.rich-output strong { color: var(--text); font-weight: 600; }
+.rich-output em { color: var(--text-dim); }
+.rich-output code { font-family: var(--mono); font-size: .92em; border: 1px solid var(--border); background: rgba(255,255,255,.05); border-radius: 5px; padding: 1px 5px; }
+.rich-output pre { margin: 10px 0; padding: 10px 12px; overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); background: rgba(0,0,0,.22); }
+.rich-output pre code { display: block; padding: 0; border: 0; background: transparent; white-space: pre; }
+.rich-output hr { border: 0; border-top: 1px solid var(--border); margin: 14px 0; }
+.kt-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+.value-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-bottom: 16px; }
+.value-card { background: linear-gradient(135deg, rgba(91,106,247,.12), rgba(45,212,191,.05)), var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 14px; min-height: 132px; display: grid; gap: 9px; align-content: start; }
+.value-card strong { font-family: var(--display); font-size: 16px; }
+.value-card p { color: var(--text-dim); font-size: 13px; line-height: 1.5; }
+.mini-action { justify-self: start; border: 1px solid var(--border2); border-radius: var(--radius); background: rgba(255,255,255,.03); color: var(--text-dim); padding: 6px 9px; font-size: 12px; }
+.mini-action:hover { color: var(--text); border-color: var(--teal); }
+.agent-grid, .connector-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; }
+.agent-card-demo, .connector-card { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 15px; display: grid; gap: 12px; min-height: 210px; }
+.agent-card-demo:hover, .connector-card:hover { border-color: rgba(45,212,191,.48); }
+.agent-head-demo, .connector-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.agent-card-demo h2, .connector-card h2 { font-size: 16px; line-height: 1.25; }
+.agent-desc, .connector-desc { color: var(--text-dim); font-size: 13px; line-height: 1.5; }
+.tag-row { display: flex; flex-wrap: wrap; gap: 6px; }
+.tag { border: 1px solid var(--border2); border-radius: 100px; padding: 4px 8px; color: var(--text-dim); font-family: var(--mono); font-size: 10px; }
+.tag.find { color: var(--teal); border-color: rgba(45,212,191,.35); }
+.tag.learn { color: var(--accent); border-color: rgba(91,106,247,.42); }
+.tag.act { color: var(--amber); border-color: rgba(245,158,11,.36); }
+.status-badge { border: 1px solid var(--border2); border-radius: 100px; padding: 4px 8px; font-family: var(--mono); font-size: 10px; color: var(--text-muted); white-space: nowrap; }
+.status-badge.indexed { color: var(--green); border-color: rgba(34,197,94,.36); }
+.status-badge.ready { color: var(--amber); border-color: rgba(245,158,11,.36); }
+.status-badge.planned { color: var(--text-dim); }
+.connector-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: auto; }
+.coverage-list { display: grid; gap: 8px; }
+.coverage-row { display: grid; grid-template-columns: 120px 1fr 80px; gap: 10px; align-items: center; color: var(--text-dim); font-size: 12px; }
+.coverage-row strong { color: var(--text); font-size: 13px; }
+.coverage-track { height: 8px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
+.coverage-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--teal)); border-radius: inherit; }
+.studio-layout { display: grid; grid-template-columns: minmax(280px, .85fr) minmax(0, 1.15fr); gap: 12px; align-items: start; }
+.studio-controls { display: grid; gap: 10px; }
+.studio-row { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.studio-output { display: grid; gap: 12px; margin-top: 12px; }
+.quiz-card { border: 1px solid var(--border); background: var(--surface2); border-radius: var(--radius); padding: 13px; display: grid; gap: 10px; }
+.quiz-title { display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; }
+.quiz-title strong { color: var(--text); }
+.quiz-options { display: grid; gap: 7px; }
+.quiz-option { width: 100%; justify-content: flex-start; text-align: left; border: 1px solid var(--border2); background: rgba(255,255,255,.03); color: var(--text-dim); border-radius: var(--radius); padding: 9px 10px; }
+.quiz-option:hover { border-color: var(--accent); color: var(--text); }
+.quiz-option.selected { color: var(--text); border-color: var(--accent); }
+.quiz-option.correct { border-color: rgba(34,197,94,.55); background: rgba(34,197,94,.10); color: var(--text); }
+.quiz-option.incorrect { border-color: rgba(239,68,68,.55); background: rgba(239,68,68,.10); color: var(--text); }
+.quiz-explain { border-top: 1px solid var(--border); padding-top: 8px; color: var(--text-dim); font-size: 12px; line-height: 1.5; }
+.conversation-thread { display: grid; gap: 10px; }
+.host-turn { display: grid; grid-template-columns: 34px 1fr; gap: 10px; align-items: start; }
+.host-avatar { width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: linear-gradient(135deg, var(--accent), var(--teal)); color: #fff; font-family: var(--mono); font-size: 11px; }
+.host-bubble { border: 1px solid var(--border2); background: var(--surface2); border-radius: var(--radius); padding: 11px 12px; color: var(--text-dim); font-size: 13px; line-height: 1.6; }
+.host-bubble strong { display: block; color: var(--text); margin-bottom: 4px; }
+.takeaway-list { display: grid; gap: 6px; }
+.studio-wide { grid-column: 1 / -1; }
+.artifact-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.artifact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; }
+.artifact-card { border: 1px solid var(--border); background: var(--surface2); border-radius: var(--radius); padding: 12px; display: grid; gap: 8px; color: var(--text-dim); font-size: 13px; line-height: 1.5; }
+.artifact-card strong { color: var(--text); }
+.artifact-card .value { font-family: var(--display); color: var(--text); font-size: 22px; }
+.flashcard-back { margin-top: 8px; border-top: 1px solid var(--border); padding-top: 8px; }
+.slide-card { min-height: 190px; background: linear-gradient(135deg, rgba(91,106,247,.10), rgba(45,212,191,.05)), var(--surface2); }
+.slide-card ul { padding-left: 18px; display: grid; gap: 6px; }
+.scene-card { border-left: 3px solid var(--accent); }
+.artifact-summary { color: var(--text-dim); line-height: 1.6; }
 .chart { display: grid; gap: 12px; margin-top: 14px; }
 .bar-row { display: grid; grid-template-columns: 130px 1fr 72px; align-items: center; gap: 10px; font-size: 12px; color: var(--text-dim); }
 .bar-track { height: 10px; background: var(--surface2); border-radius: 99px; overflow: hidden; }
@@ -82,7 +202,32 @@ h3 { font-size: 14px; }
 .insight strong { color: var(--text); }
 .pivot-wrap { overflow-x: auto; margin-top: 12px; }
 .trend-row { display: grid; grid-template-columns: 96px 1fr 74px 74px; align-items: center; gap: 10px; font-size: 12px; color: var(--text-dim); margin-top: 10px; }
+.graph-wrap { position: relative; height: min(680px, calc(100vh - 190px)); min-height: 460px; overflow: hidden; padding: 0; }
+.graph-canvas { width: 100%; height: 100%; display: block; background: radial-gradient(circle at 50% 45%, rgba(91,106,247,0.12), transparent 34%), var(--panel); }
+.graph-overlay { position: absolute; inset: 14px auto auto 14px; display: flex; gap: 8px; flex-wrap: wrap; max-width: calc(100% - 28px); pointer-events: none; }
+.graph-chip { background: rgba(17,17,19,.86); border: 1px solid var(--border2); border-radius: 100px; padding: 5px 9px; font-family: var(--mono); font-size: 10px; color: var(--text-dim); }
+.graph-controls { position: absolute; left: 14px; bottom: 14px; display: flex; align-items: center; gap: 6px; padding: 6px; border: 1px solid var(--border2); border-radius: var(--radius); background: rgba(17,17,19,.88); box-shadow: 0 14px 32px rgba(0,0,0,.28); pointer-events: auto; }
+.graph-control-btn { min-width: 30px; height: 30px; border: 1px solid var(--border); border-radius: var(--radius); background: rgba(255,255,255,.04); color: var(--text); font-family: var(--mono); font-size: 12px; cursor: pointer; }
+.graph-control-btn:hover { border-color: var(--border2); background: rgba(255,255,255,.08); }
+.graph-tip { position: absolute; right: 14px; bottom: 14px; width: min(360px, calc(100% - 28px)); max-height: min(390px, calc(100% - 84px)); overflow: auto; background: rgba(17,17,19,.94); border: 1px solid var(--border2); border-radius: var(--radius); padding: 12px; font-size: 12px; color: var(--text-dim); pointer-events: auto; box-shadow: 0 18px 42px rgba(0,0,0,.32); }
+.graph-tip strong { display: block; color: var(--text); font-size: 13px; margin-bottom: 4px; }
+.graph-detail { display: grid; gap: 9px; line-height: 1.45; }
+.graph-detail-title { color: var(--text); font-weight: 600; font-size: 13px; }
+.graph-detail-desc { color: var(--text-dim); }
+.graph-detail-rows { display: grid; gap: 5px; }
+.graph-detail-row { display: grid; grid-template-columns: 92px 1fr; gap: 10px; border-top: 1px solid var(--border); padding-top: 5px; }
+.graph-detail-row span:first-child { color: var(--text-muted); font-family: var(--mono); font-size: 10px; text-transform: uppercase; }
+.graph-detail-list { display: grid; gap: 5px; margin-top: 3px; }
+.graph-detail-pill { border: 1px solid var(--border); background: rgba(255,255,255,.03); border-radius: var(--radius); padding: 7px 8px; color: var(--text-dim); }
+.legend { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.legend-item { display: inline-flex; align-items: center; gap: 6px; color: var(--text-dim); font-size: 12px; }
+.legend-dot { width: 9px; height: 9px; border-radius: 50%; background: var(--accent); }
 .chat-shell { display: flex; flex-direction: column; height: calc(100vh - 56px); }
+.chat-toolbar { border-bottom: 1px solid var(--border); padding: 10px 24px; display: flex; justify-content: center; background: var(--surface); }
+.chat-toolbar-inner { max-width: 760px; width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 12px; color: var(--text-muted); font-family: var(--mono); font-size: 10px; }
+.chat-history-tools { display: flex; align-items: center; gap: 8px; min-width: 0; }
+.chat-session-select { width: min(260px, 42vw); height: 34px; border: 1px solid var(--border2); border-radius: var(--radius); background: var(--surface2); color: var(--text-dim); font-family: var(--mono); font-size: 10px; padding: 0 10px; outline: none; }
+.chat-session-select:focus { border-color: var(--accent); color: var(--text); }
 .chat-area { flex: 1; overflow-y: auto; padding: 32px 0; }
 .chat-inner { max-width: 760px; margin: 0 auto; width: 100%; padding: 0 24px; display: flex; flex-direction: column; gap: 24px; }
 .empty-state { display: grid; place-items: center; text-align: center; padding: 80px 24px; gap: 10px; }
@@ -98,8 +243,26 @@ h3 { font-size: 14px; }
 .msg-user .msg-bubble { background: var(--accent); color: #fff; border-bottom-right-radius: 4px; }
 .msg-assistant .msg-bubble { background: var(--surface2); border: 1px solid var(--border2); color: var(--text); border-bottom-left-radius: 4px; }
 .msg-sources { display: flex; flex-wrap: wrap; gap: 6px; padding: 0 4px; }
-.source-chip { padding: 4px 10px; background: var(--surface); border: 1px solid var(--border2); border-radius: 100px; font-family: var(--mono); font-size: 11px; color: var(--text-dim); }
+.source-chip { padding: 4px 10px; background: var(--surface); border: 1px solid var(--border2); border-radius: 100px; font-family: var(--mono); font-size: 11px; color: var(--text-dim); text-decoration: none; display: inline-flex; align-items: center; gap: 4px; }
+a.source-chip:hover { border-color: var(--teal); color: var(--text); }
 .msg-meta { font-family: var(--mono); font-size: 10px; color: var(--text-muted); padding: 0 4px; }
+.agent-card { width: min(560px, 92%); border: 1px solid rgba(91,106,247,.32); background: linear-gradient(135deg, rgba(91,106,247,.10), rgba(45,212,191,.05)), var(--surface2); border-radius: 12px; padding: 14px; position: relative; overflow: hidden; box-shadow: 0 14px 34px rgba(0,0,0,.22); white-space: normal; }
+.agent-card::before { content: ""; position: absolute; inset: 0; background: linear-gradient(90deg, transparent, rgba(255,255,255,.08), transparent); transform: translateX(-100%); animation: agent-sheen 1.8s infinite; pointer-events: none; }
+.agent-head { display: flex; align-items: center; gap: 12px; position: relative; }
+.agent-ring { width: 34px; height: 34px; border-radius: 50%; border: 2px solid rgba(91,106,247,.24); border-top-color: var(--teal); animation: agent-spin 1.05s linear infinite; flex: 0 0 auto; }
+.agent-title { color: var(--text); font-weight: 600; font-size: 13px; }
+.agent-subtitle { color: var(--text-dim); font-size: 12px; margin-top: 2px; }
+.agent-progress { height: 3px; background: var(--surface); border-radius: 99px; overflow: hidden; margin: 13px 0 11px; position: relative; }
+.agent-progress span { display: block; height: 100%; width: 42%; background: linear-gradient(90deg, var(--accent), var(--teal)); border-radius: inherit; animation: agent-progress 1.35s ease-in-out infinite; }
+.agent-steps { display: grid; gap: 8px; position: relative; }
+.agent-step { display: grid; grid-template-columns: 14px 1fr; gap: 9px; color: var(--text-dim); font-size: 12px; line-height: 1.45; }
+.agent-step strong { display: block; color: var(--text); font-weight: 500; }
+.agent-step-dot { width: 8px; height: 8px; border-radius: 50%; margin-top: 5px; background: var(--green); box-shadow: 0 0 0 3px rgba(34,197,94,.12); }
+.agent-step.active .agent-step-dot { background: var(--teal); box-shadow: 0 0 0 3px rgba(45,212,191,.16); animation: agent-pulse 1s ease-in-out infinite; }
+@keyframes agent-spin { to { transform: rotate(360deg); } }
+@keyframes agent-sheen { 60%, 100% { transform: translateX(100%); } }
+@keyframes agent-progress { 0% { transform: translateX(-120%); } 55% { transform: translateX(95%); } 100% { transform: translateX(230%); } }
+@keyframes agent-pulse { 0%, 100% { transform: scale(1); opacity: .75; } 50% { transform: scale(1.35); opacity: 1; } }
 .input-bar { border-top: 1px solid var(--border); padding: 16px 24px 20px; background: var(--surface); flex-shrink: 0; }
 .input-inner { max-width: 760px; margin: 0 auto; display: flex; gap: 10px; align-items: flex-end; }
 .input-wrap { flex: 1; background: var(--surface2); border: 1px solid var(--border2); border-radius: 12px; display: flex; padding: 10px 14px; }
@@ -121,37 +284,83 @@ td:first-child { color: var(--text); }
 .toast-info { color: var(--teal); border-color: rgba(45,212,191,.35); }
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-@media(max-width:900px){.kpi-grid,.grid-2{grid-template-columns:1fr}.sidebar{display:none}.bar-row{grid-template-columns:90px 1fr 58px}}
+@media(max-width:900px){.kpi-grid,.grid-2,.value-grid,.studio-layout{grid-template-columns:1fr}.sidebar{display:none}.bar-row{grid-template-columns:90px 1fr 58px}.coverage-row{grid-template-columns:1fr}}
+@media(max-width:760px){.project-header,.section-head{align-items:flex-start;flex-direction:column}.project-create{grid-template-columns:1fr}.project-shell{padding:24px 16px 36px}.graph-tip{bottom:66px}}
 </style>
 </head>
 <body>
+<section class="project-hub active" id="project-hub">
+  <div class="project-shell">
+    <div class="project-header">
+      <div>
+        <div class="project-brand">
+          <div class="logo-mark">B</div>
+          <div>
+            <div class="logo-text">Base</div>
+            <div class="muted">Project Intelligence & KT Copilot</div>
+          </div>
+        </div>
+        <h1>Projects</h1>
+        <p class="muted">Create a project workspace, then upload the related Jira, Teams, GitHub, metrics, database, Confluence, and incident files inside it.</p>
+      </div>
+      <button class="secondary-btn" onclick="loadProjects()">Refresh</button>
+    </div>
+
+    <form class="project-create" onsubmit="createProject(event)">
+      <div>
+        <label class="field-label" for="project-name">Project Name</label>
+        <input class="text-field" id="project-name" placeholder="Project Atlas" maxlength="120" required />
+      </div>
+      <div>
+        <label class="field-label" for="project-description">Description</label>
+        <input class="text-field" id="project-description" placeholder="Checkout modernization, Q2 handoff, platform migration..." maxlength="500" />
+      </div>
+      <button class="primary-btn" id="create-project-btn" type="submit">Create Project</button>
+    </form>
+
+    <div class="section-head">
+      <div>
+        <h2>Available Projects</h2>
+        <p class="muted" id="project-count">0 projects</p>
+      </div>
+    </div>
+    <div class="project-grid" id="project-list"></div>
+  </div>
+</section>
+
 <div id="app">
   <aside class="sidebar">
     <div class="sidebar-logo">
       <div class="logo-mark">B</div>
       <span class="logo-text">Base</span>
-      <span class="logo-badge">AUDIT</span>
+      <span class="logo-badge">KT</span>
     </div>
     <nav class="sidebar-nav">
+      <button class="nav-btn" onclick="backToProjects()">All Projects</button>
       <div class="nav-label">Workspace</div>
       <button class="nav-btn active" data-view="dashboard" onclick="setView('dashboard')">Dashboard</button>
+      <button class="nav-btn" data-view="agents" onclick="setView('agents')">Agents</button>
+      <button class="nav-btn" data-view="connectors" onclick="setView('connectors')">Connectors</button>
+      <button class="nav-btn" data-view="graph" onclick="setView('graph')">Knowledge Graph</button>
       <button class="nav-btn" data-view="chat" onclick="setView('chat')">Ask AI</button>
-      <button class="nav-btn" data-view="documents" onclick="setView('documents')">Documents</button>
-      <button class="nav-btn" data-view="audit" onclick="setView('audit')">Audit Trail</button>
+      <button class="nav-btn" data-view="kt" onclick="setView('kt')">KT Brief</button>
+      <button class="nav-btn" data-view="studio" onclick="setView('studio')">Study Studio</button>
+      <button class="nav-btn" data-view="documents" onclick="setView('documents')">Sources</button>
+      <button class="nav-btn" data-view="audit" onclick="setView('audit')">Activity Log</button>
     </nav>
-    <div class="nav-label" style="padding-left:20px;">Indexed Files</div>
-    <div class="sidebar-docs" id="doc-list"><div style="padding:8px 12px;font-size:12px;color:var(--text-muted);">No documents yet</div></div>
+    <div class="nav-label" style="padding-left:20px;">Indexed Sources</div>
+    <div class="sidebar-docs" id="doc-list"><div style="padding:8px 12px;font-size:12px;color:var(--text-muted);">No sources yet</div></div>
     <div class="sidebar-upload">
-      <button class="primary-btn" onclick="triggerUpload()" id="upload-btn">Upload Document</button>
+      <button class="primary-btn" onclick="triggerUpload()" id="upload-btn">Upload Source</button>
       <button class="secondary-btn" onclick="exportCsv()">Export CSV</button>
-      <button class="secondary-btn" onclick="exportTableau()">Export Tableau</button>
-      <button class="secondary-btn" onclick="exportPowerBi()">Export PowerBI</button>
+      <button class="secondary-btn" onclick="exportTableau()">Tableau JSON</button>
+      <button class="secondary-btn" onclick="exportPowerBi()">PowerBI JSON</button>
     </div>
   </aside>
   <main class="main">
     <div class="topbar">
-      <span class="topbar-title" id="topbar-title">Audit Dashboard</span>
-      <span class="topbar-sub" id="topbar-doc-count">0 documents indexed</span>
+      <span class="topbar-title" id="topbar-title">Project Dashboard</span>
+      <span class="topbar-sub" id="topbar-doc-count">0 sources indexed</span>
       <div class="topbar-right">
         <select class="select" id="language-select" title="AI response language">
           <option value="en">English</option>
@@ -160,7 +369,7 @@ td:first-child { color: var(--text); }
           <option value="de">German</option>
           <option value="hi">Hindi</option>
         </select>
-        <div class="pill"><span id="tenant-label">default</span></div>
+        <div class="pill"><span id="tenant-label">No project</span></div>
         <div class="pill"><span class="status-dot"></span><span>API Ready</span></div>
       </div>
     </div>
@@ -169,34 +378,60 @@ td:first-child { color: var(--text); }
       <div class="workspace">
         <div class="section-head">
           <div>
-            <h1>Audit Analytics</h1>
-            <p class="muted">Version 2.0 analytics: insights, anomalies, pivots, BI exports, and multilingual AI answers.</p>
+            <h1>Project Intelligence</h1>
+            <p class="muted">Project health, risks, blockers, source coverage, KT readiness, and multilingual AI answers.</p>
           </div>
           <div class="toolbar">
             <button class="secondary-btn" onclick="refreshAll()">Refresh</button>
             <button class="secondary-btn" onclick="exportCsv()">CSV</button>
-            <button class="secondary-btn" onclick="exportTableau()">Tableau</button>
-            <button class="secondary-btn" onclick="exportPowerBi()">PowerBI</button>
+            <button class="secondary-btn" onclick="exportTableau()">Tableau JSON</button>
+            <button class="secondary-btn" onclick="exportPowerBi()">PowerBI JSON</button>
           </div>
         </div>
         <div class="kpi-grid" id="kpi-grid"></div>
+        <div class="value-grid">
+          <div class="value-card">
+            <span class="tag find">Find</span>
+            <strong>Search Project Memory</strong>
+            <p>Ask across tickets, docs, chats, incidents, metrics, and web context when project data is not enough.</p>
+            <button class="mini-action" onclick="setView('chat')">Open Ask AI</button>
+          </div>
+          <div class="value-card">
+            <span class="tag learn">Learn</span>
+            <strong>Explain Handoffs</strong>
+            <p>Generate source-grounded KT, inspect relationships, and click through graph nodes for topic context.</p>
+            <button class="mini-action" onclick="setView('kt')">Open KT Brief</button>
+          </div>
+          <div class="value-card">
+            <span class="tag learn">Study</span>
+            <strong>Generate Quizzes</strong>
+            <p>Create source-grounded quizzes and two-host project conversations from the uploaded files.</p>
+            <button class="mini-action" onclick="setView('studio')">Open Study Studio</button>
+          </div>
+          <div class="value-card">
+            <span class="tag act">Act</span>
+            <strong>Run Project Agents</strong>
+            <p>Use focused agents for risk review, incident handoff, release notes, metrics investigation, and source gaps.</p>
+            <button class="mini-action" onclick="setView('agents')">Open Agents</button>
+          </div>
+        </div>
         <div class="grid-2" style="margin-bottom:12px;">
           <div class="panel">
             <h2>AI-Driven Insights</h2>
             <div class="insight-list" id="insights-list"></div>
           </div>
           <div class="panel">
-            <h2>Anomaly Queue</h2>
+            <h2>Risk Queue</h2>
             <div class="issue-list" id="anomaly-list"></div>
           </div>
         </div>
         <div class="grid-2">
           <div class="panel">
-            <h2>Audited Amount by Category</h2>
+            <h2>Sources by Type</h2>
             <div class="chart" id="amount-chart"></div>
           </div>
           <div class="panel">
-            <h2>Exceptions by Category</h2>
+            <h2>Risks by Source Type</h2>
             <div class="chart" id="exception-chart"></div>
           </div>
         </div>
@@ -206,39 +441,120 @@ td:first-child { color: var(--text); }
             <div id="trend-chart"></div>
           </div>
           <div class="panel">
-            <h2>Document Languages</h2>
+            <h2>Source Languages</h2>
             <div class="chart" id="language-chart"></div>
           </div>
         </div>
         <div class="panel" style="margin-top:12px;">
-          <h2>Pivot Table</h2>
+          <h2>Risk Pivot</h2>
           <div class="pivot-wrap" id="pivot-table"></div>
         </div>
         <div class="grid-2" style="margin-top:12px;">
           <div class="panel">
-            <h2>Validation Queue</h2>
+            <h2>Data Quality Queue</h2>
             <div class="issue-list" id="validation-list"></div>
           </div>
           <div class="panel">
-            <h2>Recent Events</h2>
+            <h2>Recent Activity</h2>
             <div class="event-list" id="recent-events"></div>
           </div>
         </div>
       </div>
     </section>
 
+    <section class="view" id="view-agents">
+      <div class="workspace">
+        <div class="section-head">
+          <div>
+            <h1>Agent Gallery</h1>
+            <p class="muted">Reusable project agents for interview-ready handoff, risk, release, incident, and metrics workflows.</p>
+          </div>
+          <div class="toolbar">
+            <button class="secondary-btn" onclick="setView('chat')">Ask AI</button>
+            <button class="secondary-btn" onclick="setView('connectors')">Source Coverage</button>
+          </div>
+        </div>
+        <div class="agent-grid" id="agent-gallery"></div>
+      </div>
+    </section>
+
+    <section class="view" id="view-connectors">
+      <div class="workspace">
+        <div class="section-head">
+          <div>
+            <h1>Connector Hub</h1>
+            <p class="muted">Source coverage view for project data. Base supports upload-first ingestion today and tracks live connector readiness.</p>
+          </div>
+          <div class="toolbar">
+            <button class="primary-btn" onclick="triggerUpload()">Upload Source</button>
+            <button class="secondary-btn" onclick="askConnectorGap()">Ask Gap Agent</button>
+          </div>
+        </div>
+        <div class="grid-2" style="margin-bottom:12px;">
+          <div class="panel">
+            <h2>Coverage by Workstream</h2>
+            <div class="coverage-list" id="connector-coverage"></div>
+          </div>
+          <div class="panel">
+            <h2>Connector Strategy</h2>
+            <div class="insight-list">
+              <div class="insight"><strong>Upload-ready MVP</strong><br>CSV, Markdown, TXT, and PDF exports can be indexed now for demo workflows.</div>
+              <div class="insight"><strong>Next connector layer</strong><br>OAuth/API sync can replace manual exports for Jira, GitHub, Teams, Confluence, and PagerDuty.</div>
+              <div class="insight"><strong>Enterprise layer</strong><br>Permission sync, scheduled refresh, audit events, and scoped retrieval become the production moat.</div>
+            </div>
+          </div>
+        </div>
+        <div class="connector-grid" id="connector-grid"></div>
+      </div>
+    </section>
+
+    <section class="view" id="view-graph">
+      <div class="workspace">
+        <div class="section-head">
+          <div>
+            <h1>Knowledge Graph</h1>
+            <p class="muted">An Obsidian-style map of uploaded sources, tickets, PRs, incidents, source types, time periods, extracted signals, and their relationships.</p>
+          </div>
+          <div class="toolbar">
+            <button class="secondary-btn" onclick="resetGraphView()">Reset View</button>
+            <button class="secondary-btn" onclick="loadKnowledgeGraph()">Refresh</button>
+          </div>
+        </div>
+        <div class="panel graph-wrap">
+          <canvas class="graph-canvas" id="graph-canvas"></canvas>
+          <div class="graph-overlay" id="graph-stats"></div>
+          <div class="graph-controls" aria-label="Graph zoom controls">
+            <button class="graph-control-btn" type="button" onclick="zoomGraph(-1)" title="Zoom out">-</button>
+            <button class="graph-control-btn" type="button" onclick="fitGraphToView()" title="Fit graph">Fit</button>
+            <button class="graph-control-btn" type="button" onclick="zoomGraph(1)" title="Zoom in">+</button>
+          </div>
+          <div class="graph-tip" id="graph-tip"><strong>No graph yet</strong>Upload files in this project to generate nodes and links.</div>
+        </div>
+        <div class="legend" id="graph-legend"></div>
+      </div>
+    </section>
+
     <section class="view" id="view-chat">
       <div class="chat-shell">
+        <div class="chat-toolbar">
+          <div class="chat-toolbar-inner">
+            <span id="chat-memory-label">Chat history is saved for this project</span>
+            <div class="chat-history-tools">
+              <select class="chat-session-select" id="chat-session-select" onchange="switchChatSession(this.value)" aria-label="Chat history"></select>
+              <button class="secondary-btn" onclick="newChat()">New Chat</button>
+            </div>
+          </div>
+        </div>
         <div class="chat-area" id="chat-messages">
           <div class="chat-inner">
             <div class="empty-state" id="empty-state">
               <div class="empty-icon">AI</div>
-              <div class="empty-title">Ask your audit documents anything</div>
-              <div class="muted">Questions are answered through retrieval over indexed document chunks.</div>
+              <div class="empty-title">Ask your project sources anything</div>
+              <div class="muted">Questions are answered through retrieval over indexed tickets, docs, chats, exports, and reports.</div>
               <div class="empty-hints">
-                <button class="hint-btn" onclick="sendHint('Summarize the highest-risk audit findings')">Summarize the highest-risk audit findings</button>
-                <button class="hint-btn" onclick="sendHint('Which line items show exceptions or variances?')">Which line items show exceptions or variances?</button>
-                <button class="hint-btn" onclick="sendHint('List the compliance gaps with source documents')">List the compliance gaps with source documents</button>
+                <button class="hint-btn" onclick="sendHint('Summarize the current project risks and blockers')">Summarize the current project risks and blockers</button>
+                <button class="hint-btn" onclick="sendHint('What changed recently and what should the next person know?')">What changed recently and what should the next person know?</button>
+                <button class="hint-btn" onclick="sendHint('Create a short onboarding summary with source documents')">Create a short onboarding summary with source documents</button>
               </div>
             </div>
           </div>
@@ -246,9 +562,216 @@ td:first-child { color: var(--text); }
         <div class="input-bar">
           <div class="input-inner">
             <div class="input-wrap">
-              <textarea id="query-input" placeholder="Ask about audit findings, exceptions, amounts, controls..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+              <textarea id="query-input" placeholder="Ask about tickets, blockers, architecture, incidents, metrics, owners..." rows="1" onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
             </div>
             <button class="send-btn" onclick="sendQuery()" id="send-btn" title="Send">></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-kt">
+      <div class="workspace">
+        <div class="section-head">
+          <div>
+            <h1>KT Brief</h1>
+            <p class="muted">Generate onboarding or handoff context from indexed project sources.</p>
+          </div>
+          <button class="secondary-btn" onclick="generateKT()">Generate</button>
+        </div>
+        <div class="grid-2">
+          <div class="panel">
+            <h2>Brief Setup</h2>
+            <label class="field-label" for="kt-audience">Audience</label>
+            <input class="text-field" id="kt-audience" value="new backend engineer" />
+            <label class="field-label" for="kt-focus">Focus</label>
+            <textarea class="text-field large-text" id="kt-focus">overall project onboarding: architecture, current priorities, tickets, blockers, metrics, incidents, owners, and first-week checklist</textarea>
+            <div class="kt-actions">
+              <button class="secondary-btn" onclick="setKTFocus('overall project onboarding: architecture, current priorities, tickets, blockers, metrics, incidents, owners, and first-week checklist')">Onboarding</button>
+              <button class="secondary-btn" onclick="setKTFocus('handoff summary: recent changes, open risks, blockers, owners, decisions, and next actions')">Handoff</button>
+              <button class="secondary-btn" onclick="setKTFocus('operations review: traffic, latency, errors, database health, incidents, and service risks')">Ops Review</button>
+            </div>
+          </div>
+          <div class="panel">
+            <h2>Generated Brief</h2>
+            <div id="kt-result" class="kt-output muted">Upload project sources, then generate a KT brief.</div>
+            <div class="msg-sources" id="kt-sources"></div>
+            <div class="msg-meta" id="kt-meta"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="view-studio">
+      <div class="workspace">
+        <div class="section-head">
+          <div>
+            <h1>Study Studio</h1>
+            <p class="muted">Quiz generation and source conversations for project onboarding, interviews, and handoff practice.</p>
+          </div>
+          <div class="toolbar">
+            <button class="secondary-btn" onclick="generateQuiz()">Generate Quiz</button>
+            <button class="secondary-btn" onclick="generateConversation()">Generate Conversation</button>
+          </div>
+        </div>
+        <div class="studio-layout">
+          <div class="panel">
+            <h2>Quiz Builder</h2>
+            <div class="studio-controls">
+              <label class="field-label" for="quiz-focus">Focus</label>
+              <textarea class="text-field large-text" id="quiz-focus">project onboarding: risks, incidents, Jira tickets, GitHub PRs, metrics, database health, decisions, and owners</textarea>
+              <div class="studio-row">
+                <div>
+                  <label class="field-label" for="quiz-difficulty">Difficulty</label>
+                  <select class="text-field" id="quiz-difficulty">
+                    <option value="easy">Easy</option>
+                    <option value="medium" selected>Medium</option>
+                    <option value="hard">Hard</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="field-label" for="quiz-count">Questions</label>
+                  <select class="text-field" id="quiz-count">
+                    <option value="4">4</option>
+                    <option value="6" selected>6</option>
+                    <option value="8">8</option>
+                    <option value="10">10</option>
+                  </select>
+                </div>
+              </div>
+              <button class="primary-btn" id="quiz-btn" onclick="generateQuiz()">Generate Quiz</button>
+              <div class="kt-actions">
+                <button class="secondary-btn" onclick="setStudioFocus('quiz-focus','release readiness: GitHub PRs, Jira tickets, risks, blockers, release notes, and rollout decisions')">Release</button>
+                <button class="secondary-btn" onclick="setStudioFocus('quiz-focus','operations review: PagerDuty incidents, Grafana metrics, database health, latency, errors, and follow-up actions')">Ops</button>
+                <button class="secondary-btn" onclick="setStudioFocus('quiz-focus','new engineer onboarding: architecture, services, owners, runbooks, tickets, decisions, and first-week risks')">Onboarding</button>
+              </div>
+            </div>
+            <div class="studio-output" id="quiz-result">
+              <div class="issue">Generate a quiz after uploading project sources.</div>
+            </div>
+          </div>
+          <div class="panel">
+            <h2>Conversation Generator</h2>
+            <div class="studio-controls">
+              <label class="field-label" for="conversation-focus">Focus</label>
+              <textarea class="text-field large-text" id="conversation-focus">overall project deep dive: what changed, why it matters, current risks, incidents, metrics, owners, and next actions</textarea>
+              <div class="studio-row">
+                <div>
+                  <label class="field-label" for="conversation-format">Format</label>
+                  <select class="text-field" id="conversation-format">
+                    <option value="deep_dive" selected>Deep Dive</option>
+                    <option value="brief">Brief</option>
+                    <option value="critique">Critique</option>
+                    <option value="debate">Debate</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="field-label" for="conversation-length">Length</label>
+                  <select class="text-field" id="conversation-length">
+                    <option value="short">Short</option>
+                    <option value="default" selected>Default</option>
+                    <option value="long">Long</option>
+                  </select>
+                </div>
+              </div>
+              <button class="primary-btn" id="conversation-btn" onclick="generateConversation()">Generate Conversation</button>
+              <div class="kt-actions">
+                <button class="secondary-btn" onclick="setStudioFocus('conversation-focus','two-host handoff conversation covering recent changes, blockers, decisions, incidents, owners, and recommended next steps')">Handoff</button>
+                <button class="secondary-btn" onclick="setStudioFocus('conversation-focus','constructive critique of project health, weak source coverage, operational risks, unresolved incidents, and missing evidence')">Critique</button>
+                <button class="secondary-btn" onclick="setStudioFocus('conversation-focus','debate rollout readiness using Jira, GitHub, metrics, database health, PagerDuty, Teams, email, and Confluence evidence')">Debate</button>
+              </div>
+            </div>
+            <div class="studio-output" id="conversation-result">
+              <div class="issue">Generate a source conversation after uploading project sources.</div>
+            </div>
+          </div>
+          <div class="panel">
+            <h2>Audio Overview</h2>
+            <div class="studio-controls">
+              <label class="field-label" for="audio-focus">Focus</label>
+              <textarea class="text-field large-text" id="audio-focus">audio overview for onboarding: project story, architecture, risks, incidents, owners, metrics, and next actions</textarea>
+              <div class="studio-row">
+                <div>
+                  <label class="field-label" for="audio-style">Style</label>
+                  <select class="text-field" id="audio-style">
+                    <option value="deep_dive" selected>Deep Dive</option>
+                    <option value="brief">Brief</option>
+                    <option value="critique">Critique</option>
+                    <option value="debate">Debate</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="field-label" for="audio-count">Length</label>
+                  <select class="text-field" id="audio-count">
+                    <option value="4">Short</option>
+                    <option value="6" selected>Default</option>
+                    <option value="8">Long</option>
+                  </select>
+                </div>
+              </div>
+              <button class="primary-btn" id="audio-btn" onclick="generateArtifact('audio_overview')">Generate Audio Overview</button>
+            </div>
+            <div class="studio-output" id="audio-result"><div class="issue">Generate a playable source-grounded audio script.</div></div>
+          </div>
+          <div class="panel">
+            <h2>Video Overview</h2>
+            <div class="studio-controls">
+              <label class="field-label" for="video-focus">Focus</label>
+              <textarea class="text-field large-text" id="video-focus">video overview: project timeline, architecture, source coverage, risks, incidents, metrics, and next actions</textarea>
+              <label class="field-label" for="video-count">Scenes</label>
+              <select class="text-field" id="video-count">
+                <option value="4">4 scenes</option>
+                <option value="6" selected>6 scenes</option>
+                <option value="8">8 scenes</option>
+              </select>
+              <button class="primary-btn" id="video-btn" onclick="generateArtifact('video_overview')">Generate Video Storyboard</button>
+            </div>
+            <div class="studio-output" id="video-result"><div class="issue">Generate scenes, visuals, narration, and source hints.</div></div>
+          </div>
+          <div class="panel">
+            <h2>Slide Deck</h2>
+            <div class="studio-controls">
+              <label class="field-label" for="slide-focus">Focus</label>
+              <textarea class="text-field large-text" id="slide-focus">executive slide deck: project health, source coverage, risks, blockers, incidents, metrics, and recommended next actions</textarea>
+              <label class="field-label" for="slide-count">Slides</label>
+              <select class="text-field" id="slide-count">
+                <option value="4">4 slides</option>
+                <option value="6" selected>6 slides</option>
+                <option value="8">8 slides</option>
+              </select>
+              <button class="primary-btn" id="slide-btn" onclick="generateArtifact('slide_deck')">Generate Slide Deck</button>
+            </div>
+            <div class="studio-output" id="slide-result"><div class="issue">Generate a source-grounded slide outline.</div></div>
+          </div>
+          <div class="panel">
+            <h2>Flashcards</h2>
+            <div class="studio-controls">
+              <label class="field-label" for="flashcard-focus">Focus</label>
+              <textarea class="text-field large-text" id="flashcard-focus">study flashcards for interview demo: Jira, GitHub, Teams, PagerDuty, Grafana, database health, Confluence, and decisions</textarea>
+              <label class="field-label" for="flashcard-count">Cards</label>
+              <select class="text-field" id="flashcard-count">
+                <option value="4">4 cards</option>
+                <option value="6" selected>6 cards</option>
+                <option value="8">8 cards</option>
+              </select>
+              <button class="primary-btn" id="flashcard-btn" onclick="generateArtifact('flashcards')">Generate Flashcards</button>
+            </div>
+            <div class="studio-output" id="flashcard-result"><div class="issue">Generate revealable source-backed study cards.</div></div>
+          </div>
+          <div class="panel">
+            <h2>Infographic</h2>
+            <div class="studio-controls">
+              <label class="field-label" for="infographic-focus">Focus</label>
+              <textarea class="text-field large-text" id="infographic-focus">infographic brief: source coverage, project health, risks, blockers, incidents, metrics, and next actions</textarea>
+              <label class="field-label" for="infographic-count">Panels</label>
+              <select class="text-field" id="infographic-count">
+                <option value="4">4 panels</option>
+                <option value="6" selected>6 panels</option>
+                <option value="8">8 panels</option>
+              </select>
+              <button class="primary-btn" id="infographic-btn" onclick="generateArtifact('infographic')">Generate Infographic</button>
+            </div>
+            <div class="studio-output" id="infographic-result"><div class="issue">Generate compact visual panels from project evidence.</div></div>
           </div>
         </div>
       </div>
@@ -258,8 +781,8 @@ td:first-child { color: var(--text); }
       <div class="workspace">
         <div class="section-head">
           <div>
-            <h1>Document Library</h1>
-            <p class="muted">Uploaded audit files, chunk counts, and extracted analytics.</p>
+            <h1>Source Library</h1>
+            <p class="muted">Uploaded project files, chunk counts, source type, and extracted health signals.</p>
           </div>
           <button class="primary-btn" onclick="triggerUpload()">Upload</button>
         </div>
@@ -271,7 +794,7 @@ td:first-child { color: var(--text); }
       <div class="workspace">
         <div class="section-head">
           <div>
-            <h1>Audit Trail</h1>
+            <h1>Activity Log</h1>
             <p class="muted">Append-only event records for uploads, deletes, dashboard views, and exports.</p>
           </div>
           <button class="secondary-btn" onclick="loadAuditLog()">Refresh</button>
@@ -284,10 +807,10 @@ td:first-child { color: var(--text); }
 
 <div class="dropzone-overlay" id="dropzone-overlay" onclick="closeDropzone(event)">
   <div class="dropzone-box" onclick="event.stopPropagation()">
-    <div class="dropzone-title">Upload Audit Document</div>
-    <div class="dropzone-sub">PDF, TXT, Markdown, or CSV - max 10MB</div>
-    <input type="file" id="file-input-drop" accept=".pdf,.txt,.md,.csv" style="display:none" onchange="handleFileUpload(event)">
-    <button class="primary-btn" style="margin-bottom:12px;" onclick="document.getElementById('file-input-drop').click()">Choose File</button><br>
+    <div class="dropzone-title">Upload Project Sources</div>
+    <div class="dropzone-sub">Select one or many PDF, TXT, MD, or CSV files - max 10MB each</div>
+    <input type="file" id="file-input-drop" accept=".pdf,.txt,.md,.csv" multiple style="display:none" onchange="handleFileUpload(event)">
+    <button class="primary-btn" style="margin-bottom:12px;" onclick="document.getElementById('file-input-drop').click()">Choose Files</button><br>
     <button class="secondary-btn" onclick="document.getElementById('dropzone-overlay').style.display='none'">Cancel</button>
   </div>
 </div>
@@ -297,54 +820,245 @@ td:first-child { color: var(--text); }
 const API_BASE = location.protocol === 'file:' || location.port === '3000'
   ? 'http://localhost:8000'
   : window.location.origin;
-const TENANT_ID = 'default';
-let messages = [], documents = [], dashboard = null, auditEvents = [], isLoading = false;
+const CHAT_STORAGE_KEY = 'base.project.chat.history.v1';
+const CHAT_HISTORY_LIMIT = 80;
+const GRAPH_MIN_SCALE = 0.12;
+const GRAPH_MAX_SCALE = 3.2;
+let projects = [], currentProject = null;
+let messages = [], documents = [], dashboard = null, auditEvents = [], knowledgeGraph = null;
+let currentChatSessionId = null;
+let currentQuiz = null, quizAnswers = {}, currentArtifact = null;
+let isLoading = false, isKtLoading = false, isStudioLoading = false, graphAnimationId = null, graphDragging = null, graphHover = null, graphSelected = null;
+let graphTransform = {x: 0, y: 0, scale: 1};
+let nextQueryOptions = {};
+
+const AGENT_TEMPLATES = [
+  {
+    id: 'risk-analyst',
+    name: 'Project Risk Analyst',
+    mode: 'act',
+    tags: ['risks', 'blockers', 'owners'],
+    description: 'Turns messy project history into a prioritized risk queue with owners, evidence, and next moves.',
+    prompt: 'Act as a project risk analyst. Review the indexed sources and produce a prioritized risk and blocker register with severity, owner hints, evidence, and the next action for each item.'
+  },
+  {
+    id: 'handoff-commander',
+    name: 'Handoff Commander',
+    mode: 'learn',
+    tags: ['handoff', 'timeline', 'decisions'],
+    description: 'Creates an executive handoff from tickets, chats, docs, incidents, metrics, and recent changes.',
+    prompt: 'Create a handoff command brief for this project. Include recent changes, important decisions, open risks, blockers, owners, unresolved questions, and what the next person should inspect first.'
+  },
+  {
+    id: 'incident-reviewer',
+    name: 'Incident Reviewer',
+    mode: 'act',
+    tags: ['incidents', 'pagerduty', 'root cause'],
+    description: 'Summarizes incident history, impact, likely causes, repeated patterns, and follow-up actions.',
+    prompt: 'Review incident and operations sources. Summarize incidents, customer or system impact, probable root causes, repeated patterns, open follow-ups, and prevention actions.'
+  },
+  {
+    id: 'release-writer',
+    name: 'Release Notes Drafter',
+    mode: 'act',
+    tags: ['github', 'prs', 'releases'],
+    description: 'Drafts release notes from PRs, commits, tickets, decisions, and operational risk context.',
+    prompt: 'Draft release notes from the indexed project sources. Group changes by feature, bug fix, infrastructure, risk, and migration notes. Include source-backed caveats and follow-up items.'
+  },
+  {
+    id: 'metrics-investigator',
+    name: 'Metrics Investigator',
+    mode: 'find',
+    tags: ['grafana', 'database', 'traffic'],
+    description: 'Connects product traffic, latency, errors, database health, and deployment changes into one story.',
+    prompt: 'Investigate the project metrics. Explain traffic, latency, error rate, database health, and deployment signals. Highlight anomalies, possible causes, and what to verify next.'
+  },
+  {
+    id: 'source-gap-agent',
+    name: 'Source Gap Agent',
+    mode: 'find',
+    tags: ['coverage', 'connectors', 'demo'],
+    description: 'Shows which tool exports are indexed, which are missing, and what to upload next for stronger answers.',
+    prompt: 'Audit the current project source coverage. Which important sources are present, which are missing or weak, and what should be uploaded next to improve project intelligence and KT quality?'
+  }
+];
+
+const CONNECTOR_CATALOG = [
+  {id:'jira', name:'Jira', group:'Project Work', keywords:['jira','ticket','story','sprint','epic','backlog'], description:'Issues, epics, sprint movement, blockers, and owners.'},
+  {id:'teams', name:'Microsoft Teams', group:'Communication', keywords:['teams','chat','standup','conversation'], description:'Channel decisions, handoff notes, coordination, and owner context.'},
+  {id:'email', name:'Email', group:'Communication', keywords:['email','mail','inbox','subject'], description:'Long-form stakeholder decisions, approvals, escalations, and customer context.'},
+  {id:'github', name:'GitHub', group:'Development', keywords:['github','pull request','pr-','commit','branch','release'], description:'PRs, commits, branches, releases, and engineering change history.'},
+  {id:'grafana', name:'Grafana / Metrics', group:'Observability', keywords:['grafana','traffic','latency','p95','p99','error rate','requests'], description:'Traffic, latency, errors, uptime, and service trend signals.'},
+  {id:'database', name:'Database Health', group:'Observability', keywords:['database','db','query','replication','connections','storage'], description:'Slow queries, replication, storage, locks, connections, and health checks.'},
+  {id:'confluence', name:'Confluence', group:'Knowledge', keywords:['confluence','runbook','architecture','docs','onboarding'], description:'Architecture docs, runbooks, onboarding pages, and decision records.'},
+  {id:'pagerduty', name:'PagerDuty', group:'Support & Incidents', keywords:['pagerduty','incident','outage','pd-','sev'], description:'Incidents, on-call escalations, root cause notes, and follow-up actions.'},
+  {id:'zendesk', name:'Zendesk / Support', group:'Support & Incidents', keywords:['zendesk','support','customer','ticket'], description:'Support tickets, recurring customer pain, and escalation patterns.'},
+  {id:'powerbi', name:'Power BI / BI', group:'Analytics', keywords:['power bi','dashboard','report','conversion','retention'], description:'Business dashboards, product analytics, funnel movement, and KPI context.'}
+];
 
 document.addEventListener('DOMContentLoaded', () => {
-  document.getElementById('tenant-label').textContent = TENANT_ID;
-  refreshAll();
+  loadProjects();
 });
 
 async function refreshAll() {
+  if (!currentProject) return;
   await Promise.all([loadDocuments(), loadDashboard(), loadAuditLog()]);
+}
+
+async function loadProjects() {
+  try {
+    const r = await fetch(`${API_BASE}/api/projects/`);
+    if (!r.ok) throw new Error('projects failed');
+    projects = await r.json();
+    renderProjects();
+  } catch {
+    document.getElementById('project-list').innerHTML = '<div class="issue">Cannot load projects. Is the backend running?</div>';
+  }
+}
+
+function renderProjects() {
+  const el = document.getElementById('project-list');
+  document.getElementById('project-count').textContent = `${projects.length} project${projects.length!==1?'s':''}`;
+  if (!projects.length) {
+    el.innerHTML = '<div class="issue">No projects yet. Create one above to start uploading sources.</div>';
+    return;
+  }
+  el.innerHTML = projects.map(p => `
+    <div class="project-card">
+      <div class="project-card-head">
+        <div>
+          <h2>${esc(p.name)}</h2>
+          <div class="project-card-desc">${esc(p.description || 'No description')}</div>
+        </div>
+      </div>
+      <div class="project-stats">
+        <div class="project-stat"><span>Sources</span><strong>${esc(p.document_count || 0)}</strong></div>
+        <div class="project-stat"><span>Health</span><strong>${health(p.project_health_score || 0)}</strong></div>
+        <div class="project-stat"><span>Risks</span><strong>${esc(p.risk_count || 0)}</strong></div>
+      </div>
+      <div class="project-stats">
+        <div class="project-stat"><span>Blockers</span><strong>${esc(p.blocker_count || 0)}</strong></div>
+        <div class="project-stat"><span>Tickets</span><strong>${esc(p.ticket_count || 0)}</strong></div>
+        <div class="project-stat"><span>Decisions</span><strong>${esc(p.decision_count || 0)}</strong></div>
+      </div>
+      <div class="project-card-actions">
+        <span class="project-updated">${p.updated_at ? new Date(p.updated_at).toLocaleDateString() : 'New'}</span>
+        <button class="primary-btn" data-project-id="${attr(p.project_id)}" onclick="openProjectFromButton(this)">Open</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+async function createProject(event) {
+  event.preventDefault();
+  const nameEl = document.getElementById('project-name');
+  const descriptionEl = document.getElementById('project-description');
+  const btn = document.getElementById('create-project-btn');
+  const name = nameEl.value.trim();
+  const description = descriptionEl.value.trim();
+  if (!name) return;
+  btn.disabled = true;
+  btn.textContent = 'Creating...';
+  try {
+    const r = await fetch(`${API_BASE}/api/projects/`, {
+      method: 'POST',
+      headers: {'Content-Type':'application/json'},
+      body: JSON.stringify({name, description})
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.detail || 'Create failed');
+    nameEl.value = '';
+    descriptionEl.value = '';
+    projects.unshift(data);
+    renderProjects();
+    openProject(data);
+  } catch (e) {
+    showToast(e.message || 'Project creation failed', 'error');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Create Project';
+  }
+}
+
+function openProjectFromButton(btn) {
+  const project = projects.find(p => p.project_id === btn.dataset.projectId);
+  if (project) openProject(project);
+}
+
+function openProject(project) {
+  currentProject = project;
+  messages = loadProjectChatHistory(project.project_id);
+  documents = [];
+  dashboard = null;
+  auditEvents = [];
+  knowledgeGraph = null;
+  document.getElementById('project-hub').classList.remove('active');
+  document.getElementById('app').classList.add('active');
+  document.getElementById('tenant-label').textContent = project.name;
+  document.getElementById('topbar-title').textContent = `${project.name} Dashboard`;
+  document.getElementById('topbar-doc-count').textContent = 'Loading sources...';
+  if (messages.length) renderMessages();
+  else resetChat();
+  setView('dashboard');
+  refreshAll();
+}
+
+function backToProjects() {
+  currentProject = null;
+  document.getElementById('app').classList.remove('active');
+  document.getElementById('project-hub').classList.add('active');
+  loadProjects();
+}
+
+function projectHeaders(extra = {}) {
+  return {...extra, 'x-tenant-id': currentProject?.project_id || 'default'};
 }
 
 function setView(v) {
   document.querySelectorAll('.view').forEach(el => el.classList.toggle('active', el.id === `view-${v}`));
   document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.view === v));
-  const titles = {dashboard:'Audit Dashboard', chat:'Knowledge Chat', documents:'Documents', audit:'Audit Trail'};
-  document.getElementById('topbar-title').textContent = titles[v] || 'Audit Analytics';
+  const titles = {dashboard:'Project Dashboard', agents:'Agent Gallery', connectors:'Connector Hub', graph:'Knowledge Graph', chat:'Knowledge Chat', kt:'KT Brief', studio:'Study Studio', documents:'Sources', audit:'Activity Log'};
+  const prefix = currentProject ? `${currentProject.name} ` : '';
+  document.getElementById('topbar-title').textContent = v === 'dashboard' ? `${prefix}Dashboard` : (titles[v] || 'Project Intelligence');
+  if (v === 'agents') renderAgentGallery();
+  if (v === 'connectors') renderConnectorHub();
+  if (v === 'chat') messages.length ? renderMessages() : resetChat();
+  if (v === 'studio') renderStudioState();
   if (v === 'documents') renderDocumentTable();
   if (v === 'audit') renderAuditLog();
+  if (v === 'graph') loadKnowledgeGraph();
 }
 
 async function loadDocuments() {
   try {
-    const r = await fetch(`${API_BASE}/api/documents/`, {headers:{'x-tenant-id':TENANT_ID}});
+    const r = await fetch(`${API_BASE}/api/documents/`, {headers:projectHeaders()});
     if (r.ok) {
       documents = await r.json();
       renderSidebarDocs();
       renderDocumentTable();
-      document.getElementById('topbar-doc-count').textContent = `${documents.length} document${documents.length!==1?'s':''} indexed`;
+      renderConnectorHub();
+      document.getElementById('topbar-doc-count').textContent = `${documents.length} source${documents.length!==1?'s':''} indexed`;
     }
   } catch(e) {}
 }
 
 async function loadDashboard() {
   try {
-    const r = await fetch(`${API_BASE}/api/analytics/dashboard`, {headers:{'x-tenant-id':TENANT_ID}});
+    const r = await fetch(`${API_BASE}/api/analytics/dashboard`, {headers:projectHeaders()});
     if (r.ok) {
       dashboard = await r.json();
       renderDashboard();
+      renderDocumentTable();
+      renderConnectorHub();
     }
   } catch(e) {
-    showToast('Cannot load analytics dashboard', 'error');
+    showToast('Cannot load project dashboard', 'error');
   }
 }
 
 async function loadAuditLog() {
   try {
-    const r = await fetch(`${API_BASE}/api/analytics/audit-log`, {headers:{'x-tenant-id':TENANT_ID}});
+    const r = await fetch(`${API_BASE}/api/analytics/audit-log`, {headers:projectHeaders()});
     if (r.ok) {
       auditEvents = await r.json();
       renderAuditLog();
@@ -354,26 +1068,139 @@ async function loadAuditLog() {
 
 function renderDashboard() {
   const k = dashboard?.kpis || {};
+  const healthValue = k.project_health_score ?? ((k.compliance_ratio || 0) * 100);
   const kpis = [
-    ['Documents', k.documents || 0],
-    ['Audited Amount', money(k.total_audited_amount || 0)],
-    ['Exceptions', k.exceptions || 0],
-    ['Compliance', pct(k.compliance_ratio || 0)],
-    ['Validation Issues', k.validation_issues || 0],
-    ['Anomalies', k.anomalies || 0]
+    ['Sources', k.documents || 0],
+    ['Health', health(healthValue)],
+    ['Risks', k.risks ?? k.exceptions ?? 0],
+    ['Blockers', k.blockers || 0],
+    ['Tickets', k.tickets || 0],
+    ['Decisions', k.decisions || 0]
   ];
   document.getElementById('kpi-grid').innerHTML = kpis.map(([label, value]) => `<div class="kpi"><div class="kpi-label">${label}</div><div class="kpi-value">${value}</div></div>`).join('');
   renderInsights();
   renderAnomalies();
-  renderBars('amount-chart', dashboard?.charts?.amount_by_category || [], true);
-  renderBars('exception-chart', dashboard?.charts?.exceptions_by_category || [], false);
+  renderBars('amount-chart', dashboard?.charts?.documents_by_source || dashboard?.charts?.amount_by_category || [], false);
+  renderBars('exception-chart', dashboard?.charts?.risks_by_source || dashboard?.charts?.exceptions_by_category || [], false);
   renderBars('language-chart', dashboard?.charts?.languages || [], false);
   renderTrend();
   renderPivot();
   const issues = dashboard?.validation_issues || [];
-  document.getElementById('validation-list').innerHTML = issues.length ? issues.map(i => `<div class="issue"><strong>${esc(i.filename)}</strong><br>${esc(i.issue)}</div>`).join('') : '<div class="issue">No validation issues detected.</div>';
+  document.getElementById('validation-list').innerHTML = issues.length ? issues.map(i => `<div class="issue"><strong>${esc(i.filename)}</strong><br>${esc(i.issue)}</div>`).join('') : '<div class="issue">No data quality issues detected.</div>';
   const events = dashboard?.audit_events || [];
   document.getElementById('recent-events').innerHTML = events.length ? events.slice(0,6).map(renderEvent).join('') : '<div class="event">No events yet.</div>';
+}
+
+function renderAgentGallery() {
+  const el = document.getElementById('agent-gallery');
+  if (!el) return;
+  el.innerHTML = AGENT_TEMPLATES.map(agent => `
+    <div class="agent-card-demo">
+      <div class="agent-head-demo">
+        <div>
+          <h2>${esc(agent.name)}</h2>
+          <div class="agent-desc">${esc(agent.description)}</div>
+        </div>
+        <span class="tag ${attr(agent.mode)}">${esc(agent.mode)}</span>
+      </div>
+      <div class="tag-row">${agent.tags.map(tag => `<span class="tag">${esc(tag)}</span>`).join('')}</div>
+      <div class="connector-foot">
+        <button class="primary-btn" data-agent-id="${attr(agent.id)}" onclick="runAgentFromButton(this)">Run Agent</button>
+        <button class="secondary-btn" data-agent-id="${attr(agent.id)}" onclick="loadAgentPromptFromButton(this)">Load Prompt</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function getConnectorSearchText() {
+  const analysisRows = dashboard?.documents || [];
+  return [
+    ...documents.map(doc => `${doc.filename || ''}`),
+    ...analysisRows.map(row => `${row.filename || ''} ${row.category || ''}`)
+  ].join(' ').toLowerCase();
+}
+
+function connectorIsIndexed(connector) {
+  const haystack = getConnectorSearchText();
+  return connector.keywords.some(keyword => haystack.includes(keyword));
+}
+
+function renderConnectorHub() {
+  const grid = document.getElementById('connector-grid');
+  const coverage = document.getElementById('connector-coverage');
+  if (!grid || !coverage) return;
+  const groups = [...new Set(CONNECTOR_CATALOG.map(connector => connector.group))];
+
+  coverage.innerHTML = groups.map(group => {
+    const connectors = CONNECTOR_CATALOG.filter(connector => connector.group === group);
+    const indexed = connectors.filter(connectorIsIndexed).length;
+    const percent = Math.round((indexed / connectors.length) * 100);
+    return `<div class="coverage-row"><strong>${esc(group)}</strong><div class="coverage-track"><div class="coverage-fill" style="width:${percent}%"></div></div><span>${indexed}/${connectors.length}</span></div>`;
+  }).join('');
+
+  grid.innerHTML = CONNECTOR_CATALOG.map(connector => {
+    const indexed = connectorIsIndexed(connector);
+    const statusClass = indexed ? 'indexed' : 'ready';
+    const statusText = indexed ? 'Indexed' : 'Upload Ready';
+    return `<div class="connector-card">
+      <div class="connector-head">
+        <div>
+          <h2>${esc(connector.name)}</h2>
+          <div class="connector-desc">${esc(connector.description)}</div>
+        </div>
+        <span class="status-badge ${statusClass}">${statusText}</span>
+      </div>
+      <div class="tag-row"><span class="tag">${esc(connector.group)}</span><span class="tag">Live sync planned</span></div>
+      <div class="connector-foot">
+        <button class="secondary-btn" onclick="triggerUpload()">Upload Export</button>
+        <button class="mini-action" data-connector-id="${attr(connector.id)}" onclick="askConnectorFromButton(this)">Ask Gap</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function agentById(id) {
+  return AGENT_TEMPLATES.find(agent => agent.id === id);
+}
+
+function connectorById(id) {
+  return CONNECTOR_CATALOG.find(connector => connector.id === id);
+}
+
+function runAgentFromButton(btn) {
+  const agent = agentById(btn.dataset.agentId);
+  if (agent) runAgentPrompt(agent.prompt, {allowWebSearch: false});
+}
+
+function loadAgentPromptFromButton(btn) {
+  const agent = agentById(btn.dataset.agentId);
+  if (!agent) return;
+  setView('chat');
+  nextQueryOptions = {allowWebSearch: false};
+  const input = document.getElementById('query-input');
+  input.value = agent.prompt;
+  autoResize(input);
+  input.focus();
+}
+
+function runAgentPrompt(prompt, options = {}) {
+  setView('chat');
+  const input = document.getElementById('query-input');
+  nextQueryOptions = options;
+  input.value = prompt;
+  autoResize(input);
+  sendQuery();
+}
+
+function askConnectorFromButton(btn) {
+  const connector = connectorById(btn.dataset.connectorId);
+  if (!connector) return;
+  runAgentPrompt(`Review ${connector.name} coverage for this project. Tell me whether this source is represented in the uploaded data, what signals are missing, and what export or connector data should be added next.`, {allowWebSearch: false});
+}
+
+function askConnectorGap() {
+  const agent = agentById('source-gap-agent');
+  runAgentPrompt(agent?.prompt || 'Audit current project source coverage and recommend the next uploads.', {allowWebSearch: false});
 }
 
 function renderBars(id, rows, currency) {
@@ -396,17 +1223,19 @@ function renderInsights() {
 function renderAnomalies() {
   const rows = dashboard?.anomalies || [];
   const el = document.getElementById('anomaly-list');
-  el.innerHTML = rows.length ? rows.map(a => `<div class="issue"><strong>${esc(a.filename)} - ${esc(a.type)}</strong><br>${esc(a.description)}<br><span class="muted">${esc(a.metric)}: ${esc(a.value)} | score: ${esc(a.score)} | ${esc(a.severity)}</span></div>`).join('') : '<div class="issue">No anomaly signals detected.</div>';
+  el.innerHTML = rows.length ? rows.map(a => `<div class="issue"><strong>${esc(a.filename)} - ${esc(a.type)}</strong><br>${esc(a.description)}<br><span class="muted">${esc(a.metric)}: ${esc(a.value)} | score: ${esc(a.score)} | ${esc(a.severity)}</span></div>`).join('') : '<div class="issue">No risk signals detected.</div>';
 }
 
 function renderTrend() {
   const rows = dashboard?.charts?.multi_axis_trends || [];
   const el = document.getElementById('trend-chart');
   if (!rows.length) { el.innerHTML = '<div class="muted" style="margin-top:12px;">No trend data yet.</div>'; return; }
-  const maxAmount = Math.max(...rows.map(r => Number(r.amount) || 0), 1);
+  const maxRisk = Math.max(...rows.map(r => Number(r.risks ?? r.exceptions) || 0), 1);
   el.innerHTML = rows.map(r => {
-    const width = Math.max(3, ((Number(r.amount) || 0) / maxAmount) * 100);
-    return `<div class="trend-row"><div>${esc(r.period)}</div><div class="bar-track"><div class="bar-fill" style="width:${width}%"></div></div><div>${esc(r.exceptions)} ex</div><div>${pct(r.compliance_ratio)}</div></div>`;
+    const riskValue = Number(r.risks ?? r.exceptions) || 0;
+    const width = Math.max(3, (riskValue / maxRisk) * 100);
+    const healthValue = r.project_health_score ?? ((r.compliance_ratio || 0) * 100);
+    return `<div class="trend-row"><div>${esc(r.period)}</div><div class="bar-track"><div class="bar-fill" style="width:${width}%"></div></div><div>${esc(riskValue)} risks</div><div>${health(healthValue)}</div></div>`;
   }).join('');
 }
 
@@ -414,29 +1243,31 @@ function renderPivot() {
   const pivot = dashboard?.charts?.pivot_table;
   const el = document.getElementById('pivot-table');
   if (!pivot || !pivot.columns?.length) { el.innerHTML = '<div class="muted">No pivot data yet.</div>'; return; }
-  el.innerHTML = `<table><thead><tr><th>Category</th>${pivot.columns.map(c => `<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${pivot.amounts.map(row => `<tr><td>${esc(row.category)}</td>${row.values.map(v => `<td>${money(v)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+  const rows = pivot.risks || pivot.amounts || [];
+  el.innerHTML = `<table><thead><tr><th>Source Type</th>${pivot.columns.map(c => `<th>${esc(c)}</th>`).join('')}</tr></thead><tbody>${rows.map(row => `<tr><td>${esc(row.category)}</td>${row.values.map(v => `<td>${esc(v)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
 }
 
 function renderSidebarDocs() {
   const el = document.getElementById('doc-list');
-  if (!documents.length) { el.innerHTML='<div style="padding:8px 12px;font-size:12px;color:var(--text-muted);">No documents yet</div>'; return; }
-  el.innerHTML = documents.map(d=>`<div class="doc-item"><div class="doc-dot"></div><span class="doc-name" title="${esc(d.filename)}">${esc(d.filename)}</span><span class="doc-chunks">${d.chunk_count}c</span><button class="doc-delete" onclick="deleteDocument('${d.document_id}','${esc(d.filename)}')">x</button></div>`).join('');
+  if (!documents.length) { el.innerHTML='<div style="padding:8px 12px;font-size:12px;color:var(--text-muted);">No sources yet</div>'; return; }
+  el.innerHTML = documents.map(d=>`<div class="doc-item"><div class="doc-dot"></div><span class="doc-name" title="${esc(d.filename)}">${esc(d.filename)}</span><span class="doc-chunks">${d.chunk_count}c</span><button class="doc-delete" data-doc-id="${attr(d.document_id)}" data-doc-name="${attr(d.filename)}" onclick="deleteDocumentFromButton(this)">x</button></div>`).join('');
 }
 
 function renderDocumentTable() {
   const el = document.getElementById('doc-table');
   const analyses = dashboard?.documents || [];
-  if (!documents.length) { el.innerHTML='<div style="text-align:center;padding:36px;color:var(--text-muted);font-size:14px;">No documents yet.</div>'; return; }
-  el.innerHTML=`<table><thead><tr><th>Filename</th><th>Category</th><th>Language</th><th>Chunks</th><th>Amount</th><th>Exceptions</th><th>Compliance</th><th></th></tr></thead><tbody>${documents.map(d=>{
+  if (!documents.length) { el.innerHTML='<div style="text-align:center;padding:36px;color:var(--text-muted);font-size:14px;">No sources yet.</div>'; return; }
+  el.innerHTML=`<table><thead><tr><th>Filename</th><th>Source Type</th><th>Language</th><th>Chunks</th><th>Health</th><th>Tickets</th><th>Risks</th><th>Blockers</th><th></th></tr></thead><tbody>${documents.map(d=>{
     const a = analyses.find(x => x.document_id === d.document_id) || {};
-    return `<tr><td>${esc(d.filename)}</td><td>${esc(a.category || 'Pending')}</td><td>${esc(a.language?.name || 'Unknown')}</td><td>${d.chunk_count}</td><td>${money(a.total_amount || 0)}</td><td>${a.exception_count || 0}</td><td>${pct(a.compliance_ratio || 0)}</td><td><button class="secondary-btn" onclick="deleteDocument('${d.document_id}','${esc(d.filename)}')">Delete</button></td></tr>`;
+    const healthValue = a.project_health_score ?? ((a.compliance_ratio || 0) * 100);
+    return `<tr><td>${esc(d.filename)}</td><td>${esc(a.category || 'Pending')}</td><td>${esc(a.language?.name || 'Unknown')}</td><td>${d.chunk_count}</td><td>${health(healthValue)}</td><td>${a.ticket_count || 0}</td><td>${a.risk_count ?? a.exception_count ?? 0}</td><td>${a.blocker_count || 0}</td><td><button class="secondary-btn" data-doc-id="${attr(d.document_id)}" data-doc-name="${attr(d.filename)}" onclick="deleteDocumentFromButton(this)">Delete</button></td></tr>`;
   }).join('')}</tbody></table>`;
 }
 
 function renderAuditLog() {
   const el = document.getElementById('audit-log-list');
   if (!el) return;
-  el.innerHTML = auditEvents.length ? auditEvents.map(renderEvent).join('') : '<div class="event">No audit events yet.</div>';
+  el.innerHTML = auditEvents.length ? auditEvents.map(renderEvent).join('') : '<div class="event">No activity events yet.</div>';
 }
 
 function renderEvent(e) {
@@ -447,37 +1278,706 @@ function renderEvent(e) {
 async function deleteDocument(id, name) {
   if(!confirm(`Delete "${name}"?`)) return;
   try {
-    const r = await fetch(`${API_BASE}/api/documents/${id}`,{method:'DELETE',headers:{'x-tenant-id':TENANT_ID}});
+    const r = await fetch(`${API_BASE}/api/documents/${id}`,{method:'DELETE',headers:projectHeaders()});
     if(r.ok) { showToast(`Deleted "${name}"`, 'success'); await refreshAll(); }
     else showToast('Delete failed','error');
   } catch { showToast('Cannot connect to API','error'); }
 }
 
-function triggerUpload() { document.getElementById('dropzone-overlay').style.display='flex'; }
+function deleteDocumentFromButton(btn) {
+  deleteDocument(btn.dataset.docId, btn.dataset.docName);
+}
+
+function triggerUpload() {
+  if (!currentProject) { showToast('Open a project before uploading sources', 'error'); return; }
+  document.getElementById('dropzone-overlay').style.display='flex';
+}
 function closeDropzone(e) { if(e.target===document.getElementById('dropzone-overlay')) document.getElementById('dropzone-overlay').style.display='none'; }
 
 async function handleFileUpload(e) {
-  const file = e.target.files[0]; if(!file) return;
+  const files = Array.from(e.target.files || []);
+  if(!files.length) return;
   document.getElementById('dropzone-overlay').style.display='none';
   const btn = document.getElementById('upload-btn');
-  btn.disabled=true; btn.textContent='Indexing...';
-  const fd = new FormData(); fd.append('file', file);
+  let indexed = 0;
+  let failed = 0;
+  btn.disabled=true;
   try {
-    const r = await fetch(`${API_BASE}/api/ingest/`,{method:'POST',headers:{'x-tenant-id':TENANT_ID},body:fd});
-    const data = await r.json();
-    if(r.ok) {
-      showToast(`Indexed ${file.name}: ${money(data.kpis.total_amount)} / ${data.kpis.exception_count} exceptions`, 'success');
-      if (data.validation_issues?.length) showToast(`${data.validation_issues.length} validation issue(s) need review`, 'info');
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      btn.textContent = files.length === 1 ? 'Indexing...' : `Indexing ${i + 1}/${files.length}...`;
+      const fd = new FormData();
+      fd.append('file', file);
+      try {
+        const r = await fetch(`${API_BASE}/api/ingest/`,{method:'POST',headers:projectHeaders(),body:fd});
+        const data = await r.json();
+        if(r.ok) {
+          indexed += 1;
+          const k = data.kpis || {};
+          const healthValue = k.project_health_score ?? ((k.compliance_ratio || 0) * 100);
+          const risks = k.risk_count ?? k.exception_count ?? 0;
+          showToast(`Indexed ${file.name}: ${health(healthValue)} health / ${risks} risks`, 'success');
+          if (data.validation_issues?.length) showToast(`${file.name}: ${data.validation_issues.length} validation issue(s) need review`, 'info');
+        } else {
+          failed += 1;
+          showToast(`${file.name}: ${data.detail || 'Upload failed'}`, 'error');
+        }
+      } catch {
+        failed += 1;
+        showToast(`${file.name}: Cannot connect to API`, 'error');
+      }
+    }
+    if (indexed) {
       await refreshAll();
+      knowledgeGraph = null;
       setView('dashboard');
-    } else showToast(data.detail||'Upload failed','error');
-  } catch { showToast('Cannot connect to API. Is backend running?','error'); }
-  finally { btn.disabled=false; btn.textContent='Upload Document'; e.target.value=''; }
+      showToast(`Indexed ${indexed} source${indexed!==1?'s':''}${failed ? `, ${failed} failed` : ''}`, failed ? 'info' : 'success');
+    } else if (failed) {
+      showToast(`No files indexed. ${failed} failed.`, 'error');
+    }
+  } finally {
+    btn.disabled=false;
+    btn.textContent='Upload Source';
+    e.target.value='';
+  }
 }
 
 function handleKey(e) { if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sendQuery();} }
 function autoResize(el) { el.style.height='auto'; el.style.height=Math.min(el.scrollHeight,120)+'px'; }
 function sendHint(t) { document.getElementById('query-input').value=t; sendQuery(); }
+
+function chatStorageId(projectId = currentProject?.project_id) {
+  return projectId || 'default';
+}
+
+function makeChatSessionId() {
+  if (globalThis.crypto?.randomUUID) return globalThis.crypto.randomUUID();
+  return `chat-${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
+}
+
+function readChatStore() {
+  try {
+    return JSON.parse(localStorage.getItem(CHAT_STORAGE_KEY) || '{}');
+  } catch {
+    return {};
+  }
+}
+
+function writeChatStore(store) {
+  try {
+    localStorage.setItem(CHAT_STORAGE_KEY, JSON.stringify(store));
+  } catch {
+    showToast('Chat history could not be saved in this browser', 'error');
+  }
+}
+
+function cleanChatMessage(message) {
+  return {
+    role: message.role,
+    content: message.content,
+    sources: message.sources || [],
+    tokens: message.tokens ?? null,
+    chunks: message.chunks ?? 0,
+    saved_at: message.saved_at || new Date().toISOString()
+  };
+}
+
+function deriveChatTitle(rows, fallback = 'New chat') {
+  const firstUser = rows.find(message => message.role === 'user' && message.content);
+  if (!firstUser) return fallback;
+  const title = firstUser.content.replace(/\s+/g, ' ').trim();
+  return title.length > 44 ? `${title.slice(0, 44)}...` : title;
+}
+
+function cleanChatSession(session, fallbackTitle = 'New chat') {
+  const rows = Array.isArray(session?.messages) ? session.messages : [];
+  const cleanMessages = rows
+    .filter(message => ['user', 'assistant'].includes(message.role) && message.content)
+    .slice(-CHAT_HISTORY_LIMIT)
+    .map(cleanChatMessage);
+  const lastMessage = cleanMessages[cleanMessages.length - 1];
+  return {
+    id: session?.id || makeChatSessionId(),
+    title: session?.title || deriveChatTitle(cleanMessages, fallbackTitle),
+    created_at: session?.created_at || cleanMessages[0]?.saved_at || new Date().toISOString(),
+    updated_at: session?.updated_at || lastMessage?.saved_at || new Date().toISOString(),
+    messages: cleanMessages
+  };
+}
+
+function normalizeProjectChatState(entry) {
+  if (Array.isArray(entry)) {
+    const migrated = cleanChatSession({messages: entry}, 'Previous chat');
+    return {
+      currentSessionId: migrated.id,
+      sessions: migrated.messages.length ? [migrated] : []
+    };
+  }
+  const sessions = Array.isArray(entry?.sessions)
+    ? entry.sessions.map(session => cleanChatSession(session)).filter(session => session.messages.length || session.id === entry.currentSessionId)
+    : [];
+  const currentSessionId = sessions.some(session => session.id === entry?.currentSessionId)
+    ? entry.currentSessionId
+    : sessions[0]?.id || null;
+  return {currentSessionId, sessions};
+}
+
+function getProjectChatState(projectId = currentProject?.project_id) {
+  const store = readChatStore();
+  const key = chatStorageId(projectId);
+  const state = normalizeProjectChatState(store[key]);
+  if (Array.isArray(store[key])) {
+    store[key] = state;
+    writeChatStore(store);
+  }
+  return state;
+}
+
+function persistedChatMessages() {
+  return messages
+    .filter(message => !message.loading && ['user', 'assistant'].includes(message.role) && message.content)
+    .slice(-CHAT_HISTORY_LIMIT)
+    .map(cleanChatMessage);
+}
+
+function saveProjectChatHistory() {
+  const key = chatStorageId();
+  if (!key) return;
+  if (!currentChatSessionId) currentChatSessionId = makeChatSessionId();
+  const store = readChatStore();
+  const state = normalizeProjectChatState(store[key]);
+  const persisted = persistedChatMessages();
+  const existing = state.sessions.find(session => session.id === currentChatSessionId);
+  const now = new Date().toISOString();
+  const session = {
+    id: currentChatSessionId,
+    title: deriveChatTitle(persisted, existing?.title || 'New chat'),
+    created_at: existing?.created_at || persisted[0]?.saved_at || now,
+    updated_at: persisted[persisted.length - 1]?.saved_at || now,
+    messages: persisted
+  };
+  const sessions = [
+    session,
+    ...state.sessions.filter(item => item.id !== currentChatSessionId)
+  ]
+    .filter(item => item.messages.length || item.id === currentChatSessionId)
+    .sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at))
+    .slice(0, 24);
+  if (sessions.length) store[key] = {currentSessionId: currentChatSessionId, sessions};
+  else delete store[key];
+  writeChatStore(store);
+  updateChatMemoryLabel();
+}
+
+function loadProjectChatHistory(projectId) {
+  const state = getProjectChatState(projectId);
+  const session = state.sessions.find(item => item.id === state.currentSessionId) || state.sessions[0];
+  currentChatSessionId = session?.id || makeChatSessionId();
+  return session?.messages || [];
+}
+
+function renderChatSessionSelect(state = getProjectChatState()) {
+  const select = document.getElementById('chat-session-select');
+  if (!select) return;
+  const currentRows = persistedChatMessages();
+  const hasCurrentStored = state.sessions.some(session => session.id === currentChatSessionId);
+  const sessions = hasCurrentStored
+    ? state.sessions
+    : [{
+        id: currentChatSessionId || makeChatSessionId(),
+        title: deriveChatTitle(currentRows, 'New chat'),
+        updated_at: new Date().toISOString(),
+        messages: currentRows
+      }, ...state.sessions];
+  if (!currentChatSessionId) currentChatSessionId = sessions[0]?.id || makeChatSessionId();
+  select.innerHTML = sessions.map(session => {
+    const title = session.title || deriveChatTitle(session.messages, 'New chat');
+    const count = session.messages?.length || 0;
+    return `<option value="${attr(session.id)}">${esc(title)} (${count})</option>`;
+  }).join('');
+  select.value = currentChatSessionId;
+  select.disabled = sessions.length <= 1 && !currentRows.length;
+}
+
+function updateChatMemoryLabel() {
+  const el = document.getElementById('chat-memory-label');
+  if (!el) return;
+  const state = getProjectChatState();
+  renderChatSessionSelect(state);
+  const count = persistedChatMessages().length;
+  const savedChats = state.sessions.filter(session => session.messages.length).length;
+  el.textContent = savedChats
+    ? `${savedChats} saved chat${savedChats!==1?'s':''} in this project - ${count} message${count!==1?'s':''} open`
+    : 'Chat history is saved for this project';
+}
+
+function newChat() {
+  if (isLoading) {
+    showToast('Wait for the current answer before starting a new chat', 'info');
+    return;
+  }
+  if (persistedChatMessages().length) saveProjectChatHistory();
+  else if (!currentChatSessionId) currentChatSessionId = makeChatSessionId();
+  if (!persistedChatMessages().length) {
+    resetChat();
+    document.getElementById('query-input')?.focus();
+    return;
+  }
+  currentChatSessionId = makeChatSessionId();
+  messages = [];
+  saveProjectChatHistory();
+  resetChat();
+  document.getElementById('query-input')?.focus();
+}
+
+function switchChatSession(sessionId) {
+  if (!sessionId || sessionId === currentChatSessionId) return;
+  if (isLoading) {
+    showToast('Wait for the current answer before switching chats', 'info');
+    renderChatSessionSelect();
+    return;
+  }
+  saveProjectChatHistory();
+  const state = getProjectChatState();
+  const session = state.sessions.find(item => item.id === sessionId);
+  if (!session) {
+    renderChatSessionSelect(state);
+    return;
+  }
+  currentChatSessionId = session.id;
+  messages = session.messages.map(cleanChatMessage);
+  saveProjectChatHistory();
+  if (messages.length) renderMessages();
+  else resetChat();
+}
+
+function resetChat() {
+  const container = document.getElementById('chat-messages');
+  const inner = container.querySelector('.chat-inner');
+  inner.innerHTML = `<div class="empty-state" id="empty-state">
+    <div class="empty-icon">AI</div>
+    <div class="empty-title">Ask your project sources anything</div>
+    <div class="muted">Questions are answered through retrieval over indexed tickets, docs, chats, exports, and reports.</div>
+    <div class="empty-hints">
+      <button class="hint-btn" onclick="sendHint('Summarize the current project risks and blockers')">Summarize the current project risks and blockers</button>
+      <button class="hint-btn" onclick="sendHint('What changed recently and what should the next person know?')">What changed recently and what should the next person know?</button>
+      <button class="hint-btn" onclick="sendHint('Create a short onboarding summary with source documents')">Create a short onboarding summary with source documents</button>
+    </div>
+  </div>`;
+  updateChatMemoryLabel();
+}
+
+function setKTFocus(text) {
+  document.getElementById('kt-focus').value = text;
+}
+
+async function generateKT() {
+  if (isKtLoading) return;
+  const focus = document.getElementById('kt-focus').value.trim();
+  const audience = document.getElementById('kt-audience').value.trim() || 'new team member';
+  const language = document.getElementById('language-select').value;
+  const resultEl = document.getElementById('kt-result');
+  const sourcesEl = document.getElementById('kt-sources');
+  const metaEl = document.getElementById('kt-meta');
+  if (!focus) {
+    showToast('Add a KT focus first', 'error');
+    return;
+  }
+  isKtLoading = true;
+  resultEl.classList.remove('muted');
+  sourcesEl.innerHTML = '';
+  metaEl.textContent = '';
+  const payload = {focus, audience, language};
+  const activity = [{
+    stage: 'queued',
+    message: 'Agent is preparing the KT workflow.',
+    detail: 'The brief request is queued and the progress stream is opening.'
+  }];
+  renderKTActivity(resultEl, activity);
+  try {
+    const streamed = await streamKT(payload, resultEl, sourcesEl, metaEl, activity);
+    if (!streamed) await runPlainKT(payload, resultEl, sourcesEl, metaEl, activity);
+    setTimeout(loadAuditLog, 800);
+  } catch (error) {
+    resultEl.textContent = error?.message && error.message !== 'Failed to fetch'
+      ? error.message
+      : 'Cannot reach API. Is backend running on http://localhost:8000?';
+  }
+  isKtLoading = false;
+}
+
+function renderKTActivity(resultEl, activity) {
+  resultEl.innerHTML = renderAgentActivity({activity});
+}
+
+function renderKTResult(data, resultEl, sourcesEl, metaEl) {
+  resultEl.classList.add('rich-output');
+  resultEl.innerHTML = renderRichOutput(data.answer || 'No KT brief returned.');
+  sourcesEl.innerHTML = data.sources?.length ? data.sources.map(renderSourceChip).join('') : '';
+  metaEl.textContent = data.tokens_used ? `${data.chunks_used} chunks - ${data.tokens_used} tokens` : `${data.chunks_used || 0} chunks`;
+}
+
+async function streamKT(payload, resultEl, sourcesEl, metaEl, activity) {
+  const r = await fetch(`${API_BASE}/api/query/kt/stream`, {
+    method: 'POST',
+    headers: projectHeaders({'Content-Type':'application/json'}),
+    body: JSON.stringify(payload)
+  });
+  if (!r.ok || !r.body) return false;
+
+  const reader = r.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = '';
+  let receivedFinal = false;
+
+  while (true) {
+    const {value, done} = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, {stream:true});
+    const blocks = buffer.split('\n\n');
+    buffer = blocks.pop();
+    for (const block of blocks) {
+      if (!block.trim()) continue;
+      const parsed = parseSseBlock(block);
+      if (parsed.event === 'progress') {
+        activity.push(parsed.data);
+        activity.splice(0, Math.max(0, activity.length - 7));
+        renderKTActivity(resultEl, activity);
+      } else if (parsed.event === 'final') {
+        renderKTResult(parsed.data, resultEl, sourcesEl, metaEl);
+        receivedFinal = true;
+      } else if (parsed.event === 'error') {
+        throw new Error(parsed.data.detail || 'KT generation failed');
+      }
+    }
+  }
+  return receivedFinal;
+}
+
+async function runPlainKT(payload, resultEl, sourcesEl, metaEl, activity) {
+  activity.push({
+    stage: 'fallback',
+    message: 'Agent is using the standard KT generation path.',
+    detail: 'Live progress was unavailable, so the app is waiting for the final brief.'
+  });
+  renderKTActivity(resultEl, activity);
+  const r = await fetch(`${API_BASE}/api/query/kt`, {
+    method: 'POST',
+    headers: projectHeaders({'Content-Type':'application/json'}),
+    body: JSON.stringify(payload)
+  });
+  const data = await r.json();
+  if (r.ok) renderKTResult(data, resultEl, sourcesEl, metaEl);
+  else resultEl.textContent = `Error: ${data.detail || 'KT generation failed.'}`;
+}
+
+function setStudioFocus(id, text) {
+  const el = document.getElementById(id);
+  if (el) el.value = text;
+}
+
+function renderStudioState() {
+  if (currentQuiz) renderQuiz(currentQuiz);
+}
+
+function renderStudioLoading(targetId, title, detail) {
+  const el = document.getElementById(targetId);
+  if (!el) return;
+  el.innerHTML = renderAgentActivity({
+    activity: [{
+      stage: 'studio',
+      message: title,
+      detail
+    }]
+  });
+}
+
+async function generateQuiz() {
+  if (isStudioLoading) return;
+  const resultEl = document.getElementById('quiz-result');
+  const btn = document.getElementById('quiz-btn');
+  const payload = {
+    focus: document.getElementById('quiz-focus').value.trim(),
+    difficulty: document.getElementById('quiz-difficulty').value,
+    count: Number(document.getElementById('quiz-count').value) || 6,
+    language: document.getElementById('language-select').value
+  };
+  isStudioLoading = true;
+  if (btn) btn.disabled = true;
+  renderStudioLoading('quiz-result', 'Agent is creating a source-grounded quiz.', 'Retrieving project chunks, selecting concepts, and writing answer explanations.');
+  try {
+    const r = await fetch(`${API_BASE}/api/query/quiz`, {
+      method: 'POST',
+      headers: projectHeaders({'Content-Type':'application/json'}),
+      body: JSON.stringify(payload)
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.detail || 'Quiz generation failed.');
+    currentQuiz = data;
+    quizAnswers = {};
+    renderQuiz(data);
+    setTimeout(loadAuditLog, 800);
+  } catch (error) {
+    resultEl.innerHTML = `<div class="issue">Error: ${esc(error.message || 'Quiz generation failed.')}</div>`;
+  } finally {
+    isStudioLoading = false;
+    if (btn) btn.disabled = false;
+  }
+}
+
+function selectQuizAnswer(questionIndex, answerIndex) {
+  quizAnswers[questionIndex] = answerIndex;
+  renderQuiz(currentQuiz);
+}
+
+function renderQuiz(data) {
+  const el = document.getElementById('quiz-result');
+  if (!el || !data) return;
+  const questions = data.questions || [];
+  if (!questions.length) {
+    el.innerHTML = '<div class="issue">No quiz could be generated from the current project sources.</div>';
+    return;
+  }
+  const answered = Object.keys(quizAnswers).length;
+  const correct = questions.filter((q, i) => quizAnswers[i] === q.answer_index).length;
+  el.innerHTML = `
+    <div class="quiz-title">
+      <div><strong>${esc(data.title || 'Project quiz')}</strong><div class="muted">${esc(data.difficulty || 'medium')} - ${answered}/${questions.length} answered</div></div>
+      <span class="tag ${answered === questions.length ? 'learn' : ''}">${correct}/${questions.length}</span>
+    </div>
+    ${questions.map((q, i) => {
+      const picked = quizAnswers[i];
+      const hasAnswer = picked !== undefined;
+      return `<div class="quiz-card">
+        <strong>${i + 1}. ${esc(q.question)}</strong>
+        <div class="quiz-options">${(q.options || []).map((option, j) => {
+          const classes = ['quiz-option'];
+          if (picked === j) classes.push('selected');
+          if (hasAnswer && j === q.answer_index) classes.push('correct');
+          if (hasAnswer && picked === j && picked !== q.answer_index) classes.push('incorrect');
+          return `<button class="${classes.join(' ')}" onclick="selectQuizAnswer(${i},${j})">${esc(option)}</button>`;
+        }).join('')}</div>
+        ${!hasAnswer && q.hint ? `<details class="quiz-explain"><summary>Hint</summary>${esc(q.hint)}</details>` : ''}
+        ${hasAnswer ? `<div class="quiz-explain"><strong>${picked === q.answer_index ? 'Correct' : 'Review'}</strong><br>${esc(q.explanation || '')}${q.source_hint ? `<br><span class="muted">${esc(q.source_hint)}</span>` : ''}</div>` : ''}
+      </div>`;
+    }).join('')}
+    <div class="msg-sources">${data.sources?.length ? data.sources.map(renderSourceChip).join('') : ''}</div>
+    <div class="msg-meta">${data.tokens_used ? `${data.chunks_used} chunks - ${data.tokens_used} tokens` : `${data.chunks_used || 0} chunks`}</div>
+  `;
+}
+
+async function generateConversation() {
+  if (isStudioLoading) return;
+  const resultEl = document.getElementById('conversation-result');
+  const btn = document.getElementById('conversation-btn');
+  const payload = {
+    focus: document.getElementById('conversation-focus').value.trim(),
+    format: document.getElementById('conversation-format').value,
+    length: document.getElementById('conversation-length').value,
+    language: document.getElementById('language-select').value
+  };
+  isStudioLoading = true;
+  if (btn) btn.disabled = true;
+  renderStudioLoading('conversation-result', 'Agent is drafting a source conversation.', 'Retrieving project evidence and turning it into a grounded host-style discussion.');
+  try {
+    const r = await fetch(`${API_BASE}/api/query/conversation`, {
+      method: 'POST',
+      headers: projectHeaders({'Content-Type':'application/json'}),
+      body: JSON.stringify(payload)
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.detail || 'Conversation generation failed.');
+    renderConversation(data);
+    setTimeout(loadAuditLog, 800);
+  } catch (error) {
+    resultEl.innerHTML = `<div class="issue">Error: ${esc(error.message || 'Conversation generation failed.')}</div>`;
+  } finally {
+    isStudioLoading = false;
+    if (btn) btn.disabled = false;
+  }
+}
+
+function renderConversation(data) {
+  const el = document.getElementById('conversation-result');
+  if (!el) return;
+  const turns = data.turns || [];
+  if (!turns.length) {
+    el.innerHTML = '<div class="issue">No conversation could be generated from the current project sources.</div>';
+    return;
+  }
+  el.innerHTML = `
+    <div class="quiz-title">
+      <div><strong>${esc(data.title || 'Project conversation')}</strong><div class="muted">${esc(data.format || 'deep dive')}</div></div>
+      <span class="tag learn">${turns.length} turns</span>
+    </div>
+    <div class="conversation-thread">${turns.map((turn, index) => `
+      <div class="host-turn">
+        <div class="host-avatar">${index % 2 ? 'B' : 'A'}</div>
+        <div class="host-bubble"><strong>${esc(turn.speaker)}</strong>${esc(turn.text)}</div>
+      </div>
+    `).join('')}</div>
+    ${data.takeaways?.length ? `<div class="quiz-card"><strong>Takeaways</strong><div class="takeaway-list">${data.takeaways.map(item => `<div class="graph-detail-pill">${esc(item)}</div>`).join('')}</div></div>` : ''}
+    <div class="msg-sources">${data.sources?.length ? data.sources.map(renderSourceChip).join('') : ''}</div>
+    <div class="msg-meta">${data.tokens_used ? `${data.chunks_used} chunks - ${data.tokens_used} tokens` : `${data.chunks_used || 0} chunks`}</div>
+  `;
+}
+
+const ARTIFACT_UI = {
+  audio_overview: {focus: 'audio-focus', style: 'audio-style', count: 'audio-count', btn: 'audio-btn', result: 'audio-result'},
+  video_overview: {focus: 'video-focus', style: null, count: 'video-count', btn: 'video-btn', result: 'video-result'},
+  slide_deck: {focus: 'slide-focus', style: null, count: 'slide-count', btn: 'slide-btn', result: 'slide-result'},
+  flashcards: {focus: 'flashcard-focus', style: null, count: 'flashcard-count', btn: 'flashcard-btn', result: 'flashcard-result'},
+  infographic: {focus: 'infographic-focus', style: null, count: 'infographic-count', btn: 'infographic-btn', result: 'infographic-result'}
+};
+
+function artifactUi(type) {
+  return ARTIFACT_UI[type] || ARTIFACT_UI.audio_overview;
+}
+
+function setArtifactBusy(type, busy) {
+  const ui = artifactUi(type);
+  const btn = document.getElementById(ui.btn);
+  if (btn) btn.disabled = busy;
+}
+
+async function generateArtifact(type = 'audio_overview') {
+  if (isStudioLoading) return;
+  const ui = artifactUi(type);
+  const resultEl = document.getElementById(ui.result);
+  const payload = {
+    artifact_type: type,
+    focus: document.getElementById(ui.focus).value.trim(),
+    style: ui.style ? document.getElementById(ui.style).value : 'default',
+    count: Number(document.getElementById(ui.count).value) || 6,
+    language: document.getElementById('language-select').value
+  };
+  isStudioLoading = true;
+  setArtifactBusy(type, true);
+  renderStudioLoading(ui.result, 'Agent is generating a Study Studio artifact.', 'Retrieving source evidence and shaping it into this NotebookLM-style format.');
+  try {
+    const r = await fetch(`${API_BASE}/api/query/artifact`, {
+      method: 'POST',
+      headers: projectHeaders({'Content-Type':'application/json'}),
+      body: JSON.stringify(payload)
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.detail || 'Artifact generation failed.');
+    currentArtifact = data;
+    renderArtifact(data, ui.result);
+    setTimeout(loadAuditLog, 800);
+  } catch (error) {
+    resultEl.innerHTML = `<div class="issue">Error: ${esc(error.message || 'Artifact generation failed.')}</div>`;
+  } finally {
+    isStudioLoading = false;
+    setArtifactBusy(type, false);
+  }
+}
+
+function artifactMeta(data) {
+  return `<div class="msg-sources">${data.sources?.length ? data.sources.map(renderSourceChip).join('') : ''}</div>
+    <div class="msg-meta">${data.tokens_used ? `${data.chunks_used} chunks - ${data.tokens_used} tokens` : `${data.chunks_used || 0} chunks`}</div>`;
+}
+
+function renderArtifact(data, targetId = null) {
+  const ui = artifactUi(data?.artifact_type);
+  const el = document.getElementById(targetId || ui.result);
+  if (!el || !data) return;
+  const header = `<div class="quiz-title"><div><strong>${esc(data.title || 'Study artifact')}</strong><div class="artifact-summary">${esc(data.summary || '')}</div></div><span class="tag learn">${esc((data.artifact_type || 'artifact').replaceAll('_', ' '))}</span></div>`;
+  if (data.artifact_type === 'audio_overview') {
+    renderAudioArtifact(el, header, data);
+  } else if (data.artifact_type === 'video_overview') {
+    renderVideoArtifact(el, header, data);
+  } else if (data.artifact_type === 'slide_deck') {
+    renderSlideArtifact(el, header, data);
+  } else if (data.artifact_type === 'flashcards') {
+    renderFlashcardArtifact(el, header, data);
+  } else if (data.artifact_type === 'infographic') {
+    renderInfographicArtifact(el, header, data);
+  } else {
+    el.innerHTML = `${header}<div class="issue">Unsupported artifact type.</div>${artifactMeta(data)}`;
+  }
+}
+
+function renderAudioArtifact(el, header, data) {
+  const turns = data.turns || [];
+  el.innerHTML = `${header}
+    <div class="artifact-actions">
+      <button class="primary-btn" onclick="playArtifactAudio()">Play Overview</button>
+      <button class="secondary-btn" onclick="stopArtifactAudio()">Stop</button>
+    </div>
+    <div class="conversation-thread">${turns.map((turn, index) => `
+      <div class="host-turn">
+        <div class="host-avatar">${index % 2 ? 'B' : 'A'}</div>
+        <div class="host-bubble"><strong>${esc(turn.speaker)}</strong>${esc(turn.text)}</div>
+      </div>
+    `).join('')}</div>
+    ${artifactMeta(data)}`;
+}
+
+function renderVideoArtifact(el, header, data) {
+  const scenes = data.scenes || [];
+  el.innerHTML = `${header}<div class="artifact-grid">${scenes.map(scene => `
+    <div class="artifact-card scene-card">
+      <span class="tag">Scene ${esc(scene.scene || '')}</span>
+      <strong>${esc(scene.title || 'Scene')}</strong>
+      <div>${esc(scene.visual || '')}</div>
+      <div class="quiz-explain">${esc(scene.narration || '')}</div>
+      <span class="muted">${esc(scene.source_hint || '')}</span>
+    </div>
+  `).join('')}</div>${artifactMeta(data)}`;
+}
+
+function renderSlideArtifact(el, header, data) {
+  const slides = data.slides || [];
+  el.innerHTML = `${header}<div class="artifact-grid">${slides.map((slide, index) => `
+    <div class="artifact-card slide-card">
+      <span class="tag">Slide ${index + 1}</span>
+      <strong>${esc(slide.title || 'Slide')}</strong>
+      <ul>${(slide.bullets || []).map(bullet => `<li>${esc(bullet)}</li>`).join('')}</ul>
+      <div class="quiz-explain">${esc(slide.speaker_notes || '')}</div>
+    </div>
+  `).join('')}</div>${artifactMeta(data)}`;
+}
+
+function renderFlashcardArtifact(el, header, data) {
+  const cards = data.cards || [];
+  el.innerHTML = `${header}<div class="artifact-grid">${cards.map((card, index) => `
+    <details class="artifact-card">
+      <summary><strong>${index + 1}. ${esc(card.front || 'Flashcard')}</strong></summary>
+      <div class="flashcard-back">${esc(card.back || '')}</div>
+      <span class="muted">${esc(card.source_hint || '')}</span>
+    </details>
+  `).join('')}</div>${artifactMeta(data)}`;
+}
+
+function renderInfographicArtifact(el, header, data) {
+  const panels = data.panels || [];
+  el.innerHTML = `${header}<div class="artifact-grid">${panels.map(panel => `
+    <div class="artifact-card">
+      <span class="tag">${esc(panel.label || 'Panel')}</span>
+      <div class="value">${esc(panel.value || '')}</div>
+      <div>${esc(panel.body || '')}</div>
+      ${panel.source_hint ? `<span class="muted">${esc(panel.source_hint)}</span>` : ''}
+    </div>
+  `).join('')}</div>${artifactMeta(data)}`;
+}
+
+function playArtifactAudio() {
+  if (!currentArtifact?.turns?.length || !('speechSynthesis' in window)) {
+    showToast('Browser speech playback is not available here', 'error');
+    return;
+  }
+  window.speechSynthesis.cancel();
+  const script = currentArtifact.turns.map(turn => `${turn.speaker}. ${turn.text}`).join(' ');
+  const utterance = new SpeechSynthesisUtterance(script);
+  utterance.rate = 0.96;
+  utterance.pitch = 1;
+  window.speechSynthesis.speak(utterance);
+}
+
+function stopArtifactAudio() {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+}
 
 async function sendQuery() {
   const input = document.getElementById('query-input');
@@ -485,18 +1985,272 @@ async function sendQuery() {
   if(!q||isLoading) return;
   const es = document.getElementById('empty-state');
   if(es) es.style.display='none';
-  messages.push({role:'user',content:q});
+  const history = messages
+    .filter(m => !m.loading && (m.role === 'user' || m.role === 'assistant') && m.content)
+    .map(m => ({role: m.role, content: m.content}));
+  messages.push({role:'user', content: q, saved_at: new Date().toISOString()});
+  messages.push({
+    role: 'assistant',
+    content: '',
+    sources: [],
+    loading: true,
+    activity: [{
+      stage: 'queued',
+      message: 'Agent is waiting for the backend.',
+      detail: 'The question is queued and the progress stream is opening.'
+    }]
+  });
+  const assistantIndex = messages.length - 1;
   renderMessages(); input.value=''; input.style.height='auto';
+  saveProjectChatHistory();
   isLoading=true; document.getElementById('send-btn').disabled=true;
+  const language = document.getElementById('language-select').value;
+  const payload = {
+    question: q,
+    chat_history: history,
+    language,
+    allow_web_search: nextQueryOptions.allowWebSearch !== false
+  };
+  nextQueryOptions = {};
   try {
-    const history = messages.slice(0,-1).map(m=>({role:m.role,content:m.content}));
-    const language = document.getElementById('language-select').value;
-    const r = await fetch(`${API_BASE}/api/query/`,{method:'POST',headers:{'Content-Type':'application/json','x-tenant-id':TENANT_ID},body:JSON.stringify({question:q,chat_history:history,language})});
-    const data = await r.json();
-    if(r.ok) messages.push({role:'assistant',content:data.answer,sources:data.sources,tokens:data.tokens_used,chunks:data.chunks_used});
-    else messages.push({role:'assistant',content:`Error: ${data.detail||'Something went wrong.'}`,sources:[]});
-  } catch { messages.push({role:'assistant',content:'Cannot reach API. Is backend running on http://localhost:8000?',sources:[]}); }
+    const streamed = await streamQuery(payload, assistantIndex);
+    if (!streamed) await runPlainQuery(payload, assistantIndex);
+  } catch (error) {
+    const errorMessage = error?.message && error.message !== 'Failed to fetch'
+      ? error.message
+      : 'Cannot reach API. Is backend running on http://localhost:8000?';
+    finishAssistantMessage(assistantIndex, {
+      answer: errorMessage,
+      sources: [],
+      chunks_used: 0,
+      tokens_used: null
+    });
+  }
   renderMessages(); isLoading=false; document.getElementById('send-btn').disabled=false; input.focus();
+}
+
+function finishAssistantMessage(index, data) {
+  const message = messages[index];
+  if (!message) return;
+  message.loading = false;
+  message.content = data.answer || 'No answer returned.';
+  message.sources = data.sources || [];
+  message.tokens = data.tokens_used;
+  message.chunks = data.chunks_used || 0;
+  message.saved_at = new Date().toISOString();
+  saveProjectChatHistory();
+}
+
+function addAgentActivity(index, event) {
+  const message = messages[index];
+  if (!message) return;
+  message.activity = [...(message.activity || []), event].slice(-7);
+}
+
+function parseSseBlock(block) {
+  const lines = block.split(/\r?\n/);
+  let event = 'message';
+  let data = '';
+  lines.forEach(line => {
+    if (line.startsWith('event:')) event = line.slice(6).trim();
+    if (line.startsWith('data:')) data += line.slice(5).trim();
+  });
+  return {event, data: data ? JSON.parse(data) : {}};
+}
+
+async function streamQuery(payload, assistantIndex) {
+  const r = await fetch(`${API_BASE}/api/query/stream`, {
+    method: 'POST',
+    headers: projectHeaders({'Content-Type':'application/json'}),
+    body: JSON.stringify(payload)
+  });
+  if (!r.ok || !r.body) return false;
+
+  const reader = r.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = '';
+  let receivedFinal = false;
+
+  while (true) {
+    const {value, done} = await reader.read();
+    if (done) break;
+    buffer += decoder.decode(value, {stream:true});
+    const blocks = buffer.split('\n\n');
+    buffer = blocks.pop();
+    for (const block of blocks) {
+      if (!block.trim()) continue;
+      const parsed = parseSseBlock(block);
+      if (parsed.event === 'progress') {
+        addAgentActivity(assistantIndex, parsed.data);
+        renderMessages();
+      } else if (parsed.event === 'final') {
+        finishAssistantMessage(assistantIndex, parsed.data);
+        receivedFinal = true;
+        renderMessages();
+      } else if (parsed.event === 'error') {
+        throw new Error(parsed.data.detail || 'Query failed');
+      }
+    }
+  }
+  return receivedFinal;
+}
+
+async function runPlainQuery(payload, assistantIndex) {
+  addAgentActivity(assistantIndex, {
+    stage: 'fallback',
+    message: 'Agent is using the standard backend query path.',
+    detail: 'Live progress was unavailable, so the app is waiting for the final answer.'
+  });
+  renderMessages();
+  const r = await fetch(`${API_BASE}/api/query/`, {
+    method:'POST',
+    headers:projectHeaders({'Content-Type':'application/json'}),
+    body:JSON.stringify(payload)
+  });
+  const data = await r.json();
+  if(r.ok) finishAssistantMessage(assistantIndex, data);
+  else finishAssistantMessage(assistantIndex, {answer:`Error: ${data.detail||'Something went wrong.'}`,sources:[],chunks_used:0,tokens_used:null});
+}
+
+function renderAgentActivity(message) {
+  const steps = (message.activity || []).slice(-5);
+  const active = steps[steps.length - 1] || {};
+  return `<div class="agent-card">
+    <div class="agent-head">
+      <div class="agent-ring"></div>
+      <div>
+        <div class="agent-title">${esc(active.message || 'Agent is thinking through the question.')}</div>
+        <div class="agent-subtitle">${esc(active.detail || 'Gathering source-grounded context from the backend.')}</div>
+      </div>
+    </div>
+    <div class="agent-progress"><span></span></div>
+    <div class="agent-steps">${steps.map((step, index) => `<div class="agent-step ${index === steps.length - 1 ? 'active' : 'done'}"><span class="agent-step-dot"></span><div><strong>${esc(step.message)}</strong>${step.detail ? `<span>${esc(step.detail)}</span>` : ''}</div></div>`).join('')}</div>
+  </div>`;
+}
+
+function renderSourceChip(source) {
+  const isWeb = source.source_type === 'web' || source.url;
+  const mode = source.retrieval_mode ? ` ${source.retrieval_mode}` : '';
+  const label = isWeb ? `${source.filename || 'Web source'} (web)` : `${source.filename} ${(source.relevance_score*100).toFixed(0)}%${mode}`;
+  if (source.url) {
+    return `<a class="source-chip" href="${attr(source.url)}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>`;
+  }
+  return `<div class="source-chip">${esc(label)}</div>`;
+}
+
+function renderInlineMarkdown(text) {
+  const codeTokens = [];
+  const tokenized = String(text ?? '').replace(/`([^`]+)`/g, (_, code) => {
+    const token = `@@CODE_${codeTokens.length}@@`;
+    codeTokens.push(`<code>${escPlain(code)}</code>`);
+    return token;
+  });
+  let html = escPlain(tokenized);
+  html = html
+    .replace(/\*\*\*([^*\n]+?)\*\*\*/g, '<strong><em>$1</em></strong>')
+    .replace(/___([^_\n]+?)___/g, '<strong><em>$1</em></strong>')
+    .replace(/\*\*([^*\n]+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/__([^_\n]+?)__/g, '<strong>$1</strong>')
+    .replace(/(^|[\s(])\*([^*\n]+?)\*/g, '$1<em>$2</em>');
+  codeTokens.forEach((codeHtml, index) => {
+    html = html.replace(`@@CODE_${index}@@`, codeHtml);
+  });
+  return html;
+}
+
+function renderRichOutput(text) {
+  const lines = String(text ?? '').replace(/\r\n/g, '\n').replace(/\r/g, '\n').split('\n');
+  const html = [];
+  let paragraph = [];
+  let listType = null;
+  let codeLines = null;
+
+  const flushParagraph = () => {
+    if (!paragraph.length) return;
+    html.push(`<p>${paragraph.map(renderInlineMarkdown).join('<br>')}</p>`);
+    paragraph = [];
+  };
+  const closeList = () => {
+    if (!listType) return;
+    html.push(`</${listType}>`);
+    listType = null;
+  };
+  const openList = type => {
+    flushParagraph();
+    if (listType === type) return;
+    closeList();
+    listType = type;
+    html.push(`<${type}>`);
+  };
+  const flushCode = () => {
+    if (!codeLines) return;
+    html.push(`<pre><code>${escPlain(codeLines.join('\n'))}</code></pre>`);
+    codeLines = null;
+  };
+
+  lines.forEach(rawLine => {
+    const line = rawLine.replace(/\s+$/g, '');
+    const trimmed = line.trim();
+
+    if (trimmed.startsWith('```')) {
+      if (codeLines) flushCode();
+      else {
+        flushParagraph();
+        closeList();
+        codeLines = [];
+      }
+      return;
+    }
+
+    if (codeLines) {
+      codeLines.push(rawLine);
+      return;
+    }
+
+    if (!trimmed) {
+      flushParagraph();
+      closeList();
+      return;
+    }
+
+    const heading = trimmed.match(/^(#{1,6})\s+(.+)$/);
+    if (heading) {
+      flushParagraph();
+      closeList();
+      const level = Math.min(3, heading[1].length);
+      html.push(`<h${level}>${renderInlineMarkdown(heading[2])}</h${level}>`);
+      return;
+    }
+
+    if (/^(\*\s*){3,}$|^(-\s*){3,}$|^(_\s*){3,}$/.test(trimmed)) {
+      flushParagraph();
+      closeList();
+      html.push('<hr>');
+      return;
+    }
+
+    const bullet = trimmed.match(/^[-*•]\s+(.+)$/);
+    if (bullet) {
+      openList('ul');
+      html.push(`<li>${renderInlineMarkdown(bullet[1])}</li>`);
+      return;
+    }
+
+    const ordered = trimmed.match(/^\d+[\.)]\s+(.+)$/);
+    if (ordered) {
+      openList('ol');
+      html.push(`<li>${renderInlineMarkdown(ordered[1])}</li>`);
+      return;
+    }
+
+    closeList();
+    paragraph.push(trimmed);
+  });
+
+  flushCode();
+  flushParagraph();
+  closeList();
+  return html.join('') || '';
 }
 
 function renderMessages() {
@@ -504,28 +2258,588 @@ function renderMessages() {
   const inner = container.querySelector('.chat-inner');
   inner.innerHTML = messages.map(m => {
     if(m.role==='user') return `<div class="msg msg-user"><div class="msg-bubble">${esc(m.content)}</div></div>`;
-    const src = m.sources&&m.sources.length?`<div class="msg-sources">${m.sources.map(s=>`<div class="source-chip">${esc(s.filename)} ${(s.relevance_score*100).toFixed(0)}%</div>`).join('')}</div>`:'';
+    if(m.loading) return `<div class="msg msg-assistant msg-thinking">${renderAgentActivity(m)}</div>`;
+    const src = m.sources&&m.sources.length?`<div class="msg-sources">${m.sources.map(renderSourceChip).join('')}</div>`:'';
     const meta = m.tokens?`<div class="msg-meta">${m.chunks} chunks - ${m.tokens} tokens</div>`:'';
-    return `<div class="msg msg-assistant"><div class="msg-bubble">${esc(m.content)}</div>${src}${meta}</div>`;
+    return `<div class="msg msg-assistant"><div class="msg-bubble rich-output">${renderRichOutput(m.content)}</div>${src}${meta}</div>`;
   }).join('');
   container.scrollTop=container.scrollHeight;
+  updateChatMemoryLabel();
+}
+
+async function loadKnowledgeGraph() {
+  if (!currentProject) return;
+  try {
+    const r = await fetch(`${API_BASE}/api/analytics/knowledge-graph`, {headers:projectHeaders()});
+    if (!r.ok) throw new Error('graph failed');
+    knowledgeGraph = await r.json();
+    renderKnowledgeGraph();
+  } catch {
+    showToast('Cannot load knowledge graph', 'error');
+  }
+}
+
+function graphColor(type) {
+  return {
+    project: '#f2f2f5',
+    document: '#5b6af7',
+    source_type: '#2dd4bf',
+    ticket: '#f59e0b',
+    incident: '#ef4444',
+    pull_request: '#22c55e',
+    release: '#a78bfa',
+    signal: '#f472b6',
+    period: '#38bdf8',
+    language: '#94a3b8'
+  }[type] || '#9494a3';
+}
+
+function graphRadius(node) {
+  return Math.max(5, Math.min(18, 4 + Math.sqrt(node.weight || 1) * 2.2));
+}
+
+function prepareGraphLayout(canvas, graph) {
+  const rect = canvas.getBoundingClientRect();
+  const cx = rect.width / 2;
+  const cy = rect.height / 2;
+  graph.nodes.forEach((node, i) => {
+    if (Number.isFinite(node.x) && Number.isFinite(node.y)) return;
+    const angle = (i / Math.max(1, graph.nodes.length)) * Math.PI * 2;
+    const radius = 80 + (i % 7) * 28;
+    node.x = cx + Math.cos(angle) * radius;
+    node.y = cy + Math.sin(angle) * radius;
+    node.vx = 0;
+    node.vy = 0;
+  });
+}
+
+function renderKnowledgeGraph() {
+  const canvas = document.getElementById('graph-canvas');
+  const statsEl = document.getElementById('graph-stats');
+  const tipEl = document.getElementById('graph-tip');
+  const legendEl = document.getElementById('graph-legend');
+  if (!canvas || !knowledgeGraph) return;
+  const stats = knowledgeGraph.stats || {};
+  statsEl.innerHTML = [
+    ['Nodes', stats.nodes || 0],
+    ['Edges', stats.edges || 0],
+    ['Documents', stats.documents || 0],
+    ['Tickets', stats.tickets || 0],
+    ['Incidents', stats.incidents || 0],
+    ['PRs', stats.pull_requests || 0]
+  ].map(([label, value]) => `<span class="graph-chip">${label}: ${esc(value)}</span>`).join('');
+  legendEl.innerHTML = ['document','ticket','incident','pull_request','source_type','signal','period'].map(type => `<span class="legend-item"><span class="legend-dot" style="background:${graphColor(type)}"></span>${esc(type.replace('_',' '))}</span>`).join('');
+  graphSelected = null;
+  graphHover = null;
+  if (!knowledgeGraph.nodes?.length) {
+    tipEl.innerHTML = '<strong>No graph yet</strong>Upload sources to generate the project knowledge graph.';
+    return;
+  }
+  updateGraphTip(null);
+  setupGraphInteractions(canvas);
+  resetGraphView();
+}
+
+function resetGraphView() {
+  const canvas = document.getElementById('graph-canvas');
+  if (!canvas || !knowledgeGraph) return;
+  graphTransform = {x: 0, y: 0, scale: 1};
+  prepareGraphLayout(canvas, knowledgeGraph);
+  startGraphSimulation();
+}
+
+function resizeGraphCanvas(canvas) {
+  const rect = canvas.getBoundingClientRect();
+  const dpr = window.devicePixelRatio || 1;
+  const width = Math.max(1, Math.floor(rect.width * dpr));
+  const height = Math.max(1, Math.floor(rect.height * dpr));
+  if (canvas.width !== width || canvas.height !== height) {
+    canvas.width = width;
+    canvas.height = height;
+  }
+  return {width: rect.width, height: rect.height, dpr};
+}
+
+function graphPointFromEvent(canvas, event) {
+  const rect = canvas.getBoundingClientRect();
+  return {
+    x: (event.clientX - rect.left - graphTransform.x) / graphTransform.scale,
+    y: (event.clientY - rect.top - graphTransform.y) / graphTransform.scale
+  };
+}
+
+function clampGraphScale(scale) {
+  return Math.max(GRAPH_MIN_SCALE, Math.min(GRAPH_MAX_SCALE, scale));
+}
+
+function applyGraphZoom(canvas, nextScale, originX, originY) {
+  if (!canvas || !knowledgeGraph) return;
+  const scale = clampGraphScale(nextScale);
+  graphTransform.x = originX - ((originX - graphTransform.x) / graphTransform.scale) * scale;
+  graphTransform.y = originY - ((originY - graphTransform.y) / graphTransform.scale) * scale;
+  graphTransform.scale = scale;
+  drawGraphFrame();
+}
+
+function zoomGraph(direction) {
+  const canvas = document.getElementById('graph-canvas');
+  if (!canvas || !knowledgeGraph) return;
+  const rect = canvas.getBoundingClientRect();
+  const factor = direction < 0 ? 0.72 : 1.28;
+  applyGraphZoom(canvas, graphTransform.scale * factor, rect.width / 2, rect.height / 2);
+}
+
+function fitGraphToView() {
+  const canvas = document.getElementById('graph-canvas');
+  if (!canvas || !knowledgeGraph?.nodes?.length) return;
+  const rect = canvas.getBoundingClientRect();
+  const xs = knowledgeGraph.nodes.map(node => node.x).filter(Number.isFinite);
+  const ys = knowledgeGraph.nodes.map(node => node.y).filter(Number.isFinite);
+  if (!xs.length || !ys.length) return;
+  const minX = Math.min(...xs);
+  const maxX = Math.max(...xs);
+  const minY = Math.min(...ys);
+  const maxY = Math.max(...ys);
+  const padding = 72;
+  const graphWidth = Math.max(1, maxX - minX + padding * 2);
+  const graphHeight = Math.max(1, maxY - minY + padding * 2);
+  const scale = clampGraphScale(Math.min(rect.width / graphWidth, rect.height / graphHeight));
+  graphTransform = {
+    scale,
+    x: rect.width / 2 - ((minX + maxX) / 2) * scale,
+    y: rect.height / 2 - ((minY + maxY) / 2) * scale
+  };
+  drawGraphFrame();
+}
+
+function findGraphNode(canvas, event) {
+  if (!knowledgeGraph) return null;
+  const p = graphPointFromEvent(canvas, event);
+  let best = null;
+  let bestDistance = Infinity;
+  knowledgeGraph.nodes.forEach(node => {
+    const distance = Math.hypot(node.x - p.x, node.y - p.y);
+    const hitPadding = Math.max(6, 10 / graphTransform.scale);
+    if (distance < graphRadius(node) + hitPadding && distance < bestDistance) {
+      best = node;
+      bestDistance = distance;
+    }
+  });
+  return best;
+}
+
+function graphNodeMap() {
+  return Object.fromEntries((knowledgeGraph?.nodes || []).map(node => [node.id, node]));
+}
+
+function graphTypeLabel(type) {
+  return String(type || 'connection').replace(/_/g, ' ');
+}
+
+function graphEventInsideCanvas(canvas, event) {
+  const rect = canvas.getBoundingClientRect();
+  return event.clientX >= rect.left && event.clientX <= rect.right && event.clientY >= rect.top && event.clientY <= rect.bottom;
+}
+
+function distanceToSegment(point, a, b) {
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  const lengthSq = dx * dx + dy * dy;
+  if (!lengthSq) return Math.hypot(point.x - a.x, point.y - a.y);
+  const t = Math.max(0, Math.min(1, ((point.x - a.x) * dx + (point.y - a.y) * dy) / lengthSq));
+  return Math.hypot(point.x - (a.x + t * dx), point.y - (a.y + t * dy));
+}
+
+function findGraphEdge(canvas, event) {
+  if (!knowledgeGraph) return null;
+  const p = graphPointFromEvent(canvas, event);
+  const nodesById = graphNodeMap();
+  const threshold = Math.max(7, 11 / graphTransform.scale);
+  let best = null;
+  let bestDistance = Infinity;
+  knowledgeGraph.edges.forEach(edge => {
+    const source = nodesById[edge.source];
+    const target = nodesById[edge.target];
+    if (!source || !target) return;
+    const distance = distanceToSegment(p, source, target);
+    if (distance < threshold && distance < bestDistance) {
+      best = edge;
+      bestDistance = distance;
+    }
+  });
+  return best;
+}
+
+function isGraphEdgeSelected(edge) {
+  return graphSelected?.kind === 'edge'
+    && graphSelected.source === edge.source
+    && graphSelected.target === edge.target
+    && graphSelected.type === edge.type;
+}
+
+function selectGraphItem(canvas, event) {
+  const node = findGraphNode(canvas, event);
+  if (node) {
+    graphSelected = {kind: 'node', id: node.id};
+    updateGraphInspector();
+    drawGraphFrame();
+    return;
+  }
+
+  const edge = findGraphEdge(canvas, event);
+  if (edge) {
+    graphSelected = {kind: 'edge', source: edge.source, target: edge.target, type: edge.type};
+    updateGraphInspector();
+    drawGraphFrame();
+    return;
+  }
+
+  graphSelected = null;
+  updateGraphTip(graphHover);
+  drawGraphFrame();
+}
+
+function setupGraphInteractions(canvas) {
+  if (canvas.dataset.ready === 'true') return;
+  canvas.dataset.ready = 'true';
+  canvas.addEventListener('mousedown', event => {
+    const node = findGraphNode(canvas, event);
+    const p = graphPointFromEvent(canvas, event);
+    graphDragging = {node, lastX: event.clientX, lastY: event.clientY, startX: event.clientX, startY: event.clientY, moved: false};
+    if (!graphAnimationId) startGraphSimulation();
+    if (node) {
+      node.fx = p.x;
+      node.fy = p.y;
+    }
+  });
+  window.addEventListener('mousemove', event => {
+    if (graphDragging?.node) {
+      if (Math.hypot(event.clientX - graphDragging.startX, event.clientY - graphDragging.startY) > 3) graphDragging.moved = true;
+      const p = graphPointFromEvent(canvas, event);
+      graphDragging.node.x = p.x;
+      graphDragging.node.y = p.y;
+      graphDragging.node.fx = p.x;
+      graphDragging.node.fy = p.y;
+    } else if (graphDragging) {
+      if (Math.hypot(event.clientX - graphDragging.startX, event.clientY - graphDragging.startY) > 3) graphDragging.moved = true;
+      graphTransform.x += event.clientX - graphDragging.lastX;
+      graphTransform.y += event.clientY - graphDragging.lastY;
+      graphDragging.lastX = event.clientX;
+      graphDragging.lastY = event.clientY;
+      if (!graphAnimationId) drawGraphFrame();
+    } else {
+      const hover = findGraphNode(canvas, event);
+      if (hover !== graphHover) {
+        graphHover = hover;
+        if (!graphSelected) updateGraphTip(hover);
+        if (!graphAnimationId) drawGraphFrame();
+      }
+    }
+  });
+  window.addEventListener('mouseup', event => {
+    const activeDrag = graphDragging;
+    if (graphDragging?.node) {
+      graphDragging.node.fx = null;
+      graphDragging.node.fy = null;
+    }
+    graphDragging = null;
+    if (activeDrag && !activeDrag.moved && graphEventInsideCanvas(canvas, event)) {
+      selectGraphItem(canvas, event);
+    }
+  });
+  canvas.addEventListener('wheel', event => {
+    event.preventDefault();
+    const rect = canvas.getBoundingClientRect();
+    const mx = event.clientX - rect.left;
+    const my = event.clientY - rect.top;
+    const delta = event.deltaY > 0 ? 0.88 : 1.12;
+    applyGraphZoom(canvas, graphTransform.scale * delta, mx, my);
+  }, {passive: false});
+}
+
+function graphValuePresent(value) {
+  return value !== undefined && value !== null && value !== '';
+}
+
+function graphTruncate(value, max = 190) {
+  const text = String(value ?? '').replace(/\s+/g, ' ').trim();
+  return text.length > max ? `${text.slice(0, max - 3)}...` : text;
+}
+
+function graphFormatDate(value) {
+  if (!value) return '';
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? value : date.toLocaleString();
+}
+
+function graphDetailRows(rows) {
+  const html = rows
+    .filter(([, value]) => graphValuePresent(value))
+    .map(([label, value]) => `<div class="graph-detail-row"><span>${esc(label)}</span><span>${esc(value)}</span></div>`)
+    .join('');
+  return html ? `<div class="graph-detail-rows">${html}</div>` : '';
+}
+
+function graphDetailList(title, items) {
+  const visible = (items || []).filter(Boolean).slice(0, 5);
+  if (!visible.length) return '';
+  return `<div><div class="graph-detail-title">${esc(title)}</div><div class="graph-detail-list">${visible.map(item => `<div class="graph-detail-pill">${esc(item)}</div>`).join('')}</div></div>`;
+}
+
+function graphConnectionsFor(nodeId) {
+  const nodesById = graphNodeMap();
+  return (knowledgeGraph?.edges || [])
+    .filter(edge => edge.source === nodeId || edge.target === nodeId)
+    .map(edge => {
+      const otherId = edge.source === nodeId ? edge.target : edge.source;
+      const other = nodesById[otherId];
+      const direction = edge.source === nodeId ? 'to' : 'from';
+      return `${graphTypeLabel(edge.type)} ${direction} ${other?.label || otherId}`;
+    });
+}
+
+function graphEdgeEvidence(edge) {
+  const metadata = edge?.metadata || {};
+  const evidence = [];
+  if (metadata.evidence) evidence.push(`Evidence: ${metadata.evidence}`);
+  if (Array.isArray(metadata.samples)) evidence.push(...metadata.samples.map(sample => graphTruncate(sample)));
+  return evidence;
+}
+
+function updateGraphTip(node) {
+  const tipEl = document.getElementById('graph-tip');
+  if (!tipEl) return;
+  if (graphSelected) {
+    updateGraphInspector();
+    return;
+  }
+  if (!node) {
+    tipEl.innerHTML = '<strong>Project Graph</strong>Click a node for topic details or a line for the connection. Drag nodes, scroll to zoom, or use Fit for large graphs.';
+    return;
+  }
+  const meta = node.metadata || {};
+  const details = [
+    graphTypeLabel(node.type),
+    meta.source_type,
+    meta.health !== undefined ? `health ${health(meta.health)}` : '',
+    meta.risks ? `${meta.risks} risks` : '',
+    meta.blockers ? `${meta.blockers} blockers` : '',
+    `${graphConnectionsFor(node.id).length} connection(s)`
+  ].filter(Boolean).join(' | ');
+  tipEl.innerHTML = `<strong>${esc(node.label)}</strong><div class="graph-detail-desc">${esc(details || graphTypeLabel(node.type))}</div><div class="graph-detail-desc">Click to pin full details.</div>`;
+}
+
+function updateGraphInspector() {
+  const tipEl = document.getElementById('graph-tip');
+  if (!tipEl || !knowledgeGraph || !graphSelected) return;
+  const nodesById = graphNodeMap();
+
+  if (graphSelected.kind === 'node') {
+    const node = nodesById[graphSelected.id];
+    if (!node) {
+      graphSelected = null;
+      updateGraphTip(graphHover);
+      return;
+    }
+    const meta = node.metadata || {};
+    const description = meta.description || `${node.label} is a ${graphTypeLabel(node.type)} topic extracted from uploaded project data.`;
+    const rows = [
+      ['Type', graphTypeLabel(node.type)],
+      ['Source', meta.source_type],
+      ['Health', meta.health !== undefined ? health(meta.health) : ''],
+      ['Tickets', meta.tickets],
+      ['Risks', meta.risks],
+      ['Blockers', meta.blockers],
+      ['Decisions', meta.decisions],
+      ['Metrics', meta.metrics],
+      ['Mentions', meta.mentions],
+      ['Uploaded', graphFormatDate(meta.uploaded_at)]
+    ];
+    tipEl.innerHTML = `<div class="graph-detail"><div><strong>${esc(node.label)}</strong><div class="graph-detail-desc">${esc(description)}</div></div>${graphDetailRows(rows)}${graphDetailList('Connections', graphConnectionsFor(node.id))}<div class="graph-detail-desc">Click another node, a line, or empty space to update this inspector.</div></div>`;
+    return;
+  }
+
+  const edge = (knowledgeGraph.edges || []).find(isGraphEdgeSelected);
+  if (!edge) {
+    graphSelected = null;
+    updateGraphTip(graphHover);
+    return;
+  }
+  const source = nodesById[edge.source];
+  const target = nodesById[edge.target];
+  const sourceLabel = source?.label || edge.source;
+  const targetLabel = target?.label || edge.target;
+  const description = edge.description || `${sourceLabel} is connected to ${targetLabel} through ${graphTypeLabel(edge.type)}.`;
+  const rows = [
+    ['Type', graphTypeLabel(edge.type)],
+    ['Strength', edge.weight],
+    ['Source', sourceLabel],
+    ['Target', targetLabel]
+  ];
+  tipEl.innerHTML = `<div class="graph-detail"><div><strong>${esc(sourceLabel)} to ${esc(targetLabel)}</strong><div class="graph-detail-desc">${esc(description)}</div></div>${graphDetailRows(rows)}${graphDetailList('Connection Evidence', graphEdgeEvidence(edge))}<div class="graph-detail-desc">Click another line, a node, or empty space to update this inspector.</div></div>`;
+}
+
+function startGraphSimulation() {
+  if (graphAnimationId) cancelAnimationFrame(graphAnimationId);
+  const canvas = document.getElementById('graph-canvas');
+  const ctx = canvas.getContext('2d');
+  const graph = knowledgeGraph;
+  const nodeById = Object.fromEntries(graph.nodes.map(node => [node.id, node]));
+  let ticks = 0;
+
+  function tick() {
+    const {width, height, dpr} = resizeGraphCanvas(canvas);
+    const centerX = width / 2;
+    const centerY = height / 2;
+    ticks += 1;
+
+    graph.nodes.forEach((a, i) => {
+      for (let j = i + 1; j < graph.nodes.length; j++) {
+        const b = graph.nodes[j];
+        const dx = a.x - b.x || 0.01;
+        const dy = a.y - b.y || 0.01;
+        const distSq = Math.max(80, dx * dx + dy * dy);
+        const force = 900 / distSq;
+        a.vx += (dx * force) / 8;
+        a.vy += (dy * force) / 8;
+        b.vx -= (dx * force) / 8;
+        b.vy -= (dy * force) / 8;
+      }
+    });
+
+    graph.edges.forEach(edge => {
+      const a = nodeById[edge.source];
+      const b = nodeById[edge.target];
+      if (!a || !b) return;
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      const dist = Math.max(1, Math.hypot(dx, dy));
+      const target = 72 + Math.max(0, 5 - (edge.weight || 1)) * 10;
+      const force = (dist - target) * 0.004;
+      const fx = (dx / dist) * force;
+      const fy = (dy / dist) * force;
+      a.vx += fx;
+      a.vy += fy;
+      b.vx -= fx;
+      b.vy -= fy;
+    });
+
+    graph.nodes.forEach(node => {
+      node.vx += (centerX - node.x) * 0.0008;
+      node.vy += (centerY - node.y) * 0.0008;
+      if (node.fx !== null && node.fx !== undefined) {
+        node.x = node.fx;
+        node.y = node.fy;
+        node.vx = 0;
+        node.vy = 0;
+      } else {
+        node.vx *= 0.84;
+        node.vy *= 0.84;
+        node.x += node.vx;
+        node.y += node.vy;
+      }
+    });
+
+    drawGraph(ctx, canvas, dpr, nodeById);
+    graphAnimationId = requestAnimationFrame(tick);
+    if (ticks > 900 && !graphDragging) {
+      cancelAnimationFrame(graphAnimationId);
+      graphAnimationId = null;
+    }
+  }
+  tick();
+}
+
+function drawGraphFrame() {
+  if (!knowledgeGraph) return;
+  const canvas = document.getElementById('graph-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const {dpr} = resizeGraphCanvas(canvas);
+  const nodeById = Object.fromEntries(knowledgeGraph.nodes.map(node => [node.id, node]));
+  drawGraph(ctx, canvas, dpr, nodeById);
+}
+
+function drawGraph(ctx, canvas, dpr, nodeById) {
+  const width = canvas.width / dpr;
+  const height = canvas.height / dpr;
+  const selectedNodeId = graphSelected?.kind === 'node' ? graphSelected.id : null;
+  const selectedEdge = graphSelected?.kind === 'edge' ? graphSelected : null;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, width, height);
+  ctx.save();
+  ctx.translate(graphTransform.x, graphTransform.y);
+  ctx.scale(graphTransform.scale, graphTransform.scale);
+
+  ctx.lineCap = 'round';
+  knowledgeGraph.edges.forEach(edge => {
+    const source = nodeById[edge.source];
+    const target = nodeById[edge.target];
+    if (!source || !target) return;
+    const isSelected = isGraphEdgeSelected(edge);
+    const isRelated = selectedNodeId && (edge.source === selectedNodeId || edge.target === selectedNodeId);
+    ctx.beginPath();
+    ctx.moveTo(source.x, source.y);
+    ctx.lineTo(target.x, target.y);
+    ctx.strokeStyle = isSelected
+      ? 'rgba(242,242,245,.88)'
+      : isRelated
+        ? 'rgba(91,106,247,.52)'
+        : `rgba(148,148,163,${Math.min(0.32, 0.06 + (edge.weight || 1) * 0.018)})`;
+    ctx.lineWidth = isSelected ? 3.4 : Math.min(3, 0.6 + Math.sqrt(edge.weight || 1) * 0.35);
+    ctx.stroke();
+    if (isSelected) {
+      ctx.font = '10px IBM Plex Sans, sans-serif';
+      ctx.fillStyle = '#f2f2f5';
+      ctx.textAlign = 'center';
+      ctx.fillText(graphTypeLabel(edge.type).slice(0, 28), (source.x + target.x) / 2, (source.y + target.y) / 2 - 6);
+    }
+  });
+
+  knowledgeGraph.nodes.forEach(node => {
+    const radius = graphRadius(node);
+    const isHover = graphHover?.id === node.id;
+    const isSelected = selectedNodeId === node.id;
+    const isEndpoint = selectedEdge && (selectedEdge.source === node.id || selectedEdge.target === node.id);
+    ctx.beginPath();
+    ctx.arc(node.x, node.y, isSelected ? radius + 4 : isHover || isEndpoint ? radius + 3 : radius, 0, Math.PI * 2);
+    ctx.fillStyle = graphColor(node.type);
+    ctx.shadowColor = graphColor(node.type);
+    ctx.shadowBlur = isSelected || isEndpoint ? 22 : isHover ? 18 : 8;
+    ctx.fill();
+    ctx.shadowBlur = 0;
+    if (isSelected || isEndpoint) {
+      ctx.beginPath();
+      ctx.arc(node.x, node.y, radius + 7, 0, Math.PI * 2);
+      ctx.strokeStyle = 'rgba(242,242,245,.72)';
+      ctx.lineWidth = 1.3;
+      ctx.stroke();
+    }
+    if (isHover || isSelected || isEndpoint || node.type === 'document' || node.type === 'project') {
+      ctx.font = `${isHover || isSelected || isEndpoint ? 12 : 10}px IBM Plex Sans, sans-serif`;
+      ctx.fillStyle = '#f2f2f5';
+      ctx.textAlign = 'center';
+      ctx.fillText(node.label.slice(0, 28), node.x, node.y - radius - 8);
+    }
+  });
+  ctx.restore();
 }
 
 function exportCsv() {
-  downloadEndpoint('/api/analytics/export.csv', 'audit-analytics.csv');
+  downloadEndpoint('/api/analytics/export.csv', 'project-intelligence.csv');
 }
 
 function exportTableau() {
-  downloadEndpoint('/api/analytics/export.tableau.json', 'audit-tableau.json');
+  downloadEndpoint('/api/analytics/export.tableau.json', 'project-tableau.json');
 }
 
 function exportPowerBi() {
-  downloadEndpoint('/api/analytics/export.powerbi.json', 'audit-powerbi.json');
+  downloadEndpoint('/api/analytics/export.powerbi.json', 'project-powerbi.json');
 }
 
 async function downloadEndpoint(path, filename) {
   try {
-    const r = await fetch(`${API_BASE}${path}`, {headers:{'x-tenant-id':TENANT_ID}});
+    const r = await fetch(`${API_BASE}${path}`, {headers:projectHeaders()});
     if (!r.ok) throw new Error('export failed');
     const blob = await r.blob();
     const url = URL.createObjectURL(blob);
@@ -546,7 +2860,10 @@ function showToast(msg, type='success') {
 
 function money(v) { return '$' + Number(v || 0).toLocaleString(undefined, {maximumFractionDigits: 0}); }
 function pct(v) { return Math.round(Number(v || 0) * 100) + '%'; }
-function esc(s) { return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/\n/g,'<br>'); }
+function health(v) { return Math.round(Number(v || 0)) + '%'; }
+function escPlain(s) { return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function esc(s) { return escPlain(s).replace(/\n/g,'<br>'); }
+function attr(s) { return esc(s).replace(/<br>/g, ' '); }
 </script>
 </body>
 </html>

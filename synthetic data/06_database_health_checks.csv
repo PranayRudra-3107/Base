@@ -1,0 +1,18 @@
+check_date,database,cluster,storage_used_gb,storage_pct,processor_pct,connections_pct,slow_queries_per_hour,replication_lag_ms,index_bloat_pct,cache_hit_pct,status,issue_or_action,owner,linked_work_item
+2025-05-09,checkout_primary,atlas-prod,410,52,46,44,28,20,8,96.8,healthy,baseline before Atlas checkout tables,Samir Rao,ATLAS-100
+2025-06-06,checkout_primary,atlas-prod,438,55,49,47,34,24,9,96.5,healthy,checkout_order migration plan reviewed,Samir Rao,ATLAS-106
+2025-07-04,checkout_primary,atlas-prod,461,58,52,51,48,30,10,95.9,watch,index bloat rising after replay worker tests,Samir Rao,ATLAS-106
+2025-08-08,checkout_primary,atlas-prod,486,61,54,53,53,32,11,95.6,watch,tax comparison queries added more read load,Samir Rao,ATLAS-115
+2025-09-12,checkout_primary,atlas-prod,512,64,56,57,61,38,12,95.3,healthy,25 percent route approved with weekly database checks,Samir Rao,ATLAS-116
+2025-10-15,checkout_primary,atlas-prod,541,68,72,74,138,80,15,92.1,issue,slow checkout price query contributed to PD-1002 database incident,Samir Rao,ATLAS-121
+2025-10-31,checkout_primary,atlas-prod,548,69,58,61,52,34,13,95.8,healthy,query index fix applied and checkout response time recovered,Samir Rao,ATLAS-122
+2025-11-21,checkout_primary,atlas-prod,571,71,60,64,58,36,14,95.4,healthy,PCI review confirmed no card data stored in Atlas tables,Luca Moretti,ATLAS-123
+2025-12-12,checkout_primary,atlas-prod,612,76,84,92,186,120,18,90.7,incident,connection pool saturation during promotion load PD-1003,Samir Rao,ATLAS-126
+2025-12-26,checkout_primary,atlas-prod,618,77,62,68,66,42,15,95.1,watch,read replica planned to isolate reporting queries,Samir Rao,ATLAS-127
+2026-01-10,checkout_reporting_replica,atlas-prod,620,77,45,38,22,95,13,94.9,healthy,reporting read replica online and lag under 100ms,Samir Rao,ATLAS-127
+2026-01-24,checkout_primary,atlas-prod,635,79,64,66,57,48,14,95.6,healthy,75 percent routing enabled with stable database connections,Samir Rao,ATLAS-128
+2026-02-04,checkout_primary,atlas-prod,648,81,68,70,73,55,15,95.0,watch,inventory timeout incident increased retries but database remained available,Samir Rao,ATLAS-129
+2026-02-28,checkout_primary,atlas-prod,658,82,63,64,48,40,14,96.1,healthy,launch readiness check for 100 percent route,Samir Rao,ATLAS-132
+2026-03-18,checkout_primary,atlas-prod,671,84,61,62,43,38,15,96.2,watch,post-cutover storage growth continues and archive plan needed,Samir Rao,ATLAS-134
+2026-04-15,checkout_primary,atlas-prod,690,86,60,61,46,36,16,96.0,risk,storage will exceed 90 percent in June if monolith archive is delayed,Samir Rao,ATLAS-137
+2026-04-30,checkout_primary,atlas-prod,704,88,62,63,51,39,17,95.8,risk,ATLAS-134 blocked by ATLAS-136 finance reconciliation and storage risk remains,Samir Rao,ATLAS-137
