@@ -102,7 +102,7 @@ This inventory was discovered from AWS CLI using profile `base-admin`.
 | ECR image tag | eu-central-1 | `base-api:latest` | pushed |
 | ECS cluster | eu-central-1 | `base-cluster` | created |
 | ECS service | eu-central-1 | `base-api-service` | running, desired count `1` |
-| ECS task definition | eu-central-1 | `base-api:3` | active |
+| ECS task definition | eu-central-1 | `base-api:4` | active |
 | RDS PostgreSQL instance | eu-central-1 | `base` | available |
 | RDS endpoint | eu-central-1 | `base.cfqs0omo2oaz.eu-central-1.rds.amazonaws.com` | available |
 | Application Load Balancer | eu-central-1 | `base-alb` | created |
@@ -149,7 +149,7 @@ ECS service state: ACTIVE
 Desired tasks:     1
 Running tasks:     1
 Pending tasks:     0
-Task definition:   base-api:3
+Task definition:   base-api:4
 Target group:      base-api-tg
 Target health:     healthy
 Container image:   626210706801.dkr.ecr.eu-central-1.amazonaws.com/base-api:latest
@@ -159,7 +159,7 @@ Important deployment fix that was made:
 
 ```text
 Initial ECS startup failed because DATABASE_URL was injected as the full JSON secret.
-Task definition base-api:3 now uses Secrets Manager JSON key selectors:
+Task definition base-api:3 and later use Secrets Manager JSON key selectors:
 
 OPENAI_API_KEY -> base/openai-api-key:OPENAI_API_KEY
 DATABASE_URL   -> base/database-url:DATABASE_URL
@@ -194,14 +194,36 @@ curl http://base-alb-2085702204.eu-central-1.elb.amazonaws.com/health
 curl https://d13xa0pqwvaoqw.cloudfront.net/api/projects/
 ```
 
-CI/CD remaining handoff:
+CI/CD status:
 
 ```text
 The GitHub Actions workflow exists at .github/workflows/deploy-aws.yml.
 The AWS deploy role exists: arn:aws:iam::626210706801:role/base-github-deploy-role
 
-The GitHub CLI was not installed/authenticated locally, so repository variables
-and secrets still need to be added in GitHub.
+GitHub CLI is installed and authenticated as PranayRudra-3107.
+Repository variables and secrets have been configured.
+Deploy AWS workflow was triggered successfully and completed.
+```
+
+Last successful GitHub Actions deployment:
+
+```text
+Workflow:   Deploy AWS
+Run ID:     26337292590
+Run URL:    https://github.com/PranayRudra-3107/Base/actions/runs/26337292590
+Commit:     ca9c3aa Add AWS deployment and CI/CD setup
+Duration:   about 5 minutes
+Result:     success
+Outputs:    pushed backend image, deployed ECS task definition base-api:4,
+            synced frontend to S3, invalidated CloudFront cache
+```
+
+Note from the successful workflow run:
+
+```text
+GitHub Actions warned that some Node.js 20 actions are deprecated and will move
+to Node.js 24 defaults in 2026. The run succeeded, but action versions should be
+checked later for Node.js 24 support.
 ```
 
 GitHub repository variables to add:
@@ -347,7 +369,7 @@ In ECS, the backend runs like this:
 ```text
 ECS cluster:           base-cluster
 ECS service:           base-api-service
-Task definition:       base-api:3
+Task definition:       base-api:4
 Container name:        base-api
 Container port:        8080
 CloudWatch log group:  /ecs/base-api-task
@@ -542,7 +564,7 @@ ECR latest image:         pushed
 ECS cluster:              base-cluster
 ECS service:              base-api-service
 ECS desired count:        1
-Task family:              base-api:3
+Task family:              base-api:4
 Container name:           base-api
 Container port:           8080
 ALB:                      base-alb
