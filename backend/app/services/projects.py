@@ -6,7 +6,9 @@ from datetime import datetime
 from typing import Dict, List
 
 from app.core.config import get_settings
+from app.services.database import postgres_enabled
 from app.services.analytics import build_dashboard
+from app.services.storage import read_json, write_json
 
 settings = get_settings()
 
@@ -26,6 +28,9 @@ def _project_slug(name: str) -> str:
 
 
 def _read_projects() -> List[Dict]:
+    if postgres_enabled():
+        return read_json("_global", "projects", [])
+
     path = _projects_path()
     if not os.path.exists(path):
         legacy_path = os.path.join(settings.data_dir, "default", "analyses.json")
@@ -46,6 +51,10 @@ def _read_projects() -> List[Dict]:
 
 
 def _write_projects(projects: List[Dict]) -> None:
+    if postgres_enabled():
+        write_json("_global", "projects", projects)
+        return
+
     with open(_projects_path(), "w", encoding="utf-8") as f:
         json.dump(projects, f, indent=2)
 

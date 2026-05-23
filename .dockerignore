@@ -1,0 +1,16 @@
+.git
+.github
+.DS_Store
+backend/venv
+backend/__pycache__
+backend/app/**/__pycache__
+backend/chroma_db
+backend/data
+chroma_db
+data
+synthetic data
+frontend/node_modules
+*.pyc
+*.sqlite3
+.env
+backend/.env

@@ -1,8 +1,10 @@
 import chromadb
+from openai import OpenAI
 from chromadb.utils import embedding_functions
 from app.core.config import get_settings
+from app.services.database import pgvector_enabled, vector_connection
 from app.services.ingestion import chunk_text, extract_text
-from app.services.storage import list_document_analyses, read_json, write_json
+from app.services.storage import list_document_analyses, read_json, read_raw_document, write_json
 from typing import List, Dict, Any
 from collections import Counter
 from pathlib import Path
@@ -40,6 +42,27 @@ def get_or_create_collection(tenant_id: str):
         api_key=settings.openai_api_key,
         model_name=settings.embedding_model
     )
+
+
+def _vector_literal(values: List[float]) -> str:
+    return "[" + ",".join(f"{float(value):.8f}" for value in values) + "]"
+
+
+def _embed_texts(texts: List[str]) -> List[List[float]]:
+    if not texts:
+        return []
+    client = OpenAI(api_key=settings.openai_api_key)
+    embeddings = []
+    batch_size = 64
+    for start in range(0, len(texts), batch_size):
+        batch = texts[start:start + batch_size]
+        response = client.embeddings.create(
+            model=settings.embedding_model,
+            input=batch,
+        )
+        ordered = sorted(response.data, key=lambda item: item.index)
+        embeddings.extend(item.embedding for item in ordered)
+    return embeddings
     collection_name = _collection_name(tenant_id)
     return client.get_or_create_collection(
         name=collection_name,
@@ -94,11 +117,16 @@ def _keyword_cache_chunks(tenant_id: str) -> List[Dict[str, Any]]:
         filename = analysis.get("filename", "unknown")
         if not document_id or document_id in cached_docs:
             continue
-        path = _resolve_storage_path(analysis.get("storage_path", ""))
-        if not path.exists():
-            continue
         try:
-            text = extract_text(filename, path.read_bytes())
+            storage_path = analysis.get("storage_path", "")
+            if storage_path and not storage_path.startswith("s3://"):
+                path = _resolve_storage_path(storage_path)
+                if not path.exists():
+                    continue
+                file_bytes = path.read_bytes()
+            else:
+                file_bytes = read_raw_document(storage_path)
+            text = extract_text(filename, file_bytes)
             chunks = chunk_text(text)
         except Exception:
             continue
@@ -152,7 +180,161 @@ def _normalize_score(score: Any) -> float:
         return 0.0
 
 
+def _metadata_from_row(row: Dict[str, Any]) -> Dict[str, Any]:
+    metadata = dict(row.get("metadata") or {})
+    metadata.update({
+        "document_id": row.get("document_id", metadata.get("document_id", "")),
+        "filename": row.get("filename", metadata.get("filename", "unknown")),
+        "chunk_index": row.get("chunk_index", metadata.get("chunk_index", 0)),
+        "total_chunks": row.get("total_chunks", metadata.get("total_chunks", 0)),
+        "uploaded_at": row.get("uploaded_at", metadata.get("uploaded_at", "")),
+    })
+    return metadata
+
+
+def _pgvector_add_chunks(tenant_id: str, chunks: List[str], metadatas: List[Dict[str, Any]], ids: List[str]) -> None:
+    from psycopg.types.json import Jsonb
+
+    embeddings = _embed_texts(chunks)
+    with vector_connection() as conn:
+        with conn.cursor() as cur:
+            for chunk_id, chunk, metadata, embedding in zip(ids, chunks, metadatas, embeddings):
+                cur.execute(
+                    """
+                    INSERT INTO base_vector_chunks (
+                        id, tenant_id, document_id, filename, chunk_index, total_chunks,
+                        uploaded_at, text, metadata, embedding
+                    )
+                    VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s::vector)
+                    ON CONFLICT (id) DO UPDATE SET
+                        text = EXCLUDED.text,
+                        metadata = EXCLUDED.metadata,
+                        embedding = EXCLUDED.embedding
+                    """,
+                    (
+                        chunk_id,
+                        tenant_id,
+                        metadata.get("document_id", ""),
+                        metadata.get("filename", "unknown"),
+                        int(metadata.get("chunk_index", 0)),
+                        int(metadata.get("total_chunks", len(chunks))),
+                        metadata.get("uploaded_at", ""),
+                        chunk,
+                        Jsonb(metadata),
+                        _vector_literal(embedding),
+                    ),
+                )
+        conn.commit()
+
+
+def _pgvector_all_chunks(tenant_id: str) -> List[Dict[str, Any]]:
+    with vector_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT id, document_id, filename, chunk_index, total_chunks, uploaded_at, text, metadata
+                FROM base_vector_chunks
+                WHERE tenant_id = %s
+                ORDER BY document_id, chunk_index
+                """,
+                (tenant_id,),
+            )
+            rows = cur.fetchall()
+    return [
+        {
+            "id": row["id"],
+            "text": row["text"] or "",
+            "metadata": _metadata_from_row(row),
+        }
+        for row in rows
+    ]
+
+
+def _pgvector_search_chunks(tenant_id: str, query: str, k: int) -> List[Dict[str, Any]]:
+    query_embedding = _embed_texts([query])[0]
+    vector = _vector_literal(query_embedding)
+    with vector_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT
+                    id,
+                    document_id,
+                    filename,
+                    chunk_index,
+                    total_chunks,
+                    uploaded_at,
+                    text,
+                    metadata,
+                    embedding <=> %s::vector AS distance
+                FROM base_vector_chunks
+                WHERE tenant_id = %s
+                ORDER BY embedding <=> %s::vector
+                LIMIT %s
+                """,
+                (vector, tenant_id, vector, k),
+            )
+            rows = cur.fetchall()
+    chunks = []
+    for row in rows:
+        score = _normalize_score(1 - float(row["distance"]))
+        chunks.append({
+            "id": row["id"],
+            "text": row["text"] or "",
+            "metadata": _metadata_from_row(row),
+            "score": score,
+            "semantic_score": score,
+            "keyword_score": 0,
+            "retrieval_mode": "semantic",
+        })
+    return chunks
+
+
+def _pgvector_list_documents(tenant_id: str) -> List[Dict]:
+    with vector_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                SELECT
+                    document_id,
+                    MIN(filename) AS filename,
+                    MIN(uploaded_at) AS uploaded_at,
+                    COUNT(*) AS chunk_count
+                FROM base_vector_chunks
+                WHERE tenant_id = %s
+                GROUP BY document_id
+                ORDER BY uploaded_at DESC
+                """,
+                (tenant_id,),
+            )
+            rows = cur.fetchall()
+    return [dict(row) for row in rows]
+
+
+def _pgvector_delete_document(tenant_id: str, document_id: str) -> int:
+    with vector_connection() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                """
+                DELETE FROM base_vector_chunks
+                WHERE tenant_id = %s AND document_id = %s
+                RETURNING id
+                """,
+                (tenant_id, document_id),
+            )
+            deleted = cur.fetchall()
+        conn.commit()
+    return len(deleted)
+
+
 def _all_indexed_chunks(tenant_id: str) -> List[Dict[str, Any]]:
+    if pgvector_enabled():
+        try:
+            chunks = _pgvector_all_chunks(tenant_id)
+            return chunks or _keyword_cache_chunks(tenant_id)
+        except Exception:
+            return _keyword_cache_chunks(tenant_id)
+
     try:
         collection = get_or_create_collection(tenant_id)
         results = collection.get(include=["documents", "metadatas"])
@@ -174,6 +356,9 @@ def _all_indexed_chunks(tenant_id: str) -> List[Dict[str, Any]]:
 
 
 def _semantic_search_chunks(tenant_id: str, query: str, k: int) -> List[Dict[str, Any]]:
+    if pgvector_enabled():
+        return _pgvector_search_chunks(tenant_id, query, k)
+
     collection = get_or_create_collection(tenant_id)
     count = collection.count()
     if count <= 0:
@@ -327,6 +512,11 @@ def add_chunks(tenant_id: str, chunks: List[str], metadatas: List[Dict[str, Any]
         {"id": chunk_id, "text": chunk, "metadata": metadata}
         for chunk_id, chunk, metadata in zip(ids, chunks, metadatas)
     ]
+    if pgvector_enabled():
+        _pgvector_add_chunks(tenant_id, chunks, metadatas, ids)
+        _append_keyword_chunks(tenant_id, keyword_rows)
+        return ids
+
     _append_keyword_chunks(tenant_id, keyword_rows)
     try:
         collection = get_or_create_collection(tenant_id)
@@ -353,6 +543,17 @@ def keyword_search_chunks(tenant_id: str, query: str, k: int = None) -> List[Dic
 
 
 def list_documents(tenant_id: str) -> List[Dict]:
+    if pgvector_enabled():
+        try:
+            docs = _pgvector_list_documents(tenant_id)
+            return docs or _list_documents_from_metadatas([
+                chunk.get("metadata", {}) for chunk in _keyword_cache_chunks(tenant_id)
+            ])
+        except Exception:
+            return _list_documents_from_metadatas([
+                chunk.get("metadata", {}) for chunk in _keyword_cache_chunks(tenant_id)
+            ])
+
     try:
         collection = get_or_create_collection(tenant_id)
         results = collection.get()
@@ -364,6 +565,11 @@ def list_documents(tenant_id: str) -> List[Dict]:
 
 
 def delete_document(tenant_id: str, document_id: str):
+    if pgvector_enabled():
+        deleted = _pgvector_delete_document(tenant_id, document_id)
+        keyword_deleted = _delete_keyword_document(tenant_id, document_id)
+        return deleted or keyword_deleted
+
     try:
         collection = get_or_create_collection(tenant_id)
         results = collection.get(where={"document_id": document_id})

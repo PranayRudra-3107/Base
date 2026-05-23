@@ -136,6 +136,54 @@ The MVP is intentionally simple:
 - LLM and embeddings: OpenAI.
 - Runtime storage: local files under `backend/data/` and `backend/chroma_db/`.
 
+## Production AWS Path
+
+The app now supports production-oriented storage backends through environment flags while keeping the local MVP defaults.
+
+Recommended AWS deployment:
+
+```mermaid
+graph TD
+  User[User] --> CloudFront[CloudFront]
+  CloudFront --> S3Frontend[S3 Static Frontend]
+  CloudFront --> ALB[Application Load Balancer]
+  ALB --> ECS[ECS Fargate FastAPI Backend]
+  ECS --> RDS[(RDS/Aurora PostgreSQL + pgvector)]
+  ECS --> S3Docs[S3 Uploaded Source Files]
+  ECS --> Secrets[Secrets Manager]
+  ECS --> Logs[CloudWatch Logs]
+```
+
+Production backend settings:
+
+```bash
+ENVIRONMENT=production
+METADATA_BACKEND=postgres
+DOCUMENT_STORAGE_BACKEND=s3
+VECTOR_BACKEND=pgvector
+DATABASE_URL=postgresql://...
+S3_BUCKET=your-private-upload-bucket
+S3_PREFIX=base
+AWS_REGION=us-east-1
+CORS_ORIGINS=https://yourdomain.com
+OPENAI_API_KEY=sk-...
+```
+
+With those settings:
+
+- Project metadata, document analyses, keyword cache, and audit events are stored in PostgreSQL instead of local JSON/JSONL files.
+- Uploaded source files are stored in S3 instead of `backend/data/documents`.
+- Semantic retrieval stores embeddings in PostgreSQL `pgvector` instead of local ChromaDB.
+- The container remains stateless, so ECS Fargate can restart or scale tasks safely.
+
+Deployment scaffolding:
+
+- `Dockerfile` builds the production backend container.
+- `.github/workflows/ci.yml` runs backend compile checks and container build.
+- `.github/workflows/deploy-aws.yml` builds/pushes to ECR, deploys ECS, syncs the frontend to S3, and invalidates CloudFront.
+- `infra/aws/ecs-task-definition.json` is the ECS task definition template.
+- `infra/aws/README.md` lists required AWS resources and repository variables.
+
 ---
 
 ## Project Structure
@@ -158,6 +206,7 @@ base-platform/
 |   |       +-- studio.py        # Quiz and conversation generation
 |   |       +-- analytics.py     # Current project-health metrics
 |   |       +-- storage.py       # Local document/JSON storage
+|   |       +-- database.py      # Optional PostgreSQL metadata and pgvector schema
 |   |       +-- audit_log.py     # JSONL audit trail
 |   +-- requirements.txt
 |   +-- .env.example

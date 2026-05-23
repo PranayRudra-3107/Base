@@ -1,0 +1,62 @@
+{
+  "family": "base-api",
+  "networkMode": "awsvpc",
+  "requiresCompatibilities": ["FARGATE"],
+  "cpu": "1024",
+  "memory": "2048",
+  "executionRoleArn": "arn:aws:iam::626210706801:role/ecsTaskExecutionRole",
+  "taskRoleArn": "arn:aws:iam::626210706801:role/base-ecs-task-role",
+  "containerDefinitions": [
+    {
+      "name": "base-api",
+      "image": "626210706801.dkr.ecr.eu-central-1.amazonaws.com/base-api:latest",
+      "essential": true,
+      "portMappings": [
+        {
+          "containerPort": 8080,
+          "hostPort": 8080,
+          "protocol": "tcp"
+        }
+      ],
+      "environment": [
+        {"name": "ENVIRONMENT", "value": "production"},
+        {"name": "PORT", "value": "8080"},
+        {"name": "METADATA_BACKEND", "value": "postgres"},
+        {"name": "DOCUMENT_STORAGE_BACKEND", "value": "s3"},
+        {"name": "VECTOR_BACKEND", "value": "pgvector"},
+        {"name": "S3_PREFIX", "value": "base"},
+        {"name": "AWS_REGION", "value": "eu-central-1"},
+        {"name": "CORS_ORIGINS", "value": "https://d13xa0pqwvaoqw.cloudfront.net,http://base-alb-2085702204.eu-central-1.elb.amazonaws.com"}
+      ],
+      "secrets": [
+        {
+          "name": "OPENAI_API_KEY",
+          "valueFrom": "arn:aws:secretsmanager:eu-central-1:626210706801:secret:base/openai-api-key-auaT6u:OPENAI_API_KEY::"
+        },
+        {
+          "name": "DATABASE_URL",
+          "valueFrom": "arn:aws:secretsmanager:eu-central-1:626210706801:secret:base/database-url-cHCnfR:DATABASE_URL::"
+        },
+        {
+          "name": "S3_BUCKET",
+          "valueFrom": "arn:aws:secretsmanager:eu-central-1:626210706801:secret:base/s3-bucket-sDSH6J:DOCUMENTS_BUCKET::"
+        }
+      ],
+      "logConfiguration": {
+        "logDriver": "awslogs",
+        "options": {
+          "awslogs-group": "/ecs/base-api-task",
+          "awslogs-region": "eu-central-1",
+          "awslogs-stream-prefix": "ecs"
+        }
+      },
+      "healthCheck": {
+        "command": ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://127.0.0.1:8080/health', timeout=3)\""],
+        "interval": 30,
+        "timeout": 5,
+        "retries": 3,
+        "startPeriod": 30
+      }
+    }
+  ]
+}

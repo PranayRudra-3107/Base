@@ -3,7 +3,7 @@ from pydantic import BaseModel
 from typing import List
 from app.services.audit_log import write_audit_event
 from app.services.projects import touch_project
-from app.services.storage import delete_document_analysis, list_document_analyses
+from app.services.storage import delete_document_analysis, delete_raw_document, list_document_analyses
 from app.services.vector_store import list_documents, delete_document
 
 router = APIRouter()
@@ -60,15 +60,20 @@ async def delete_doc(
 ):
     """Delete a project source and all its chunks from the index."""
     try:
+        analyses = list_document_analyses(x_tenant_id)
+        analysis = next((item for item in analyses if item.get("document_id") == document_id), None)
         count = delete_document(x_tenant_id, document_id)
         analysis_deleted = delete_document_analysis(x_tenant_id, document_id)
+        raw_deleted = False
+        if analysis:
+            raw_deleted = delete_raw_document(analysis.get("storage_path", ""))
         if count == 0 and not analysis_deleted:
             raise HTTPException(status_code=404, detail="Document not found.")
         touch_project(x_tenant_id)
         write_audit_event(
             tenant_id=x_tenant_id,
             action="document.deleted",
-            details={"document_id": document_id, "chunks_deleted": count},
+            details={"document_id": document_id, "chunks_deleted": count, "raw_deleted": raw_deleted},
         )
         return DeleteResponse(
             message="Project source deleted successfully.",
