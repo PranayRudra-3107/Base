@@ -29,6 +29,18 @@ class Settings(BaseSettings):
     chunk_size: int = 500
     chunk_overlap: int = 50
     retrieval_k: int = 5
+    public_app_url: str = ""
+    connector_sync_limit: int = 50
+    connector_timeout_seconds: float = 25
+    microsoft_client_id: str = ""
+    microsoft_client_secret: str = ""
+    microsoft_tenant_id: str = "organizations"
+    microsoft_redirect_uri: str = ""
+    microsoft_connector_scopes: str = "offline_access User.Read Mail.Read Team.ReadBasic.All Channel.ReadBasic.All ChannelMessage.Read.All Chat.Read Sites.Read.All Files.Read.All"
+    atlassian_client_id: str = ""
+    atlassian_client_secret: str = ""
+    atlassian_redirect_uri: str = ""
+    atlassian_connector_scopes: str = "read:jira-work read:jira-user read:confluence-content.all read:confluence-space.summary offline_access"
 
     class Config:
         env_file = ".env"

@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api import ingest, query, documents, analytics, projects
+from app.api import ingest, query, documents, analytics, projects, connectors
 from app.core.config import get_settings, parse_csv_setting
 from app.services.database import init_metadata_schema, init_vector_schema, postgres_enabled, pgvector_enabled
 
@@ -25,6 +25,7 @@ app.include_router(query.router, prefix="/api/query", tags=["Query"])
 app.include_router(documents.router, prefix="/api/documents", tags=["Documents"])
 app.include_router(analytics.router, prefix="/api/analytics", tags=["Analytics"])
 app.include_router(projects.router, prefix="/api/projects", tags=["Projects"])
+app.include_router(connectors.router, prefix="/api/connectors", tags=["Connectors"])
 
 
 @app.on_event("startup")

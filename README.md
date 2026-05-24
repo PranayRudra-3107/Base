@@ -61,17 +61,18 @@ The current app can:
 - Generate NotebookLM-style study artifacts: interactive quizzes, host conversations, audio overview playback scripts, video storyboards, slide deck outlines, flashcards, and infographics over uploaded project files.
 - Show a static web UI with project picker, dashboard, agent gallery, connector hub, knowledge graph, chat, KT brief, source library, and activity log views.
 - Run demo-ready project agents for risk review, incident review, release notes, handoff briefs, metrics investigation, and source gap analysis.
-- Track upload-first connector coverage for Jira, Teams, email, GitHub, Grafana, database health, Confluence, PagerDuty, support, and BI sources.
+- Connect and sync project data from live APIs or credential-based connectors, then index the fetched records through the same RAG path as uploaded files.
+- Track connector coverage for Jira, Linear, Azure Boards, Slack, Teams, email, GitHub, GitLab, Bitbucket, product analytics, observability, database health, incidents, docs, support, and BI sources.
 - Export project intelligence analytics as CSV, Tableau-style JSON, and PowerBI-style JSON.
 - Keep a local JSONL activity trail of uploads, queries, KT briefs, deletes, dashboard views, and exports.
 
-Important note: the current implementation is still file-upload based. External connectors for Jira, Slack, GitHub, observability, analytics, and databases are part of the roadmap.
+Important note: live connectors are demo-grade. They support manual credential/OAuth setup and on-demand sync, but production use should move secrets to AWS Secrets Manager, add permission-aware retrieval, scheduled refresh, and background ingestion workers.
 
 ---
 
 ## Target Data Sources
 
-Future versions should support connectors for:
+The connector hub defines live or upload-fallback paths for:
 
 - Jira, Linear, Azure Boards, or other ticket systems.
 - Slack, Microsoft Teams, or email conversations.
@@ -82,6 +83,8 @@ Future versions should support connectors for:
 - Incident tools like PagerDuty, Opsgenie, Statuspage, or internal incident docs.
 - Internal docs from Notion, Confluence, Google Drive, SharePoint, Markdown repos, or PDFs.
 - Customer support systems like Zendesk, Intercom, Freshdesk, or CRM notes.
+
+OAuth support is currently scaffolded for Microsoft Graph and Atlassian. API-token connectors can be configured directly in the Connector Hub per project workspace.
 
 ---
 
@@ -199,12 +202,15 @@ base-platform/
 |   |   |   +-- query.py         # POST /api/query/
 |   |   |   +-- documents.py     # GET/DELETE /api/documents/
 |   |   |   +-- analytics.py     # Project dashboard, activity log, exports
+|   |   |   +-- connectors.py    # Connector catalog, credentials, OAuth, and sync
 |   |   +-- services/
 |   |       +-- ingestion.py     # File parsing and chunking
 |   |       +-- vector_store.py  # ChromaDB and hybrid retrieval operations
 |   |       +-- rag.py           # RAG pipeline
 |   |       +-- studio.py        # Quiz and conversation generation
 |   |       +-- analytics.py     # Current project-health metrics
+|   |       +-- connectors.py    # Live connector adapters and state management
+|   |       +-- connector_ingestion.py # Index connector output like uploaded sources
 |   |       +-- storage.py       # Local document/JSON storage
 |   |       +-- database.py      # Optional PostgreSQL metadata and pgvector schema
 |   |       +-- audit_log.py     # JSONL audit trail
@@ -318,8 +324,35 @@ Because this is still the document-focused MVP, use project docs, tickets export
 | GET | `/api/analytics/export.csv` | Export extracted analytics as CSV |
 | GET | `/api/analytics/export.tableau.json` | Export Tableau-friendly JSON |
 | GET | `/api/analytics/export.powerbi.json` | Export PowerBI-friendly JSON |
+| GET | `/api/connectors/` | List supported connectors and project connection state |
+| POST | `/api/connectors/{id}/credentials` | Save API-token or endpoint credentials for a connector |
+| POST | `/api/connectors/{id}/authorize` | Start OAuth for Microsoft Graph or Atlassian connectors |
+| GET | `/api/connectors/oauth/{provider}/callback` | Complete connector OAuth |
+| POST | `/api/connectors/{id}/sync` | Fetch connector data and index it as a source |
+| DELETE | `/api/connectors/{id}` | Disconnect a project connector |
 
-Project-scoped endpoints such as ingestion, query, documents, and analytics accept the `x-tenant-id` header. The frontend sets it to the selected `project_id`.
+Project-scoped endpoints such as ingestion, query, documents, analytics, and connectors accept the `x-tenant-id` header. The frontend sets it to the selected `project_id`.
+
+## Connector Configuration
+
+Most connectors can be configured from the Connector Hub by entering API tokens, read-only endpoints, or access tokens. The sync action fetches records and indexes a Markdown source file for the selected project.
+
+For OAuth buttons, configure these backend environment variables first:
+
+```bash
+PUBLIC_APP_URL=https://your-app-domain.com
+MICROSOFT_CLIENT_ID=
+MICROSOFT_CLIENT_SECRET=
+MICROSOFT_TENANT_ID=organizations
+MICROSOFT_REDIRECT_URI=
+ATLASSIAN_CLIENT_ID=
+ATLASSIAN_CLIENT_SECRET=
+ATLASSIAN_REDIRECT_URI=
+CONNECTOR_SYNC_LIMIT=50
+CONNECTOR_TIMEOUT_SECONDS=25
+```
+
+In production, do not store long-lived connector secrets in plain JSON metadata. Put them in AWS Secrets Manager or a KMS-encrypted credential store and save only references in project metadata.
 
 `POST /api/query/` also accepts a `language` field:
 
@@ -358,20 +391,19 @@ RETRIEVAL_K=5
 
 The current app is useful as a prototype, but it is not the full project intelligence platform yet.
 
-Not implemented yet:
+Still not production-grade:
 
-- Jira, Slack, GitHub, analytics, observability, or database connectors.
 - Authentication, SSO, RBAC, and user management.
-- True metric computation from live systems.
+- Deep metric normalization across every external tool.
 - Scheduled sync jobs.
 - Background ingestion workers.
 - OCR for scanned documents or images.
 - Enterprise-grade tenant isolation.
-- Production secrets management.
+- Production secrets management for connector credentials.
 - Real Tableau/PowerBI push integration.
 - Deep role-specific KT templates beyond the initial KT brief generator.
 
-The current analytics are heuristic and text-based. For production performance metrics, Base should query structured sources directly instead of asking the LLM to infer numbers from text.
+The current analytics are still heuristic and text-based after connector data is indexed. For production performance metrics, Base should preserve structured metric series in database tables and use RAG mainly for explanation and evidence.
 
 ---
 
@@ -384,13 +416,13 @@ The current analytics are heuristic and text-based. For production performance m
 - Add richer KT templates by role: engineer, PM, SRE, support, and manager.
 - Add tests around ingestion, analytics, exports, and KT endpoint behavior.
 
-### Phase 2 - Real Connectors
+### Phase 2 - Harden Real Connectors
 
-- Add Jira or Linear connector.
-- Add GitHub connector for PRs, commits, releases, and ownership.
-- Add Slack or Teams connector for decisions and discussions.
-- Add product analytics connector for usage and engagement.
-- Add observability connector for latency, errors, traffic, uptime, and DB health.
+- Add refresh tokens, token rotation, and AWS Secrets Manager backed connector storage.
+- Add scheduled sync jobs and background workers for larger tenants.
+- Add permission-aware retrieval so users only see source chunks they are allowed to access.
+- Normalize structured metrics from analytics, observability, and database connectors into queryable tables.
+- Add connector-specific tests and mocked API fixtures.
 
 ### Phase 3 - Metrics Layer
 
