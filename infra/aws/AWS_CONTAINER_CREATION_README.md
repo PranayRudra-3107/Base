@@ -12,23 +12,9 @@ or:
 Help me create the base-api ECS service.
 ```
 
-## 1. Values To Fill Once
+## 1. Current Account Values
 
-Fill these values for your AWS account before creating resources.
-
-```bash
-AWS_ACCOUNT_ID=626210706801
-AWS_REGION=eu-central-1
-S3_REGION=us-east-1
-IAM_IDENTITY_CENTER_REGION=eu-central-1
-IAM_IDENTITY_CENTER_START_URL=https://d-996748b0aa.awsapps.com/start
-AWS_CLI_PROFILE=base-admin
-PROJECT_SLUG=base
-UNIQUE_SUFFIX=pranay
-DOMAIN_NAME=not-configured-yet
-```
-
-Example:
+These are the current values from the live AWS/GitHub setup.
 
 ```bash
 AWS_ACCOUNT_ID=626210706801
@@ -39,7 +25,8 @@ IAM_IDENTITY_CENTER_START_URL=https://d-996748b0aa.awsapps.com/start
 AWS_CLI_PROFILE=base-admin
 PROJECT_SLUG=base
 UNIQUE_SUFFIX=pranay
-DOMAIN_NAME=base.example.com
+CLOUDFRONT_DOMAIN=d13xa0pqwvaoqw.cloudfront.net
+ACTIVE_PUBLIC_DOMAIN=d13xa0pqwvaoqw.cloudfront.net
 ```
 
 Important: S3 bucket names must be globally unique across all AWS accounts, so always include a personal/random suffix in bucket names.
@@ -119,6 +106,41 @@ This inventory was discovered from AWS CLI using profile `base-admin`.
 | CloudFront domain | global | `d13xa0pqwvaoqw.cloudfront.net` | created |
 | Frontend object | us-east-1 | `s3://base-frontend-pranay/index.html` | uploaded |
 
+## 1.2.1. Official AWS ARNs And Generated IDs
+
+These values were refreshed from AWS CLI after SSO login on `2026-05-24`.
+
+| Purpose | Official Value |
+|---|---|
+| Current AWS caller | `arn:aws:sts::626210706801:assumed-role/AWSReservedSSO_AdministratorAccess_812c9fe8474c7b0b/pranay_rudra` |
+| ECR repository ARN | `arn:aws:ecr:eu-central-1:626210706801:repository/base-api` |
+| ECR repository URI | `626210706801.dkr.ecr.eu-central-1.amazonaws.com/base-api` |
+| ECS cluster ARN | `arn:aws:ecs:eu-central-1:626210706801:cluster/base-cluster` |
+| ECS service ARN | `arn:aws:ecs:eu-central-1:626210706801:service/base-cluster/base-api-service` |
+| Current ECS task definition ARN | `arn:aws:ecs:eu-central-1:626210706801:task-definition/base-api:4` |
+| Current deployed image | `626210706801.dkr.ecr.eu-central-1.amazonaws.com/base-api:ca9c3aa935520feaf4c751c2991ffc400ad7e6dc` |
+| ALB ARN | `arn:aws:elasticloadbalancing:eu-central-1:626210706801:loadbalancer/app/base-alb/17bc7b314892ff68` |
+| ALB listener ARN, HTTP 80 | `arn:aws:elasticloadbalancing:eu-central-1:626210706801:listener/app/base-alb/17bc7b314892ff68/5beaccfe2147d088` |
+| Target group ARN | `arn:aws:elasticloadbalancing:eu-central-1:626210706801:targetgroup/base-api-tg/3f5af475d1124e71` |
+| VPC ID | `vpc-03ea2e9d4843da40a` |
+| Public subnet 1 | `subnet-08772e60815f98ebb` |
+| Public subnet 2 | `subnet-0bd1feed3294f76ce` |
+| ALB/RDS security group | `sg-02d8535c0f4290437` (`default`) |
+| ECS task security group | `sg-0c0dcb9be347d599f` (`base-api-service-sg`) |
+| RDS instance ARN | `arn:aws:rds:eu-central-1:626210706801:db:base` |
+| RDS master secret ARN | `arn:aws:secretsmanager:eu-central-1:626210706801:secret:rds!db-bbfc41d8-91fb-4d5b-87c9-a986608908ba-NrJfXu` |
+| CloudWatch log group ARN | `arn:aws:logs:eu-central-1:626210706801:log-group:/ecs/base-api-task:*` |
+| ECS execution role ARN | `arn:aws:iam::626210706801:role/ecsTaskExecutionRole` |
+| ECS task role ARN | `arn:aws:iam::626210706801:role/base-ecs-task-role` |
+| GitHub deploy role ARN | `arn:aws:iam::626210706801:role/base-github-deploy-role` |
+| OpenAI secret ARN | `arn:aws:secretsmanager:eu-central-1:626210706801:secret:base/openai-api-key-auaT6u` |
+| Database URL secret ARN | `arn:aws:secretsmanager:eu-central-1:626210706801:secret:base/database-url-cHCnfR` |
+| S3 bucket secret ARN | `arn:aws:secretsmanager:eu-central-1:626210706801:secret:base/s3-bucket-sDSH6J` |
+| CloudFront distribution ARN | `arn:aws:cloudfront::626210706801:distribution/E1YZJLNPYALOSR` |
+| CloudFront OAC ID | `E2NZ0OL8JD3FUJ` (`base-frontend-oac`) |
+| CloudFront frontend origin | `base-frontend-pranay.s3.us-east-1.amazonaws.com` |
+| CloudFront API origin | `base-alb-2085702204.eu-central-1.elb.amazonaws.com` |
+
 ## 1.3. Current Deployment Snapshot
 
 Last deployment status saved on `2026-05-23`.
@@ -152,7 +174,7 @@ Pending tasks:     0
 Task definition:   base-api:4
 Target group:      base-api-tg
 Target health:     healthy
-Container image:   626210706801.dkr.ecr.eu-central-1.amazonaws.com/base-api:latest
+Container image:   626210706801.dkr.ecr.eu-central-1.amazonaws.com/base-api:ca9c3aa935520feaf4c751c2991ffc400ad7e6dc
 ```
 
 Important deployment fix that was made:
@@ -161,9 +183,9 @@ Important deployment fix that was made:
 Initial ECS startup failed because DATABASE_URL was injected as the full JSON secret.
 Task definition base-api:3 and later use Secrets Manager JSON key selectors:
 
-OPENAI_API_KEY -> base/openai-api-key:OPENAI_API_KEY
-DATABASE_URL   -> base/database-url:DATABASE_URL
-S3_BUCKET      -> base/s3-bucket:DOCUMENTS_BUCKET
+OPENAI_API_KEY -> arn:aws:secretsmanager:eu-central-1:626210706801:secret:base/openai-api-key-auaT6u:OPENAI_API_KEY::
+DATABASE_URL   -> arn:aws:secretsmanager:eu-central-1:626210706801:secret:base/database-url-cHCnfR:DATABASE_URL::
+S3_BUCKET      -> arn:aws:secretsmanager:eu-central-1:626210706801:secret:base/s3-bucket-sDSH6J:DOCUMENTS_BUCKET::
 ```
 
 The `base/database-url` secret was updated to point to the RDS instance:
@@ -226,7 +248,7 @@ to Node.js 24 defaults in 2026. The run succeeded, but action versions should be
 checked later for Node.js 24 support.
 ```
 
-GitHub repository variables to add:
+GitHub repository variables configured:
 
 ```text
 AWS_REGION=eu-central-1
@@ -237,7 +259,7 @@ FRONTEND_BUCKET=base-frontend-pranay
 CLOUDFRONT_DISTRIBUTION_ID=E1YZJLNPYALOSR
 ```
 
-GitHub repository secret to add:
+GitHub repository secret configured:
 
 ```text
 AWS_DEPLOY_ROLE_ARN=arn:aws:iam::626210706801:role/base-github-deploy-role
@@ -350,16 +372,16 @@ Push it:
 docker push "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/base-api:latest"
 ```
 
-Final ECR image URI format:
-
-```text
-<AWS_ACCOUNT_ID>.dkr.ecr.<AWS_REGION>.amazonaws.com/base-api:latest
-```
-
-Example:
+Final ECR image URI:
 
 ```text
 626210706801.dkr.ecr.eu-central-1.amazonaws.com/base-api:latest
+```
+
+Current GitHub Actions deployed image:
+
+```text
+626210706801.dkr.ecr.eu-central-1.amazonaws.com/base-api:ca9c3aa935520feaf4c751c2991ffc400ad7e6dc
 ```
 
 ## 5. ECS Container Names
@@ -428,7 +450,7 @@ DOCUMENT_STORAGE_BACKEND=s3
 VECTOR_BACKEND=pgvector
 S3_PREFIX=base
 AWS_REGION=eu-central-1
-CORS_ORIGINS=https://yourdomain.com
+CORS_ORIGINS=https://d13xa0pqwvaoqw.cloudfront.net,http://base-alb-2085702204.eu-central-1.elb.amazonaws.com
 ```
 
 Secrets Manager provides:
@@ -581,4 +603,843 @@ Database user:            postgres
 GitHub deploy role:       base-github-deploy-role
 ECS execution role:       ecsTaskExecutionRole
 ECS task role:            base-ecs-task-role
+```
+
+## 13. Commands Used For AWS Containers, Resources, And CI/CD
+
+These are the important commands used to create/configure the AWS container deployment and GitHub CI/CD pipeline.
+
+Do not paste real secret values into this file. Commands below use `REDACTED` where a password, OpenAI key, or generated secret value would appear.
+
+### 13.1. Common Shell Variables
+
+```bash
+export AWS_PROFILE=base-admin
+export AWS_ACCOUNT_ID=626210706801
+export AWS_REGION=eu-central-1
+export S3_REGION=us-east-1
+
+export PROJECT_SLUG=base
+export ECR_REPOSITORY=base-api
+export ECS_CLUSTER=base-cluster
+export ECS_SERVICE=base-api-service
+export ECS_CONTAINER_NAME=base-api
+export ECS_TASK_FAMILY=base-api
+export ECS_PORT=8080
+
+export FRONTEND_BUCKET=base-frontend-pranay
+export DOCUMENTS_BUCKET=base-documents-pranay
+export ALB_NAME=base-alb
+export ALB_DNS=base-alb-2085702204.eu-central-1.elb.amazonaws.com
+export TARGET_GROUP_NAME=base-api-tg
+export CLOUDFRONT_DISTRIBUTION_ID=E1YZJLNPYALOSR
+export CLOUDFRONT_DOMAIN=d13xa0pqwvaoqw.cloudfront.net
+
+export ECR_REPOSITORY_ARN=arn:aws:ecr:eu-central-1:626210706801:repository/base-api
+export ECR_REPOSITORY_URI=626210706801.dkr.ecr.eu-central-1.amazonaws.com/base-api
+export ECR_IMAGE_LATEST=626210706801.dkr.ecr.eu-central-1.amazonaws.com/base-api:latest
+export ECR_IMAGE_DEPLOYED=626210706801.dkr.ecr.eu-central-1.amazonaws.com/base-api:ca9c3aa935520feaf4c751c2991ffc400ad7e6dc
+
+export ECS_CLUSTER_ARN=arn:aws:ecs:eu-central-1:626210706801:cluster/base-cluster
+export ECS_SERVICE_ARN=arn:aws:ecs:eu-central-1:626210706801:service/base-cluster/base-api-service
+export ECS_TASK_DEFINITION_ARN=arn:aws:ecs:eu-central-1:626210706801:task-definition/base-api:4
+
+export ALB_ARN=arn:aws:elasticloadbalancing:eu-central-1:626210706801:loadbalancer/app/base-alb/17bc7b314892ff68
+export ALB_HTTP_LISTENER_ARN=arn:aws:elasticloadbalancing:eu-central-1:626210706801:listener/app/base-alb/17bc7b314892ff68/5beaccfe2147d088
+export TARGET_GROUP_ARN=arn:aws:elasticloadbalancing:eu-central-1:626210706801:targetgroup/base-api-tg/3f5af475d1124e71
+
+export VPC_ID=vpc-03ea2e9d4843da40a
+export ALB_SECURITY_GROUP_ID=sg-02d8535c0f4290437
+export ECS_SECURITY_GROUP_ID=sg-0c0dcb9be347d599f
+export SUBNET_1=subnet-08772e60815f98ebb
+export SUBNET_2=subnet-0bd1feed3294f76ce
+
+export CLOUDFRONT_DISTRIBUTION_ARN=arn:aws:cloudfront::626210706801:distribution/E1YZJLNPYALOSR
+export CLOUDFRONT_OAC_ID=E2NZ0OL8JD3FUJ
+```
+
+### 13.2. AWS CLI Login And Verification
+
+```bash
+aws configure sso --profile base-admin
+aws sso login --profile base-admin
+aws sts get-caller-identity --profile base-admin
+aws s3 ls --profile base-admin
+aws ecs list-clusters --profile base-admin --region eu-central-1
+```
+
+### 13.3. Docker And ECR Container Image Commands
+
+```bash
+open -a Docker
+docker info
+
+aws ecr create-repository \
+  --repository-name "$ECR_REPOSITORY" \
+  --profile "$AWS_PROFILE" \
+  --region "$AWS_REGION"
+
+aws ecr get-login-password \
+  --profile "$AWS_PROFILE" \
+  --region "$AWS_REGION" \
+  | docker login \
+    --username AWS \
+    --password-stdin "$AWS_ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com"
+
+docker buildx build \
+  --platform linux/amd64 \
+  -t "$ECR_IMAGE_LATEST" \
+  --push .
+
+aws ecr describe-images \
+  --profile "$AWS_PROFILE" \
+  --region "$AWS_REGION" \
+  --repository-name "$ECR_REPOSITORY" \
+  --query 'imageDetails[].{Tags:imageTags,Digest:imageDigest,Pushed:imagePushedAt,Size:imageSizeInBytes}' \
+  --output json
+```
+
+### 13.4. Secrets Manager Commands
+
+The secrets were stored as JSON objects so ECS can inject individual keys.
+
+```bash
+aws secretsmanager create-secret \
+  --profile "$AWS_PROFILE" \
+  --region "$AWS_REGION" \
+  --name base/openai-api-key \
+  --secret-string '{"OPENAI_API_KEY":"REDACTED"}'
+
+aws secretsmanager create-secret \
+  --profile "$AWS_PROFILE" \
+  --region "$AWS_REGION" \
+  --name base/database-url \
+  --secret-string '{"DATABASE_URL":"postgresql://REDACTED"}'
+
+aws secretsmanager create-secret \
+  --profile "$AWS_PROFILE" \
+  --region "$AWS_REGION" \
+  --name base/s3-bucket \
+  --secret-string '{"DOCUMENTS_BUCKET":"base-documents-pranay","FRONTEND_BUCKET":"base-frontend-pranay"}'
+```
+
+The first database URL was a temporary value. This command rebuilt the real `DATABASE_URL` from the RDS-managed master password secret without printing the password:
+
+```bash
+tmp=$(mktemp)
+
+aws secretsmanager get-secret-value \
+  --profile "$AWS_PROFILE" \
+  --region "$AWS_REGION" \
+  --secret-id 'arn:aws:secretsmanager:eu-central-1:626210706801:secret:rds!db-bbfc41d8-91fb-4d5b-87c9-a986608908ba-NrJfXu' \
+  --query SecretString \
+  --output text \
+  | jq -c \
+    --arg host 'base.cfqs0omo2oaz.eu-central-1.rds.amazonaws.com' \
+    --arg db 'postgres' \
+    '{DATABASE_URL: ("postgresql://" + (.username | @uri) + ":" + (.password | @uri) + "@" + $host + ":5432/" + $db)}' \
+  > "$tmp"
+
+aws secretsmanager put-secret-value \
+  --profile "$AWS_PROFILE" \
+  --region "$AWS_REGION" \
+  --secret-id base/database-url \
+  --secret-string "file://$tmp"
+
+rm -f "$tmp"
+```
+
+Secret verification commands used only lengths/keys, not secret values:
+
+```bash
+aws secretsmanager get-secret-value \
+  --profile "$AWS_PROFILE" \
+  --region "$AWS_REGION" \
+  --secret-id base/database-url \
+  --query 'SecretString' \
+  --output text \
+  | awk '{print "database_secret_length=" length($0); print ($0 ~ /^\\{/ ? "database_secret_json=yes" : "database_secret_json=no")}'
+
+aws secretsmanager list-secrets \
+  --profile "$AWS_PROFILE" \
+  --region "$AWS_REGION" \
+  --query "SecretList[?starts_with(Name, 'base/')].{Name:Name,ARN:ARN}" \
+  --output json
+```
+
+### 13.5. IAM Role And Policy Commands
+
+ECS task role trust policy:
+
+```bash
+cat > /tmp/base-ecs-task-trust-policy.json <<'JSON'
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
+    }
+  ]
+}
+JSON
+
+aws iam create-role \
+  --profile "$AWS_PROFILE" \
+  --role-name base-ecs-task-role \
+  --assume-role-policy-document file:///tmp/base-ecs-task-trust-policy.json
+```
+
+ECS task S3 access policy:
+
+```bash
+cat > /tmp/base-task-s3-documents-policy.json <<'JSON'
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject"
+      ],
+      "Resource": "arn:aws:s3:::base-documents-pranay/*"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListBucket"
+      ],
+      "Resource": "arn:aws:s3:::base-documents-pranay"
+    }
+  ]
+}
+JSON
+
+aws iam put-role-policy \
+  --profile "$AWS_PROFILE" \
+  --role-name base-ecs-task-role \
+  --policy-name base-task-s3-documents \
+  --policy-document file:///tmp/base-task-s3-documents-policy.json
+```
+
+ECS execution role access to Secrets Manager:
+
+```bash
+cat > /tmp/base-execution-secrets-policy.json <<'JSON'
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "secretsmanager:GetSecretValue"
+      ],
+      "Resource": [
+        "arn:aws:secretsmanager:eu-central-1:626210706801:secret:base/openai-api-key-auaT6u",
+        "arn:aws:secretsmanager:eu-central-1:626210706801:secret:base/database-url-cHCnfR",
+        "arn:aws:secretsmanager:eu-central-1:626210706801:secret:base/s3-bucket-sDSH6J"
+      ]
+    }
+  ]
+}
+JSON
+
+aws iam put-role-policy \
+  --profile "$AWS_PROFILE" \
+  --role-name ecsTaskExecutionRole \
+  --policy-name base-execution-secrets \
+  --policy-document file:///tmp/base-execution-secrets-policy.json
+```
+
+GitHub OIDC provider:
+
+```bash
+aws iam create-open-id-connect-provider \
+  --profile "$AWS_PROFILE" \
+  --url https://token.actions.githubusercontent.com \
+  --client-id-list sts.amazonaws.com \
+  --thumbprint-list 6938fd4d98bab03faadb97b34396831e3780aea1
+```
+
+GitHub deploy role trust policy:
+
+```bash
+cat > /tmp/base-github-deploy-trust-policy.json <<'JSON'
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Federated": "arn:aws:iam::626210706801:oidc-provider/token.actions.githubusercontent.com"
+      },
+      "Action": "sts:AssumeRoleWithWebIdentity",
+      "Condition": {
+        "StringEquals": {
+          "token.actions.githubusercontent.com:aud": "sts.amazonaws.com"
+        },
+        "StringLike": {
+          "token.actions.githubusercontent.com:sub": "repo:PranayRudra-3107/Base:*"
+        }
+      }
+    }
+  ]
+}
+JSON
+
+aws iam create-role \
+  --profile "$AWS_PROFILE" \
+  --role-name base-github-deploy-role \
+  --assume-role-policy-document file:///tmp/base-github-deploy-trust-policy.json
+```
+
+Split GitHub deploy role policies:
+
+```bash
+cat > /tmp/base-github-ecr-auth-policy.json <<'JSON'
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "ecr:GetAuthorizationToken",
+      "Resource": "*"
+    }
+  ]
+}
+JSON
+
+aws iam put-role-policy \
+  --profile "$AWS_PROFILE" \
+  --role-name base-github-deploy-role \
+  --policy-name base-github-ecr-auth \
+  --policy-document file:///tmp/base-github-ecr-auth-policy.json
+```
+
+```bash
+cat > /tmp/base-github-ecr-repo-policy.json <<'JSON'
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:BatchGetImage",
+        "ecr:CompleteLayerUpload",
+        "ecr:DescribeImages",
+        "ecr:InitiateLayerUpload",
+        "ecr:PutImage",
+        "ecr:UploadLayerPart"
+      ],
+      "Resource": "arn:aws:ecr:eu-central-1:626210706801:repository/base-api"
+    }
+  ]
+}
+JSON
+
+aws iam put-role-policy \
+  --profile "$AWS_PROFILE" \
+  --role-name base-github-deploy-role \
+  --policy-name base-github-ecr-repo \
+  --policy-document file:///tmp/base-github-ecr-repo-policy.json
+```
+
+```bash
+cat > /tmp/base-github-ecs-policy.json <<'JSON'
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "ecs:DescribeServices",
+        "ecs:DescribeTaskDefinition",
+        "ecs:RegisterTaskDefinition",
+        "ecs:UpdateService"
+      ],
+      "Resource": "*"
+    }
+  ]
+}
+JSON
+
+aws iam put-role-policy \
+  --profile "$AWS_PROFILE" \
+  --role-name base-github-deploy-role \
+  --policy-name base-github-ecs \
+  --policy-document file:///tmp/base-github-ecs-policy.json
+```
+
+```bash
+cat > /tmp/base-github-passrole-policy.json <<'JSON'
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "iam:PassRole",
+      "Resource": [
+        "arn:aws:iam::626210706801:role/ecsTaskExecutionRole",
+        "arn:aws:iam::626210706801:role/base-ecs-task-role"
+      ]
+    }
+  ]
+}
+JSON
+
+aws iam put-role-policy \
+  --profile "$AWS_PROFILE" \
+  --role-name base-github-deploy-role \
+  --policy-name base-github-passrole \
+  --policy-document file:///tmp/base-github-passrole-policy.json
+```
+
+```bash
+cat > /tmp/base-github-s3-policy.json <<'JSON'
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:ListBucket"
+      ],
+      "Resource": "arn:aws:s3:::base-frontend-pranay"
+    },
+    {
+      "Effect": "Allow",
+      "Action": [
+        "s3:DeleteObject",
+        "s3:GetObject",
+        "s3:PutObject"
+      ],
+      "Resource": "arn:aws:s3:::base-frontend-pranay/*"
+    }
+  ]
+}
+JSON
+
+aws iam put-role-policy \
+  --profile "$AWS_PROFILE" \
+  --role-name base-github-deploy-role \
+  --policy-name base-github-s3 \
+  --policy-document file:///tmp/base-github-s3-policy.json
+```
+
+```bash
+cat > /tmp/base-github-cloudfront-policy.json <<'JSON'
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": "cloudfront:CreateInvalidation",
+      "Resource": "arn:aws:cloudfront::626210706801:distribution/E1YZJLNPYALOSR"
+    }
+  ]
+}
+JSON
+
+aws iam put-role-policy \
+  --profile "$AWS_PROFILE" \
+  --role-name base-github-deploy-role \
+  --policy-name base-github-cloudfront \
+  --policy-document file:///tmp/base-github-cloudfront-policy.json
+```
+
+### 13.6. Network, Target Group, And ECS Service Commands
+
+These commands use the VPC, subnet, and security group IDs discovered during setup.
+
+```bash
+export VPC_ID=vpc-03ea2e9d4843da40a
+export ALB_SECURITY_GROUP_ID=sg-02d8535c0f4290437
+export ECS_SECURITY_GROUP_ID=sg-0c0dcb9be347d599f
+export ECS_SECURITY_GROUP_NAME=base-api-service-sg
+export SUBNET_1=subnet-08772e60815f98ebb
+export SUBNET_2=subnet-0bd1feed3294f76ce
+export TARGET_GROUP_ARN=arn:aws:elasticloadbalancing:eu-central-1:626210706801:targetgroup/base-api-tg/3f5af475d1124e71
+export ALB_ARN=arn:aws:elasticloadbalancing:eu-central-1:626210706801:loadbalancer/app/base-alb/17bc7b314892ff68
+export ALB_HTTP_LISTENER_ARN=arn:aws:elasticloadbalancing:eu-central-1:626210706801:listener/app/base-alb/17bc7b314892ff68/5beaccfe2147d088
+```
+
+Security group commands:
+
+```bash
+aws ec2 create-security-group \
+  --profile "$AWS_PROFILE" \
+  --region "$AWS_REGION" \
+  --group-name base-api-service-sg \
+  --description "Base API ECS service tasks" \
+  --vpc-id "$VPC_ID"
+
+aws ec2 authorize-security-group-ingress \
+  --profile "$AWS_PROFILE" \
+  --region "$AWS_REGION" \
+  --group-id "$ECS_SECURITY_GROUP_ID" \
+  --protocol tcp \
+  --port 8080 \
+  --source-group "$ALB_SECURITY_GROUP_ID"
+
+aws ec2 authorize-security-group-ingress \
+  --profile "$AWS_PROFILE" \
+  --region "$AWS_REGION" \
+  --group-id "$ALB_SECURITY_GROUP_ID" \
+  --protocol tcp \
+  --port 5432 \
+  --source-group "$ECS_SECURITY_GROUP_ID"
+```
+
+Target group and listener commands:
+
+```bash
+aws elbv2 create-target-group \
+  --profile "$AWS_PROFILE" \
+  --region "$AWS_REGION" \
+  --name "$TARGET_GROUP_NAME" \
+  --protocol HTTP \
+  --port 8080 \
+  --target-type ip \
+  --vpc-id "$VPC_ID" \
+  --health-check-protocol HTTP \
+  --health-check-path /health \
+  --matcher HttpCode=200
+
+aws elbv2 modify-target-group-attributes \
+  --profile "$AWS_PROFILE" \
+  --region "$AWS_REGION" \
+  --target-group-arn "$TARGET_GROUP_ARN" \
+  --attributes Key=deregistration_delay.timeout_seconds,Value=30
+
+aws elbv2 modify-listener \
+  --profile "$AWS_PROFILE" \
+  --region "$AWS_REGION" \
+  --listener-arn "$ALB_HTTP_LISTENER_ARN" \
+  --default-actions Type=forward,TargetGroupArn="$TARGET_GROUP_ARN"
+```
+
+Task definition and service commands:
+
+```bash
+aws logs create-log-group \
+  --profile "$AWS_PROFILE" \
+  --region "$AWS_REGION" \
+  --log-group-name /ecs/base-api-task
+
+aws ecs register-task-definition \
+  --profile "$AWS_PROFILE" \
+  --region "$AWS_REGION" \
+  --cli-input-json file://infra/aws/ecs-task-definition.json
+
+aws ecs create-service \
+  --profile "$AWS_PROFILE" \
+  --region "$AWS_REGION" \
+  --cluster "$ECS_CLUSTER" \
+  --service-name "$ECS_SERVICE" \
+  --task-definition arn:aws:ecs:eu-central-1:626210706801:task-definition/base-api:2 \
+  --desired-count 0 \
+  --launch-type FARGATE \
+  --network-configuration "awsvpcConfiguration={subnets=[$SUBNET_1,$SUBNET_2],securityGroups=[$ECS_SECURITY_GROUP_ID],assignPublicIp=ENABLED}" \
+  --load-balancers "targetGroupArn=$TARGET_GROUP_ARN,containerName=$ECS_CONTAINER_NAME,containerPort=$ECS_PORT"
+
+aws ecs update-service \
+  --profile "$AWS_PROFILE" \
+  --region "$AWS_REGION" \
+  --cluster "$ECS_CLUSTER" \
+  --service "$ECS_SERVICE" \
+  --task-definition arn:aws:ecs:eu-central-1:626210706801:task-definition/base-api:3 \
+  --desired-count 1 \
+  --force-new-deployment
+
+aws ecs wait services-stable \
+  --profile "$AWS_PROFILE" \
+  --region "$AWS_REGION" \
+  --cluster "$ECS_CLUSTER" \
+  --services "$ECS_SERVICE"
+```
+
+After GitHub Actions deployment, ECS registered and deployed `base-api:4`.
+
+### 13.7. CloudFront And Frontend S3 Commands
+
+CloudFront OAC creation:
+
+```bash
+cat > /tmp/base-cloudfront-oac.json <<'JSON'
+{
+  "Name": "base-frontend-oac",
+  "Description": "OAC for Base frontend bucket",
+  "SigningProtocol": "sigv4",
+  "SigningBehavior": "always",
+  "OriginAccessControlOriginType": "s3"
+}
+JSON
+
+aws cloudfront create-origin-access-control \
+  --profile "$AWS_PROFILE" \
+  --origin-access-control-config file:///tmp/base-cloudfront-oac.json
+```
+
+CloudFront distribution creation used a generated distribution config with:
+
+```text
+Distribution ID:  E1YZJLNPYALOSR
+OAC ID:           E2NZ0OL8JD3FUJ
+Default origin:   base-frontend-pranay.s3.us-east-1.amazonaws.com
+API origin:       base-alb-2085702204.eu-central-1.elb.amazonaws.com
+API behavior:     /api/*
+```
+
+Command:
+
+```bash
+aws cloudfront create-distribution \
+  --profile "$AWS_PROFILE" \
+  --distribution-config file:///tmp/base-cloudfront-distribution.json
+```
+
+Frontend bucket policy for CloudFront:
+
+```bash
+cat > /tmp/base-frontend-cloudfront-policy.json <<'JSON'
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowCloudFrontServicePrincipalReadOnly",
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "cloudfront.amazonaws.com"
+      },
+      "Action": "s3:GetObject",
+      "Resource": "arn:aws:s3:::base-frontend-pranay/*",
+      "Condition": {
+        "StringEquals": {
+          "AWS:SourceArn": "arn:aws:cloudfront::626210706801:distribution/E1YZJLNPYALOSR"
+        }
+      }
+    }
+  ]
+}
+JSON
+
+aws s3api put-bucket-policy \
+  --profile "$AWS_PROFILE" \
+  --bucket "$FRONTEND_BUCKET" \
+  --policy file:///tmp/base-frontend-cloudfront-policy.json
+```
+
+Frontend upload and invalidation:
+
+```bash
+aws s3 sync frontend/ "s3://$FRONTEND_BUCKET/" \
+  --profile "$AWS_PROFILE" \
+  --delete \
+  --exclude "package.json" \
+  --cache-control "public,max-age=300"
+
+aws cloudfront create-invalidation \
+  --profile "$AWS_PROFILE" \
+  --distribution-id "$CLOUDFRONT_DISTRIBUTION_ID" \
+  --paths "/*"
+```
+
+### 13.8. Runtime Debug And Verification Commands
+
+```bash
+aws ecs describe-services \
+  --profile "$AWS_PROFILE" \
+  --region "$AWS_REGION" \
+  --cluster "$ECS_CLUSTER" \
+  --services "$ECS_SERVICE" \
+  --query 'services[0].{Status:status,Desired:desiredCount,Running:runningCount,Pending:pendingCount,TaskDefinition:taskDefinition,Events:events[:5]}' \
+  --output json
+
+aws ecs list-tasks \
+  --profile "$AWS_PROFILE" \
+  --region "$AWS_REGION" \
+  --cluster "$ECS_CLUSTER" \
+  --service-name "$ECS_SERVICE" \
+  --desired-status RUNNING
+
+aws logs tail /ecs/base-api-task \
+  --profile "$AWS_PROFILE" \
+  --region "$AWS_REGION" \
+  --since 30m \
+  --format short
+
+aws elbv2 describe-target-health \
+  --profile "$AWS_PROFILE" \
+  --region "$AWS_REGION" \
+  --target-group-arn "$TARGET_GROUP_ARN" \
+  --query 'TargetHealthDescriptions[].{Target:Target.Id,State:TargetHealth.State,Reason:TargetHealth.Reason,Description:TargetHealth.Description}' \
+  --output json
+
+curl http://base-alb-2085702204.eu-central-1.elb.amazonaws.com/health
+curl https://d13xa0pqwvaoqw.cloudfront.net/api/projects/
+curl -I https://d13xa0pqwvaoqw.cloudfront.net/
+```
+
+### 13.9. GitHub CLI And CI/CD Commands
+
+Install and authenticate GitHub CLI:
+
+```bash
+brew install gh
+
+gh auth login \
+  --hostname github.com \
+  --git-protocol https \
+  --web \
+  --scopes repo,workflow
+
+gh auth status
+```
+
+Set GitHub Actions repository variables:
+
+```bash
+gh variable set AWS_REGION \
+  --repo PranayRudra-3107/Base \
+  --body eu-central-1
+
+gh variable set ECR_REPOSITORY \
+  --repo PranayRudra-3107/Base \
+  --body base-api
+
+gh variable set ECS_CLUSTER \
+  --repo PranayRudra-3107/Base \
+  --body base-cluster
+
+gh variable set ECS_SERVICE \
+  --repo PranayRudra-3107/Base \
+  --body base-api-service
+
+gh variable set FRONTEND_BUCKET \
+  --repo PranayRudra-3107/Base \
+  --body base-frontend-pranay
+
+gh variable set CLOUDFRONT_DISTRIBUTION_ID \
+  --repo PranayRudra-3107/Base \
+  --body E1YZJLNPYALOSR
+```
+
+Set GitHub Actions repository secret:
+
+```bash
+gh secret set AWS_DEPLOY_ROLE_ARN \
+  --repo PranayRudra-3107/Base \
+  --body arn:aws:iam::626210706801:role/base-github-deploy-role
+```
+
+Verify GitHub Actions configuration:
+
+```bash
+gh variable list --repo PranayRudra-3107/Base
+gh secret list --repo PranayRudra-3107/Base
+gh workflow list --repo PranayRudra-3107/Base
+```
+
+Commit and push the CI/CD files:
+
+```bash
+git add \
+  Dockerfile \
+  README.md \
+  backend/.env.example \
+  backend/app/api/documents.py \
+  backend/app/core/config.py \
+  backend/app/main.py \
+  backend/app/services/audit_log.py \
+  backend/app/services/projects.py \
+  backend/app/services/storage.py \
+  backend/app/services/vector_store.py \
+  backend/app/services/database.py \
+  backend/requirements.txt \
+  .dockerignore \
+  .github \
+  infra
+
+git commit -m "Add AWS deployment and CI/CD setup"
+git push origin main
+```
+
+Trigger and watch the deployment workflow:
+
+```bash
+gh workflow run "Deploy AWS" \
+  --repo PranayRudra-3107/Base \
+  --ref main \
+  -f environment=prod
+
+gh run watch 26337292590 \
+  --repo PranayRudra-3107/Base \
+  --interval 10 \
+  --exit-status
+
+gh run view 26337292590 \
+  --repo PranayRudra-3107/Base \
+  --json status,conclusion,createdAt,updatedAt,url,jobs
+```
+
+Commit and push the documentation update after successful deployment:
+
+```bash
+git add infra/aws/AWS_CONTAINER_CREATION_README.md
+git commit -m "Document successful AWS CI/CD deployment"
+git push origin main
+```
+
+Watch the automatic CI run from the documentation push:
+
+```bash
+gh run list \
+  --repo PranayRudra-3107/Base \
+  --branch main \
+  --limit 5
+
+gh run watch 26337421896 \
+  --repo PranayRudra-3107/Base \
+  --interval 10 \
+  --exit-status
+```
+
+### 13.10. Notes About Existing Resources
+
+Some AWS resources were already present when the deployment was completed and were discovered/configured rather than created from scratch:
+
+```text
+RDS instance:  base
+ALB:           base-alb
+S3 buckets:    base-frontend-pranay, base-documents-pranay
+ECS cluster:   base-cluster
+```
+
+Useful discovery commands:
+
+```bash
+aws rds describe-db-instances \
+  --profile "$AWS_PROFILE" \
+  --region "$AWS_REGION" \
+  --db-instance-identifier base
+
+aws elbv2 describe-load-balancers \
+  --profile "$AWS_PROFILE" \
+  --region "$AWS_REGION" \
+  --names base-alb
+
+aws s3api get-bucket-location \
+  --profile "$AWS_PROFILE" \
+  --bucket "$FRONTEND_BUCKET"
+
+aws ecs describe-clusters \
+  --profile "$AWS_PROFILE" \
+  --region "$AWS_REGION" \
+  --clusters "$ECS_CLUSTER"
 ```

@@ -5,6 +5,7 @@ from typing import Dict, List
 
 from app.services.audit_log import read_audit_events
 from app.services.storage import list_document_analyses
+from app.services.vector_store import list_documents
 
 AMOUNT_RE = re.compile(r"(?<![A-Za-z0-9])(?:USD|EUR|GBP|INR|\$)?\s*(-?\d[\d,]*(?:\.\d{1,2})?)")
 DATE_RE = re.compile(r"\b(?:\d{4}-\d{1,2}-\d{1,2}|\d{1,2}[/-]\d{1,2}[/-]\d{2,4})\b")
@@ -806,8 +807,40 @@ def build_knowledge_graph(tenant_id: str) -> Dict:
     }
 
 
+def merge_analyses_with_indexed_documents(tenant_id: str, analyses: List[Dict]) -> List[Dict]:
+    merged = list(analyses)
+    analysed_ids = {
+        item.get("document_id")
+        for item in analyses
+        if item.get("document_id")
+    }
+    for doc in list_documents(tenant_id):
+        document_id = doc.get("document_id")
+        if not document_id or document_id in analysed_ids:
+            continue
+        merged.append({
+            "document_id": document_id,
+            "filename": doc.get("filename", "unknown"),
+            "uploaded_at": doc.get("uploaded_at", ""),
+            "chunk_count": doc.get("chunk_count", 0),
+            "category": "Indexed Source",
+            "language": {"name": "Unknown"},
+            "validation_issues": [],
+            "risk_count": 0,
+            "blocker_count": 0,
+            "ticket_count": 0,
+            "decision_count": 0,
+            "total_metric_value": 0,
+            "project_health_score": 0,
+            "kt_readiness_score": 0,
+            "summary": "Indexed source available in the vector store; detailed analytics were not recorded for this upload.",
+        })
+        analysed_ids.add(document_id)
+    return merged
+
+
 def build_dashboard(tenant_id: str) -> Dict:
-    analyses = list_document_analyses(tenant_id)
+    analyses = merge_analyses_with_indexed_documents(tenant_id, list_document_analyses(tenant_id))
     doc_count = len(analyses)
     total_metric_value = round(sum(_metric_value(item) for item in analyses), 2)
     total_risks = sum(_risk_count(item) for item in analyses)
