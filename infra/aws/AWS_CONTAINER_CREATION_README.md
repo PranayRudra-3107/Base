@@ -89,7 +89,7 @@ This inventory was discovered from AWS CLI using profile `base-admin`.
 | ECR image tag | eu-central-1 | `base-api:latest` | pushed |
 | ECS cluster | eu-central-1 | `base-cluster` | created |
 | ECS service | eu-central-1 | `base-api-service` | running, desired count `1` |
-| ECS task definition | eu-central-1 | `base-api:5` | active |
+| ECS task definition | eu-central-1 | `base-api:6` | active |
 | RDS PostgreSQL instance | eu-central-1 | `base` | available |
 | RDS endpoint | eu-central-1 | `base.cfqs0omo2oaz.eu-central-1.rds.amazonaws.com` | available |
 | Application Load Balancer | eu-central-1 | `base-alb` | created |
@@ -117,8 +117,8 @@ These values were refreshed from AWS CLI after SSO login on `2026-05-24`.
 | ECR repository URI | `626210706801.dkr.ecr.eu-central-1.amazonaws.com/base-api` |
 | ECS cluster ARN | `arn:aws:ecs:eu-central-1:626210706801:cluster/base-cluster` |
 | ECS service ARN | `arn:aws:ecs:eu-central-1:626210706801:service/base-cluster/base-api-service` |
-| Current ECS task definition ARN | `arn:aws:ecs:eu-central-1:626210706801:task-definition/base-api:5` |
-| Current deployed image | `626210706801.dkr.ecr.eu-central-1.amazonaws.com/base-api:57fd47a5f7a1be738bfd99bfb7e7841023bf372a` |
+| Current ECS task definition ARN | `arn:aws:ecs:eu-central-1:626210706801:task-definition/base-api:6` |
+| Current deployed image | `626210706801.dkr.ecr.eu-central-1.amazonaws.com/base-api:bc1573eef9382df612402e9ed8b36ae8dca8953d` |
 | ALB ARN | `arn:aws:elasticloadbalancing:eu-central-1:626210706801:loadbalancer/app/base-alb/17bc7b314892ff68` |
 | ALB listener ARN, HTTP 80 | `arn:aws:elasticloadbalancing:eu-central-1:626210706801:listener/app/base-alb/17bc7b314892ff68/5beaccfe2147d088` |
 | Target group ARN | `arn:aws:elasticloadbalancing:eu-central-1:626210706801:targetgroup/base-api-tg/3f5af475d1124e71` |
@@ -171,10 +171,10 @@ ECS service state: ACTIVE
 Desired tasks:     1
 Running tasks:     1
 Pending tasks:     0
-Task definition:   base-api:5
+Task definition:   base-api:6
 Target group:      base-api-tg
 Target health:     healthy
-Container image:   626210706801.dkr.ecr.eu-central-1.amazonaws.com/base-api:57fd47a5f7a1be738bfd99bfb7e7841023bf372a
+Container image:   626210706801.dkr.ecr.eu-central-1.amazonaws.com/base-api:bc1573eef9382df612402e9ed8b36ae8dca8953d
 ```
 
 Important deployment fix that was made:
@@ -231,12 +231,12 @@ Last successful GitHub Actions deployment:
 
 ```text
 Workflow:   Deploy AWS
-Run ID:     26362095064
-Run URL:    https://github.com/PranayRudra-3107/Base/actions/runs/26362095064
-Commit:     57fd47a Fix dashboard source counts on AWS
-Duration:   about 4 minutes 32 seconds
+Run ID:     26363680084
+Run URL:    https://github.com/PranayRudra-3107/Base/actions/runs/26363680084
+Commit:     bc1573e Add live connector hub
+Duration:   about 5 minutes 6 seconds
 Result:     success
-Outputs:    pushed backend image, deployed ECS task definition base-api:5,
+Outputs:    pushed backend image, deployed ECS task definition base-api:6,
             synced frontend to S3, invalidated CloudFront cache
 ```
 
@@ -381,7 +381,7 @@ Final ECR image URI:
 Current GitHub Actions deployed image:
 
 ```text
-626210706801.dkr.ecr.eu-central-1.amazonaws.com/base-api:57fd47a5f7a1be738bfd99bfb7e7841023bf372a
+626210706801.dkr.ecr.eu-central-1.amazonaws.com/base-api:bc1573eef9382df612402e9ed8b36ae8dca8953d
 ```
 
 ## 5. ECS Container Names
@@ -391,7 +391,7 @@ In ECS, the backend runs like this:
 ```text
 ECS cluster:           base-cluster
 ECS service:           base-api-service
-Task definition:       base-api:5
+Task definition:       base-api:6
 Container name:        base-api
 Container port:        8080
 CloudWatch log group:  /ecs/base-api-task
@@ -586,7 +586,7 @@ ECR latest image:         pushed
 ECS cluster:              base-cluster
 ECS service:              base-api-service
 ECS desired count:        1
-Task family:              base-api:5
+Task family:              base-api:6
 Container name:           base-api
 Container port:           8080
 ALB:                      base-alb
@@ -638,11 +638,11 @@ export CLOUDFRONT_DOMAIN=d13xa0pqwvaoqw.cloudfront.net
 export ECR_REPOSITORY_ARN=arn:aws:ecr:eu-central-1:626210706801:repository/base-api
 export ECR_REPOSITORY_URI=626210706801.dkr.ecr.eu-central-1.amazonaws.com/base-api
 export ECR_IMAGE_LATEST=626210706801.dkr.ecr.eu-central-1.amazonaws.com/base-api:latest
-export ECR_IMAGE_DEPLOYED=626210706801.dkr.ecr.eu-central-1.amazonaws.com/base-api:57fd47a5f7a1be738bfd99bfb7e7841023bf372a
+export ECR_IMAGE_DEPLOYED=626210706801.dkr.ecr.eu-central-1.amazonaws.com/base-api:bc1573eef9382df612402e9ed8b36ae8dca8953d
 
 export ECS_CLUSTER_ARN=arn:aws:ecs:eu-central-1:626210706801:cluster/base-cluster
 export ECS_SERVICE_ARN=arn:aws:ecs:eu-central-1:626210706801:service/base-cluster/base-api-service
-export ECS_TASK_DEFINITION_ARN=arn:aws:ecs:eu-central-1:626210706801:task-definition/base-api:5
+export ECS_TASK_DEFINITION_ARN=arn:aws:ecs:eu-central-1:626210706801:task-definition/base-api:6
 
 export ALB_ARN=arn:aws:elasticloadbalancing:eu-central-1:626210706801:loadbalancer/app/base-alb/17bc7b314892ff68
 export ALB_HTTP_LISTENER_ARN=arn:aws:elasticloadbalancing:eu-central-1:626210706801:listener/app/base-alb/17bc7b314892ff68/5beaccfe2147d088
@@ -1164,7 +1164,7 @@ aws ecs wait services-stable \
   --services "$ECS_SERVICE"
 ```
 
-After GitHub Actions deployment, ECS registered and deployed `base-api:5`.
+After GitHub Actions deployment, ECS registered and deployed `base-api:6`.
 
 ### 13.7. CloudFront And Frontend S3 Commands
 
@@ -1378,12 +1378,12 @@ gh workflow run "Deploy AWS" \
   --ref main \
   -f environment=prod
 
-gh run watch 26362095064 \
+gh run watch 26363680084 \
   --repo PranayRudra-3107/Base \
   --interval 10 \
   --exit-status
 
-gh run view 26362095064 \
+gh run view 26363680084 \
   --repo PranayRudra-3107/Base \
   --json status,conclusion,createdAt,updatedAt,url,jobs
 ```
