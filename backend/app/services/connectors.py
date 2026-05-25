@@ -19,6 +19,108 @@ settings = get_settings()
 CONNECTIONS_KEY = "connector_connections"
 OAUTH_STATES_KEY = "connector_oauth_states"
 SECRET_FIELD_HINTS = ("token", "secret", "password", "key", "pat", "database_url", "access_token", "refresh_token")
+SOURCE_CODE_EXTENSIONS = {
+    ".cfg",
+    ".conf",
+    ".css",
+    ".go",
+    ".graphql",
+    ".hcl",
+    ".html",
+    ".ini",
+    ".java",
+    ".js",
+    ".json",
+    ".jsx",
+    ".kt",
+    ".md",
+    ".php",
+    ".properties",
+    ".proto",
+    ".py",
+    ".rb",
+    ".rs",
+    ".scala",
+    ".sh",
+    ".sql",
+    ".swift",
+    ".toml",
+    ".ts",
+    ".tsx",
+    ".txt",
+    ".xml",
+    ".yaml",
+    ".yml",
+}
+SOURCE_CODE_FILENAMES = {
+    "dockerfile",
+    "makefile",
+    "procfile",
+    "requirements.txt",
+    "pyproject.toml",
+    "package.json",
+    "package-lock.json",
+    "pnpm-lock.yaml",
+    "yarn.lock",
+    "vite.config.js",
+    "vite.config.ts",
+    "next.config.js",
+    "next.config.ts",
+    "tsconfig.json",
+}
+SOURCE_SKIP_DIRS = {
+    ".cache",
+    ".git",
+    ".next",
+    ".serverless",
+    ".terraform",
+    ".venv",
+    "__pycache__",
+    "build",
+    "chroma_db",
+    "coverage",
+    "data",
+    "dist",
+    "node_modules",
+    "logs",
+    "synthetic data",
+    "synthetic_data",
+    "target",
+    "tmp",
+    "vendor",
+    "venv",
+}
+SOURCE_SKIP_EXTENSIONS = {
+    ".7z",
+    ".avif",
+    ".db",
+    ".dll",
+    ".dylib",
+    ".exe",
+    ".gif",
+    ".gz",
+    ".ico",
+    ".jpeg",
+    ".jpg",
+    ".lockb",
+    ".mov",
+    ".mp3",
+    ".mp4",
+    ".pdf",
+    ".png",
+    ".pyc",
+    ".sqlite",
+    ".sqlite3",
+    ".tar",
+    ".webp",
+    ".woff",
+    ".woff2",
+    ".zip",
+}
+MAX_SOURCE_FILES = 120
+MAX_SOURCE_FILE_BYTES = 120_000
+MAX_SOURCE_FILE_CHARS = 24_000
+MAX_SOURCE_TOTAL_CHARS = 420_000
 
 
 def _field(
@@ -126,12 +228,21 @@ CONNECTOR_CATALOG: List[Dict[str, Any]] = [
         "name": "GitHub",
         "group": "Development",
         "description": "PRs, commits, branches, releases, reviewers, and engineering change history.",
-        "keywords": ["github", "pull request", "pr-", "commit", "branch", "release"],
+        "keywords": ["github", "pull request", "pr-", "commit", "branch", "release", "source code", "repository"],
         "auth_type": "token_optional",
         "fields": [
             _field("owner", "Repository owner"),
             _field("repo", "Repository name"),
             _field("token", "GitHub token", secret=True, required=False),
+            _field("ref", "Branch or ref", required=False, placeholder="main"),
+            _field("code_paths", "Code paths", required=False, placeholder="backend/app, frontend/index.html, README.md"),
+            _field(
+                "include_code",
+                "Index source code",
+                required=False,
+                placeholder="true",
+                help_text="Leave blank or use true to index a safe source snapshot. Use false for PR/commit metadata only.",
+            ),
         ],
     },
     {
@@ -739,6 +850,76 @@ def _limit() -> int:
     return max(1, min(int(settings.connector_sync_limit or 50), 200))
 
 
+def _truthy(value: Any, default: bool = True) -> bool:
+    if value in (None, ""):
+        return default
+    return str(value).strip().lower() not in {"0", "false", "no", "off", "metadata_only"}
+
+
+def _split_list(value: Any) -> List[str]:
+    return [
+        item.strip().strip("/")
+        for item in re.split(r"[,\n]+", str(value or ""))
+        if item.strip().strip("/")
+    ]
+
+
+def _source_path_matches(path: str, filters: List[str]) -> bool:
+    if not filters:
+        return True
+    normalized = path.strip("/")
+    return any(normalized == item or normalized.startswith(f"{item.rstrip('/')}/") for item in filters)
+
+
+def _source_file_allowed(item: Dict[str, Any], filters: List[str]) -> bool:
+    path = str(item.get("path") or "")
+    if item.get("type") != "blob" or not path or not _source_path_matches(path, filters):
+        return False
+    if int(item.get("size") or 0) > MAX_SOURCE_FILE_BYTES:
+        return False
+    lowered = path.lower()
+    name = lowered.rsplit("/", 1)[-1]
+    if name.startswith(".env") or name.endswith((".pem", ".p12", ".pfx", ".crt", ".key")):
+        return False
+    parts = set(lowered.split("/")[:-1])
+    if parts & SOURCE_SKIP_DIRS:
+        return False
+    dot = name.rfind(".")
+    ext = name[dot:] if dot >= 0 else ""
+    if ext in SOURCE_SKIP_EXTENSIONS:
+        return False
+    return ext in SOURCE_CODE_EXTENSIONS or name in SOURCE_CODE_FILENAMES or name.startswith("readme")
+
+
+def _language_hint(path: str) -> str:
+    name = path.lower().rsplit("/", 1)[-1]
+    ext = name.rsplit(".", 1)[-1] if "." in name else ""
+    return {
+        "css": "css",
+        "go": "go",
+        "html": "html",
+        "java": "java",
+        "js": "javascript",
+        "json": "json",
+        "jsx": "jsx",
+        "kt": "kotlin",
+        "md": "markdown",
+        "php": "php",
+        "py": "python",
+        "rb": "ruby",
+        "rs": "rust",
+        "sh": "bash",
+        "sql": "sql",
+        "swift": "swift",
+        "toml": "toml",
+        "ts": "typescript",
+        "tsx": "tsx",
+        "xml": "xml",
+        "yaml": "yaml",
+        "yml": "yaml",
+    }.get(ext, "")
+
+
 def _require(credentials: Dict[str, Any], *fields: str) -> None:
     missing = [field for field in fields if not credentials.get(field)]
     if missing:
@@ -887,6 +1068,92 @@ async def _sync_confluence(client: httpx.AsyncClient, credentials: Dict[str, Any
     return _document("Confluence", [("Pages", pages)], {"CQL": cql}), {"records": len(pages)}
 
 
+async def _sync_github_source_snapshot(
+    client: httpx.AsyncClient,
+    base: str,
+    headers: Dict[str, str],
+    ref: str,
+    code_paths: List[str],
+) -> Tuple[List[Tuple[str, List[str]]], Dict[str, Any]]:
+    file_limit = min(MAX_SOURCE_FILES, max(20, _limit() * 2))
+    try:
+        tree = await _get_json(
+            client,
+            f"{base}/git/trees/{quote(ref, safe='')}",
+            headers=headers,
+            params={"recursive": "1"},
+        )
+    except httpx.HTTPStatusError as exc:
+        status = exc.response.status_code
+        if status in (401, 403, 404):
+            raise ValueError(
+                "GitHub source code access failed. Make sure the token has Contents: Read-only "
+                "permission for this repository, or leave the token blank for a public repository."
+            ) from exc
+        raise
+
+    files = [
+        item for item in tree.get("tree", [])
+        if _source_file_allowed(item, code_paths)
+    ]
+    files = sorted(files, key=lambda item: str(item.get("path") or ""))[:file_limit]
+    file_lines = [
+        f"- {item.get('path')} | size={item.get('size', 0)} bytes | sha={str(item.get('sha', ''))[:12]}"
+        for item in files
+    ]
+    if not file_lines:
+        requested = ", ".join(code_paths) if code_paths else "repository root"
+        return [("Source Files Selected", [f"No eligible source files found under {requested}."])], {
+            "code_files": 0,
+            "tree_truncated": bool(tree.get("truncated")),
+        }
+
+    extracts = []
+    skipped = []
+    total_chars = 0
+    for item in files:
+        if total_chars >= MAX_SOURCE_TOTAL_CHARS:
+            skipped.append("- Stopped reading files after reaching the connector source snapshot size limit.")
+            break
+        path = str(item.get("path") or "")
+        try:
+            blob = await _get_json(client, f"{base}/git/blobs/{quote(str(item.get('sha')), safe='')}", headers=headers)
+        except httpx.HTTPStatusError as exc:
+            skipped.append(f"- {path} skipped: GitHub returned HTTP {exc.response.status_code}")
+            continue
+
+        content = str(blob.get("content") or "")
+        if blob.get("encoding") == "base64":
+            raw = base64.b64decode(content.encode("ascii"), validate=False)
+            text = raw.decode("utf-8", errors="replace")
+        else:
+            text = content
+        if "\x00" in text[:2000]:
+            skipped.append(f"- {path} skipped: binary-looking content")
+            continue
+        if len(text) > MAX_SOURCE_FILE_CHARS:
+            text = text[:MAX_SOURCE_FILE_CHARS] + "\n... file truncated by Base connector ..."
+        remaining = MAX_SOURCE_TOTAL_CHARS - total_chars
+        if len(text) > remaining:
+            text = text[:remaining] + "\n... source snapshot truncated by Base connector ..."
+        total_chars += len(text)
+        language = _language_hint(path)
+        extracts.append(
+            f"### {path}\n"
+            f"size={item.get('size', 0)} bytes | sha={str(item.get('sha', ''))[:12]}\n"
+            f"```{language}\n{text}\n```"
+        )
+
+    sections = [("Source Files Selected", file_lines), ("Source File Extracts", extracts or ["No source file content could be decoded."])]
+    if skipped:
+        sections.append(("Source Files Skipped", skipped))
+    return sections, {
+        "code_files": len(extracts),
+        "tree_truncated": bool(tree.get("truncated")),
+        "code_chars": total_chars,
+    }
+
+
 async def _sync_github(client: httpx.AsyncClient, credentials: Dict[str, Any]) -> Tuple[str, Dict[str, Any]]:
     _require(credentials, "owner", "repo")
     owner = credentials["owner"]
@@ -898,10 +1165,17 @@ async def _sync_github(client: httpx.AsyncClient, credentials: Dict[str, Any]) -
     if credentials.get("token"):
         headers["Authorization"] = f"Bearer {credentials['token']}"
     base = f"https://api.github.com/repos/{quote(owner)}/{quote(repo)}"
+    repo_info = await _get_json(client, base, headers=headers)
+    ref = credentials.get("ref") or repo_info.get("default_branch") or "main"
     pulls = await _get_json(client, f"{base}/pulls", headers=headers, params={"state": "all", "per_page": _limit()})
     commits = await _get_json(client, f"{base}/commits", headers=headers, params={"per_page": min(_limit(), 100)})
     branches = await _get_json(client, f"{base}/branches", headers=headers, params={"per_page": min(_limit(), 100)})
     releases = await _get_json(client, f"{base}/releases", headers=headers, params={"per_page": min(_limit(), 100)})
+    repo_lines = [
+        f"- {repo_info.get('full_name')} | default_branch={repo_info.get('default_branch')} | "
+        f"private={repo_info.get('private')} | language={repo_info.get('language')} | "
+        f"pushed={repo_info.get('pushed_at')} | updated={repo_info.get('updated_at')}",
+    ]
     pr_lines = [
         f"- PR #{item.get('number')} [{item.get('state')}] {item.get('title')} | by={item.get('user', {}).get('login')} | "
         f"created={item.get('created_at')} | updated={item.get('updated_at')} | merged={item.get('merged_at')} | url={item.get('html_url')}"
@@ -918,11 +1192,29 @@ async def _sync_github(client: httpx.AsyncClient, credentials: Dict[str, Any]) -
         f"published={item.get('published_at')} | {item.get('body') or ''}"
         for item in releases
     ]
+    sections = [
+        ("Repository Overview", repo_lines),
+        ("Pull Requests", pr_lines),
+        ("Commits", commit_lines),
+        ("Branches", branch_lines),
+        ("Releases", release_lines),
+    ]
+    code_meta = {"code_files": 0, "tree_truncated": False}
+    code_paths = _split_list(credentials.get("code_paths"))
+    if _truthy(credentials.get("include_code"), default=True):
+        source_sections, code_meta = await _sync_github_source_snapshot(client, base, headers, ref, code_paths)
+        sections.extend(source_sections)
     return _document(
         "GitHub",
-        [("Pull Requests", pr_lines), ("Commits", commit_lines), ("Branches", branch_lines), ("Releases", release_lines)],
-        {"Repository": f"{owner}/{repo}"},
-    ), {"records": len(pr_lines) + len(commit_lines) + len(branch_lines) + len(release_lines)}
+        sections,
+        {
+            "Repository": f"{owner}/{repo}",
+            "Default branch": repo_info.get("default_branch"),
+            "Code ref": ref,
+            "Code paths": ", ".join(code_paths) if code_paths else "eligible files across repository",
+            "Source tree truncated by GitHub": code_meta.get("tree_truncated"),
+        },
+    ), {"records": len(repo_lines) + len(pr_lines) + len(commit_lines) + len(branch_lines) + len(release_lines) + int(code_meta.get("code_files") or 0)}
 
 
 async def _sync_gitlab(client: httpx.AsyncClient, credentials: Dict[str, Any]) -> Tuple[str, Dict[str, Any]]:
