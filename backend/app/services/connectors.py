@@ -227,7 +227,7 @@ CONNECTOR_CATALOG: List[Dict[str, Any]] = [
         "id": "github",
         "name": "GitHub",
         "group": "Development",
-        "description": "PRs, commits, branches, releases, reviewers, and engineering change history.",
+        "description": "PRs, commits, branches, releases, reviewers, and bounded source-code snapshots.",
         "keywords": ["github", "pull request", "pr-", "commit", "branch", "release", "source code", "repository"],
         "auth_type": "token_optional",
         "fields": [
