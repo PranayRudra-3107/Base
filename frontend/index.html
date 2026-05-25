@@ -1457,7 +1457,8 @@ async function syncConnector(connectorId) {
     });
     const data = await r.json();
     if (!r.ok) throw new Error(data.detail || 'Connector sync failed');
-    showToast(`${connector.name} synced: ${data.records_synced || 0} records indexed`, 'success');
+    const docText = data.documents_created ? ` across ${data.documents_created} source files` : '';
+    showToast(`${connector.name} synced: ${data.records_synced || 0} records indexed${docText}`, 'success');
     await refreshAll();
   } catch(e) {
     showToast(e.message || 'Connector sync failed', 'error');

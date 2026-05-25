@@ -118,8 +118,8 @@ SOURCE_SKIP_EXTENSIONS = {
     ".zip",
 }
 MAX_SOURCE_FILES = 120
-MAX_SOURCE_FILE_BYTES = 120_000
-MAX_SOURCE_FILE_CHARS = 24_000
+MAX_SOURCE_FILE_BYTES = 320_000
+MAX_SOURCE_FILE_CHARS = 48_000
 MAX_SOURCE_TOTAL_CHARS = 420_000
 
 
@@ -920,6 +920,11 @@ def _language_hint(path: str) -> str:
     }.get(ext, "")
 
 
+def _safe_connector_filename(prefix: str, path: str, timestamp: str) -> str:
+    safe_path = re.sub(r"[^a-zA-Z0-9_.-]+", "_", path.strip("/"))[:120].strip("_")
+    return f"{prefix}_{safe_path or 'source'}_{timestamp}.md"
+
+
 def _require(credentials: Dict[str, Any], *fields: str) -> None:
     missing = [field for field in fields if not credentials.get(field)]
     if missing:
@@ -1109,6 +1114,7 @@ async def _sync_github_source_snapshot(
         }
 
     extracts = []
+    code_documents = []
     skipped = []
     total_chars = 0
     for item in files:
@@ -1138,19 +1144,38 @@ async def _sync_github_source_snapshot(
             text = text[:remaining] + "\n... source snapshot truncated by Base connector ..."
         total_chars += len(text)
         language = _language_hint(path)
-        extracts.append(
-            f"### {path}\n"
-            f"size={item.get('size', 0)} bytes | sha={str(item.get('sha', ''))[:12]}\n"
+        code_document = (
+            "# GitHub source code file\n"
+            f"Repository source path: {path}\n"
+            f"Git ref: {ref}\n"
+            f"Blob SHA: {str(item.get('sha', ''))[:12]}\n"
+            f"Size: {item.get('size', 0)} bytes\n"
+            f"Language hint: {language or 'text'}\n\n"
+            "## Code\n"
             f"```{language}\n{text}\n```"
         )
+        code_documents.append({
+            "source_path": path,
+            "language": language or "text",
+            "text": code_document,
+        })
+        preview = text[:1000]
+        if len(text) > 1000:
+            preview += "\n... preview truncated; full file is indexed as a separate source document ..."
+        extracts.append(
+            f"### {path}\n"
+            f"Indexed as separate code source document. size={item.get('size', 0)} bytes | sha={str(item.get('sha', ''))[:12]}\n"
+            f"```{language}\n{preview}\n```"
+        )
 
-    sections = [("Source Files Selected", file_lines), ("Source File Extracts", extracts or ["No source file content could be decoded."])]
+    sections = [("Source Files Selected", file_lines), ("Source Code Preview", extracts or ["No source file content could be decoded."])]
     if skipped:
         sections.append(("Source Files Skipped", skipped))
     return sections, {
         "code_files": len(extracts),
         "tree_truncated": bool(tree.get("truncated")),
         "code_chars": total_chars,
+        "documents": code_documents,
     }
 
 
@@ -1203,6 +1228,17 @@ async def _sync_github(client: httpx.AsyncClient, credentials: Dict[str, Any]) -
     code_paths = _split_list(credentials.get("code_paths"))
     if _truthy(credentials.get("include_code"), default=True):
         source_sections, code_meta = await _sync_github_source_snapshot(client, base, headers, ref, code_paths)
+        for document in code_meta.get("documents", []):
+            source_path = document.get("source_path", "")
+            document["filename"] = _safe_connector_filename("connector_github_code", source_path, datetime.utcnow().strftime("%Y%m%d_%H%M%S"))
+            document["metadata"] = {
+                "connector_auth_type": "token_optional",
+                "connector_subtype": "github_code",
+                "repository": f"{owner}/{repo}",
+                "source_path": source_path,
+                "ref": ref,
+                "language": document.get("language", "text"),
+            }
         sections.extend(source_sections)
     return _document(
         "GitHub",
@@ -1214,7 +1250,10 @@ async def _sync_github(client: httpx.AsyncClient, credentials: Dict[str, Any]) -
             "Code paths": ", ".join(code_paths) if code_paths else "eligible files across repository",
             "Source tree truncated by GitHub": code_meta.get("tree_truncated"),
         },
-    ), {"records": len(repo_lines) + len(pr_lines) + len(commit_lines) + len(branch_lines) + len(release_lines) + int(code_meta.get("code_files") or 0)}
+    ), {
+        "records": len(repo_lines) + len(pr_lines) + len(commit_lines) + len(branch_lines) + len(release_lines) + int(code_meta.get("code_files") or 0),
+        "documents": code_meta.get("documents", []),
+    }
 
 
 async def _sync_gitlab(client: httpx.AsyncClient, credentials: Dict[str, Any]) -> Tuple[str, Dict[str, Any]]:
@@ -1890,14 +1929,33 @@ async def sync_connector(tenant_id: str, connector_id: str) -> Dict[str, Any]:
                 text, stats = await adapter(client, credentials)
             else:
                 text, stats = await _sync_generic_json(client, credentials, connector_name)
+        sync_timestamp = datetime.utcnow().strftime("%Y%m%d_%H%M%S")
         result = ingest_connector_text(
             tenant_id=tenant_id,
             connector_id=connector_id,
             connector_name=connector_name,
-            filename=f"connector_{connector_id}_{datetime.utcnow().strftime('%Y%m%d_%H%M%S')}.md",
+            filename=f"connector_{connector_id}_{sync_timestamp}.md",
             text=text,
             metadata={"connector_auth_type": definition.get("auth_type", "")},
         )
+        extra_results = []
+        for document in stats.get("documents", []) or []:
+            doc_text = str(document.get("text") or "")
+            if not doc_text.strip():
+                continue
+            doc_filename = document.get("filename") or _safe_connector_filename(f"connector_{connector_id}", document.get("source_path", "source"), sync_timestamp)
+            extra_results.append(ingest_connector_text(
+                tenant_id=tenant_id,
+                connector_id=connector_id,
+                connector_name=connector_name,
+                filename=doc_filename,
+                text=doc_text,
+                metadata={
+                    "connector_auth_type": definition.get("auth_type", ""),
+                    **(document.get("metadata") or {}),
+                },
+            ))
+        total_chunks_created = int(result["chunks_created"]) + sum(int(item.get("chunks_created", 0)) for item in extra_results)
         connections = _read_connections(tenant_id)
         current = connections.get(connector_id, connection)
         connections[connector_id] = {
@@ -1906,6 +1964,8 @@ async def sync_connector(tenant_id: str, connector_id: str) -> Dict[str, Any]:
             "last_error": "",
             "last_document_id": result["document_id"],
             "last_filename": result["filename"],
+            "last_document_ids": [result["document_id"], *[item["document_id"] for item in extra_results]],
+            "last_extra_document_count": len(extra_results),
             "sync_count": int(current.get("sync_count", 0)) + 1,
         }
         _write_connections(tenant_id, connections)
@@ -1916,7 +1976,10 @@ async def sync_connector(tenant_id: str, connector_id: str) -> Dict[str, Any]:
             "records_synced": int(stats.get("records", 0)),
             "document_id": result["document_id"],
             "filename": result["filename"],
-            "chunks_created": result["chunks_created"],
+            "documents_created": 1 + len(extra_results),
+            "extra_documents_created": len(extra_results),
+            "document_ids": [result["document_id"], *[item["document_id"] for item in extra_results]],
+            "chunks_created": total_chunks_created,
         }
     except Exception as exc:
         connections = _read_connections(tenant_id)
