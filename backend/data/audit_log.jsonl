@@ -214,3 +214,11 @@
 {"timestamp": "2026-05-20T06:57:31.795937", "tenant_id": "shiparu-fd42cd30", "actor": "system", "action": "kt.brief.generated", "details": {"focus_length": 133, "audience": "new backend engineer", "chunks_used": 5, "language": "en", "streamed": true}}
 {"timestamp": "2026-05-20T06:58:31.395824", "tenant_id": "shiparu-fd42cd30", "actor": "system", "action": "analytics.dashboard.viewed", "details": {}}
 {"timestamp": "2026-05-20T06:58:54.134313", "tenant_id": "shiparu-fd42cd30", "actor": "system", "action": "rag.query", "details": {"question_length": 185, "chunks_used": 5, "language": "en", "streamed": true, "answer_mode": "project"}}
+{"timestamp": "2026-05-22T11:38:28.710839", "tenant_id": "shiparu-fd42cd30", "actor": "system", "action": "analytics.dashboard.viewed", "details": {}}
+{"timestamp": "2026-05-22T11:38:49.716985", "tenant_id": "shiparu-fd42cd30", "actor": "system", "action": "rag.query", "details": {"question_length": 2, "chunks_used": 0, "language": "en", "streamed": true, "answer_mode": "web"}}
+{"timestamp": "2026-05-22T14:05:44.311073", "tenant_id": "shiparu-fd42cd30", "actor": "system", "action": "analytics.knowledge_graph.viewed", "details": {"nodes": 926, "edges": 2050}}
+{"timestamp": "2026-05-22T14:06:00.640062", "tenant_id": "shiparu-fd42cd30", "actor": "system", "action": "analytics.knowledge_graph.viewed", "details": {"nodes": 926, "edges": 2050}}
+{"timestamp": "2026-05-23T13:11:12.827752", "tenant_id": "shiparu-fd42cd30", "actor": "system", "action": "analytics.dashboard.viewed", "details": {}}
+{"timestamp": "2026-05-23T13:11:49.228426", "tenant_id": "shiparu-fd42cd30", "actor": "system", "action": "rag.query", "details": {"question_length": 61, "chunks_used": 5, "language": "en", "streamed": true, "answer_mode": "project"}}
+{"timestamp": "2026-06-07T17:35:06.190242", "tenant_id": "shiparu-fd42cd30", "actor": "system", "action": "analytics.dashboard.viewed", "details": {}}
+{"timestamp": "2026-06-07T17:35:08.193657", "tenant_id": "shiparu-fd42cd30", "actor": "system", "action": "analytics.knowledge_graph.viewed", "details": {"nodes": 926, "edges": 2050}}

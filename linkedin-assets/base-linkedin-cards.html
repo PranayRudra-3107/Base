@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Base LinkedIn Cards</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=IBM+Plex+Mono:wght@500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #080a0f;
+  --panel: #111722;
+  --panel-2: #171f2d;
+  --text: #f6f8fb;
+  --muted: #9aa6b8;
+  --line: #273349;
+  --purple: #7c5cff;
+  --teal: #2dd4bf;
+  --blue: #38bdf8;
+  --amber: #f3b950;
+  --green: #42d392;
+  --red: #ff5d6c;
+  --display: "Syne", sans-serif;
+  --sans: "IBM Plex Sans", sans-serif;
+  --mono: "IBM Plex Mono", monospace;
+}
+html, body { width: 100%; height: 100%; overflow: hidden; background: #05070b; color: var(--text); font-family: var(--sans); }
+body {
+  display: grid;
+  place-items: center;
+  background:
+    linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px),
+    radial-gradient(circle at 30% 18%, rgba(124,92,255,.16), transparent 28%),
+    radial-gradient(circle at 78% 68%, rgba(45,212,191,.12), transparent 30%),
+    #080a0f;
+  background-size: 34px 34px, 34px 34px, auto, auto, auto;
+}
+.card {
+  position: relative;
+  width: 1080px;
+  height: 1080px;
+  overflow: hidden;
+  padding: 62px;
+  background:
+    linear-gradient(135deg, rgba(124,92,255,.18), rgba(45,212,191,.06) 36%, rgba(243,185,80,.06)),
+    linear-gradient(180deg, #101723, #070a10);
+}
+.card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(120deg, transparent 0 38%, rgba(56,189,248,.07) 44%, transparent 56%),
+    linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+  background-size: auto, 42px 42px, 42px 42px;
+}
+.card > * { position: relative; z-index: 1; }
+.brand { display: flex; align-items: center; gap: 16px; color: var(--muted); font-size: 24px; font-weight: 500; }
+.logo {
+  width: 58px;
+  height: 58px;
+  display: grid;
+  place-items: center;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--purple), var(--teal) 58%, var(--amber));
+  color: white;
+  font-family: var(--display);
+  font-size: 30px;
+  font-weight: 800;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.18), 0 22px 48px rgba(45,212,191,.18);
+}
+.eyebrow { font-family: var(--mono); color: var(--teal); font-size: 18px; letter-spacing: .08em; text-transform: uppercase; }
+h1, h2 { font-family: var(--display); letter-spacing: 0; }
+h1 { margin-top: 92px; max-width: 870px; font-size: 78px; line-height: 1.02; }
+h2 { font-size: 52px; line-height: 1.05; }
+.sub { margin-top: 28px; max-width: 810px; color: #c7d0df; font-size: 29px; line-height: 1.38; }
+.chips { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 38px; }
+.chip { border: 1px solid rgba(255,255,255,.16); background: rgba(255,255,255,.055); color: #c8d2e0; border-radius: 999px; padding: 11px 16px; font-family: var(--mono); font-size: 15px; }
+.bottom { position: absolute; left: 62px; right: 62px; bottom: 52px; display: flex; justify-content: space-between; align-items: end; color: var(--muted); font-size: 20px; z-index: 2; }
+.url { color: #dfe7f2; font-family: var(--mono); font-size: 18px; }
+.mock {
+  position: absolute;
+  right: -38px;
+  bottom: 132px;
+  width: 560px;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 10px;
+  background: rgba(15,19,27,.92);
+  box-shadow: 0 34px 110px rgba(0,0,0,.48);
+  overflow: hidden;
+}
+.mock-top { height: 44px; display: flex; align-items: center; gap: 8px; padding: 0 18px; border-bottom: 1px solid var(--line); }
+.dot { width: 10px; height: 10px; border-radius: 50%; background: var(--red); }
+.dot:nth-child(2) { background: var(--amber); }
+.dot:nth-child(3) { background: var(--green); }
+.mock-body { padding: 20px; display: grid; gap: 14px; }
+.row { display: grid; grid-template-columns: 90px 1fr 54px; gap: 12px; align-items: center; color: var(--muted); font-family: var(--mono); font-size: 13px; }
+.bar { height: 10px; border-radius: 999px; background: rgba(255,255,255,.08); overflow: hidden; }
+.fill { height: 100%; border-radius: inherit; background: linear-gradient(90deg, var(--purple), var(--blue), var(--teal)); }
+.grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; margin-top: 58px; }
+.tile {
+  min-height: 178px;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 10px;
+  background: linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.02));
+  padding: 24px;
+}
+.tile strong { display: block; font-family: var(--display); font-size: 29px; margin-bottom: 12px; }
+.tile span { color: var(--muted); font-size: 21px; line-height: 1.34; }
+.flow { display: grid; grid-template-columns: 1fr 70px 1fr 70px 1fr; gap: 10px; align-items: center; margin-top: 86px; }
+.node {
+  min-height: 214px;
+  border: 1px solid rgba(255,255,255,.13);
+  border-radius: 10px;
+  background: rgba(17,23,34,.84);
+  padding: 26px;
+}
+.node-title { font-family: var(--display); font-size: 27px; margin-bottom: 16px; }
+.node p { color: var(--muted); font-size: 20px; line-height: 1.36; }
+.arrow { height: 2px; background: linear-gradient(90deg, var(--purple), var(--teal)); position: relative; }
+.arrow::after { content: ""; position: absolute; right: -1px; top: -6px; border-left: 12px solid var(--teal); border-top: 7px solid transparent; border-bottom: 7px solid transparent; }
+.code {
+  margin-top: 44px;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 10px;
+  background: rgba(4,7,12,.74);
+  overflow: hidden;
+  font-family: var(--mono);
+}
+.code-head { display: flex; justify-content: space-between; padding: 15px 18px; border-bottom: 1px solid var(--line); color: var(--muted); font-size: 15px; }
+pre { padding: 22px; color: #d5e1ef; font-size: 18px; line-height: 1.5; white-space: pre-wrap; }
+.teal { color: var(--teal); }
+.purple { color: #b6a8ff; }
+.amber { color: var(--amber); }
+.banner {
+  width: 1200px;
+  height: 627px;
+  padding: 52px 62px;
+}
+.banner h1 { margin-top: 56px; font-size: 68px; max-width: 780px; }
+.banner .sub { max-width: 560px; font-size: 25px; }
+.banner .mock { width: 500px; right: 54px; bottom: 66px; }
+.banner .bottom { left: 62px; right: 62px; bottom: 42px; }
+.hidden { display: none; }
+</style>
+</head>
+<body>
+<main id="root"></main>
+<script>
+const cards = {
+  banner: `
+    <section class="card banner">
+      <div class="brand"><div class="logo">B</div><div><strong style="color:#fff;font-family:var(--display)">Base</strong><br>Project Intelligence & KT Copilot</div></div>
+      <h1>AI project memory for faster handoffs</h1>
+      <p class="sub">A full-stack RAG platform that turns Jira, GitHub, Teams, docs, metrics, incidents, and database health into searchable project intelligence.</p>
+      <div class="chips"><span class="chip">RAG</span><span class="chip">Knowledge Graph</span><span class="chip">AWS ECS</span><span class="chip">CI/CD</span></div>
+      <div class="mock">
+        <div class="mock-top"><span class="dot"></span><span class="dot"></span><span class="dot"></span></div>
+        <div class="mock-body">
+          <div class="row"><span>Sources</span><div class="bar"><div class="fill" style="width:92%"></div></div><b>92%</b></div>
+          <div class="row"><span>Risk</span><div class="bar"><div class="fill" style="width:58%"></div></div><b>7</b></div>
+          <div class="row"><span>KT Ready</span><div class="bar"><div class="fill" style="width:86%"></div></div><b>86%</b></div>
+          <div class="row"><span>Graph</span><div class="bar"><div class="fill" style="width:78%"></div></div><b>Live</b></div>
+        </div>
+      </div>
+      <div class="bottom"><span>Interview demo project</span><span class="url">d13xa0pqwvaoqw.cloudfront.net</span></div>
+    </section>`,
+  cover: `
+    <section class="card">
+      <div class="brand"><div class="logo">B</div><div><strong style="color:#fff;font-family:var(--display)">Base</strong><br>Project Intelligence & KT Copilot</div></div>
+      <p class="eyebrow" style="margin-top:74px">Full-stack AI platform</p>
+      <h1>From scattered project data to searchable team memory</h1>
+      <p class="sub">Built to answer: “What happened, what changed, who owns it, and what should the next engineer know?”</p>
+      <div class="chips"><span class="chip">FastAPI</span><span class="chip">OpenAI</span><span class="chip">Vector Search</span><span class="chip">AWS</span><span class="chip">GitHub Actions</span></div>
+      <div class="bottom"><span>Base project showcase</span><span class="url">Live on CloudFront</span></div>
+    </section>`,
+  features: `
+    <section class="card">
+      <div class="brand"><div class="logo">B</div><div><strong style="color:#fff;font-family:var(--display)">Base</strong><br>What it does</div></div>
+      <h2 style="margin-top:66px">One workspace for project intelligence</h2>
+      <p class="sub">Create a project, ingest real workstream data, and ask AI to explain risks, decisions, code flow, and handoff context.</p>
+      <div class="grid">
+        <div class="tile"><strong>Connector Hub</strong><span>GitHub source code, Jira, Teams, email, Confluence, metrics, incidents, and database health.</span></div>
+        <div class="tile"><strong>RAG + Search</strong><span>Hybrid retrieval combines semantic embeddings with rg-style keyword matching for exact IDs and code terms.</span></div>
+        <div class="tile"><strong>Knowledge Graph</strong><span>Obsidian-like graph view shows sources, topics, incidents, PRs, signals, and relationships.</span></div>
+        <div class="tile"><strong>KT Studio</strong><span>Generates briefs, quizzes, flashcards, slide outlines, infographics, and conversation scripts.</span></div>
+      </div>
+      <div class="bottom"><span>Built for project handoff and onboarding</span><span class="url">RAG + graph + connectors</span></div>
+    </section>`,
+  architecture: `
+    <section class="card">
+      <div class="brand"><div class="logo">B</div><div><strong style="color:#fff;font-family:var(--display)">Base</strong><br>Architecture flow</div></div>
+      <h2 style="margin-top:66px">How data flows through the app</h2>
+      <div class="flow">
+        <div class="node"><div class="node-title">Sources</div><p>Uploads and connectors pull Jira, GitHub code, Teams, docs, Grafana, PagerDuty, and DB health.</p></div>
+        <div class="arrow"></div>
+        <div class="node"><div class="node-title">Ingestion</div><p>Text extraction, chunking, metadata, analytics, audit logs, and vector indexing.</p></div>
+        <div class="arrow"></div>
+        <div class="node"><div class="node-title">Answers</div><p>Ask AI uses hybrid retrieval, citations, graph context, and language-aware responses.</p></div>
+      </div>
+      <div class="code">
+        <div class="code-head"><span>backend/app/services/rag.py</span><span>hybrid retrieval</span></div>
+        <pre><span class="purple">chunks</span> = search_chunks(project_id, question)
+<span class="teal">context</span> = build_context(chunks)
+answer = llm.generate(context, question)
+return answer, sources, confidence</pre>
+      </div>
+      <div class="bottom"><span>FastAPI backend + S3 + ECS + CloudFront</span><span class="url">CI/CD via GitHub Actions</span></div>
+    </section>`,
+  impact: `
+    <section class="card">
+      <div class="brand"><div class="logo">B</div><div><strong style="color:#fff;font-family:var(--display)">Base</strong><br>Engineering highlights</div></div>
+      <h2 style="margin-top:66px">What this demonstrates</h2>
+      <div class="grid">
+        <div class="tile"><strong>Production thinking</strong><span>AWS ECS, ECR, ALB, S3, CloudFront, IAM roles, secrets strategy, and deployment docs.</span></div>
+        <div class="tile"><strong>AI system design</strong><span>RAG pipeline, embeddings, chunk metadata, citations, web fallback, and agent progress states.</span></div>
+        <div class="tile"><strong>Frontend craft</strong><span>Project dashboard, animated UI, chat history, graph interactions, connector management, and study tools.</span></div>
+        <div class="tile"><strong>Demo depth</strong><span>Synthetic multi-year enterprise data plus live connectors to show realistic onboarding workflows.</span></div>
+      </div>
+      <p class="sub" style="margin-top:48px">Business use case: reduce onboarding time and preserve institutional project context across handoffs.</p>
+      <div class="bottom"><span>Portfolio-ready full-stack AI app</span><span class="url">Base</span></div>
+    </section>`
+};
+const params = new URLSearchParams(window.location.search);
+document.getElementById("root").innerHTML = cards[params.get("card") || "cover"] || cards.cover;
+</script>
+</body>
+</html>

@@ -61,6 +61,7 @@ The current app can:
 - Generate NotebookLM-style study artifacts: interactive quizzes, host conversations, audio overview playback scripts, video storyboards, slide deck outlines, flashcards, and infographics over uploaded project files.
 - Show a static web UI with project picker, dashboard, agent gallery, connector hub, knowledge graph, chat, KT brief, source library, and activity log views.
 - Run demo-ready project agents for risk review, incident review, release notes, handoff briefs, metrics investigation, and source gap analysis.
+- Run a multi-agent Project Review Board that coordinates planner, source retriever, risk, incident, release, metrics, KT, verifier, and synthesizer agents into one source-grounded project review.
 - Connect and sync project data from live APIs or credential-based connectors, then index the fetched records through the same RAG path as uploaded files.
 - Track connector coverage for Jira, Linear, Azure Boards, Slack, Teams, email, GitHub, GitLab, Bitbucket, product analytics, observability, database health, incidents, docs, support, and BI sources.
 - Export project intelligence analytics as CSV, Tableau-style JSON, and PowerBI-style JSON.
@@ -103,6 +104,15 @@ OAuth support is currently scaffolded for Microsoft Graph and Atlassian. API-tok
 2. Ask: "How is the project performing this month?"
 3. Base returns sprint progress, delivery risks, blocked work, bug trends, deployment frequency, user engagement changes, traffic movement, latency/error trends, and database health.
 
+### Multi-Agent Project Review Board
+
+1. Connect or upload project sources from Jira, GitHub, Teams, Confluence, Grafana, database health exports, PagerDuty, and release notes.
+2. Open **Agents** and run **Project Review Board**, or use the dashboard's **Run Multi-Agent Review** action.
+3. Base streams each stage as it runs: planner, source retriever, risk analyst, incident analyst, release/code analyst, metrics analyst, KT/onboarding analyst, verifier, and synthesizer.
+4. Each specialist retrieves its own evidence, produces structured findings, and returns confidence and missing-evidence notes.
+5. The verifier checks for weak or unsupported claims before the synthesizer creates the final project review.
+6. The final answer includes source citations, chunks reviewed, token usage, and a compact specialist-agent summary in the chat.
+
 ### Incident or Handoff Summary
 
 1. Ingest incident notes, chat conversations, logs, metrics, and recent code changes.
@@ -110,6 +120,34 @@ OAuth support is currently scaffolded for Microsoft Graph and Atlassian. API-tok
 3. Base produces a concise handoff with timeline, impact, probable cause, open actions, and linked sources.
 
 ---
+
+## Multi-Agent Orchestration
+
+Base now includes a real source-grounded multi-agent workflow for project review, implemented in `backend/app/services/multi_agent.py`.
+
+The current orchestration is intentionally pragmatic for an MVP:
+
+- **Planner stage:** decomposes the review into specialist scopes and streams the plan to the UI.
+- **Source Retriever stage:** prepares specialist-specific retrieval queries.
+- **Risk Analyst Agent:** reviews blockers, stale work, unresolved owners, delivery risks, and next actions.
+- **Incident Analyst Agent:** reviews incidents, PagerDuty-style evidence, impact, probable causes, and prevention actions.
+- **Release and Code Agent:** reviews PRs, commits, branches, releases, rollout notes, and architecture/code-change evidence.
+- **Metrics and Reliability Agent:** reviews Grafana-style metrics, traffic, latency, error rates, uptime, database health, and reliability signals.
+- **KT and Onboarding Agent:** converts project evidence into first-week learning priorities and handoff guidance.
+- **Verifier Agent:** checks whether specialist findings are supported by the retrieved source snippets and highlights evidence gaps.
+- **Synthesizer Agent:** combines the specialist outputs into one final project review.
+
+The specialist agents run as separate source-grounded LLM calls. Planner and retriever are orchestration stages in the current implementation, not separate model calls. This keeps the demo fast and understandable while still showing the architecture needed for production-grade agent collaboration.
+
+The response is returned as:
+
+- `answer`: final synthesized review.
+- `sources`: deduplicated source citations across all specialists.
+- `agents`: per-agent summaries, findings, risks, actions, confidence, missing evidence, and chunks used.
+- `verifier`: unsupported claims, evidence gaps, and confidence.
+- `answer_mode`: `multi_agent`.
+
+The streaming endpoint emits progress events that the frontend renders as the animated "agent thinking" card.
 
 ## Current Architecture
 
@@ -126,6 +164,10 @@ graph TD
   RAG --> VectorDB
   RAG --> Keyword
   RAG --> OpenAI[OpenAI Chat Model]
+  API --> ReviewBoard[Multi-Agent Review Board]
+  ReviewBoard --> VectorDB
+  ReviewBoard --> Keyword
+  ReviewBoard --> OpenAI
   API --> Analytics[Project Health Analytics]
   Analytics --> Dashboard[Dashboard Data]
   API --> ActivityLog[JSONL Activity Log]
@@ -207,6 +249,7 @@ base-platform/
 |   |       +-- ingestion.py     # File parsing and chunking
 |   |       +-- vector_store.py  # ChromaDB and hybrid retrieval operations
 |   |       +-- rag.py           # RAG pipeline
+|   |       +-- multi_agent.py   # Project Review Board orchestration
 |   |       +-- studio.py        # Quiz and conversation generation
 |   |       +-- analytics.py     # Current project-health metrics
 |   |       +-- connectors.py    # Live connector adapters and state management
@@ -287,7 +330,7 @@ You can also open `frontend/index.html` directly in a browser. When served on po
 2. Create or open a project from the project dashboard.
 3. Upload PDF, TXT, Markdown, or CSV files inside that project.
 4. Review the extracted dashboard metrics for the selected project.
-5. Open Agents to run focused project workflows such as risk review, incident review, release notes, or source gap analysis.
+5. Open Agents to run the multi-agent Project Review Board or focused project workflows such as risk review, incident review, release notes, or source gap analysis.
 6. Open Connectors to inspect which project data sources are indexed and which uploads are still missing.
 7. Open the Knowledge Graph view to inspect source, ticket, PR, incident, risk, blocker, decision, and metric connections. Click nodes for topic details or edges for connection evidence.
 8. Ask questions in the AI chat.
@@ -309,6 +352,8 @@ Because this is still the document-focused MVP, use project docs, tickets export
 | POST | `/api/ingest/` | Upload and index a document |
 | POST | `/api/query/` | Ask a question over indexed documents with optional internet fallback |
 | POST | `/api/query/stream` | Ask a question with backend progress events, optional internet fallback, and final answer |
+| POST | `/api/query/multi-agent-review` | Run the Project Review Board and return specialist-agent findings plus final synthesis |
+| POST | `/api/query/multi-agent-review/stream` | Run the Project Review Board with streamed planner, specialist, verifier, and synthesizer progress |
 | POST | `/api/query/kt` | Generate a source-grounded KT brief |
 | POST | `/api/query/kt/stream` | Generate a KT brief with backend progress events and final answer |
 | POST | `/api/query/quiz` | Generate an interactive source-grounded quiz from uploaded project files |
@@ -332,6 +377,28 @@ Because this is still the document-focused MVP, use project docs, tickets export
 | DELETE | `/api/connectors/{id}` | Disconnect a project connector |
 
 Project-scoped endpoints such as ingestion, query, documents, analytics, and connectors accept the `x-tenant-id` header. The frontend sets it to the selected `project_id`.
+
+Example multi-agent review request:
+
+```bash
+curl -X POST http://localhost:8000/api/query/multi-agent-review \
+  -H "Content-Type: application/json" \
+  -H "x-tenant-id: your-project-id" \
+  -d '{
+    "focus": "release readiness, incidents, database health, delivery risk, and KT handoff",
+    "language": "en"
+  }'
+```
+
+For the animated UI flow, the frontend uses `/api/query/multi-agent-review/stream`, which returns server-sent events:
+
+```text
+event: progress
+data: {"stage":"risk_analyst","message":"Risk Analyst Agent is reviewing project evidence.", ...}
+
+event: final
+data: {"answer":"...", "answer_mode":"multi_agent", "agents":[...], "verifier":{...}}
+```
 
 ## Connector Configuration
 
@@ -397,6 +464,7 @@ Still not production-grade:
 - Deep metric normalization across every external tool.
 - Scheduled sync jobs.
 - Background ingestion workers.
+- Multi-agent execution is request-scoped and sequential; production should move long reviews into background jobs, add cancellation, retry policies, and optionally parallel specialist execution.
 - OCR for scanned documents or images.
 - Enterprise-grade tenant isolation.
 - Production secrets management for connector credentials.

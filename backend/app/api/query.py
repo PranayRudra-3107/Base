@@ -7,6 +7,7 @@ from pydantic import BaseModel, Field
 from starlette.responses import StreamingResponse
 from typing import List, Literal, Optional
 from app.services.audit_log import write_audit_event
+from app.services.multi_agent import run_project_review_board
 from app.services.rag import query_rag
 from app.services.studio import generate_artifact, generate_conversation, generate_quiz
 
@@ -50,6 +51,11 @@ class StudioArtifactRequest(BaseModel):
     focus: str = "overall project overview, recent changes, risks, metrics, incidents, and handoff context"
     style: Literal["default", "deep_dive", "brief", "critique", "debate"] = "default"
     count: int = Field(default=6, ge=3, le=12)
+    language: Literal["en", "es", "fr", "de", "hi"] = "en"
+
+
+class MultiAgentReviewRequest(BaseModel):
+    focus: str = "overall project health, risk, release readiness, incidents, metrics, and KT"
     language: Literal["en", "es", "fr", "de", "hi"] = "en"
 
 
@@ -120,6 +126,40 @@ class StudioArtifactResponse(BaseModel):
     tokens_used: Optional[int] = None
 
 
+class MultiAgentFinding(BaseModel):
+    id: str
+    name: str
+    role: str
+    status: str
+    summary: str = ""
+    findings: List[str] = Field(default_factory=list)
+    risks: List[str] = Field(default_factory=list)
+    actions: List[str] = Field(default_factory=list)
+    confidence: str = "medium"
+    missing_evidence: List[str] = Field(default_factory=list)
+    sources: List[Source] = Field(default_factory=list)
+    chunks_used: int = 0
+    tokens_used: Optional[int] = None
+
+
+class VerifierFinding(BaseModel):
+    id: str
+    name: str
+    role: str
+    status: str
+    summary: str = ""
+    unsupported_claims: List[str] = Field(default_factory=list)
+    evidence_gaps: List[str] = Field(default_factory=list)
+    confidence: str = "medium"
+    tokens_used: Optional[int] = None
+
+
+class MultiAgentReviewResponse(QueryResponse):
+    answer_mode: str = "multi_agent"
+    agents: List[MultiAgentFinding] = Field(default_factory=list)
+    verifier: Optional[VerifierFinding] = None
+
+
 def validate_question(request: QueryRequest) -> None:
     if not request.question.strip():
         raise HTTPException(status_code=400, detail="Question cannot be empty.")
@@ -152,6 +192,13 @@ def validate_studio_focus(focus: str, label: str = "Focus") -> str:
     clean = focus.strip() or "project"
     if len(clean) > 500:
         raise HTTPException(status_code=400, detail=f"{label} too long. Max 500 chars.")
+    return clean
+
+
+def validate_review_focus(focus: str) -> str:
+    clean = focus.strip() or "overall project health, risk, release readiness, incidents, metrics, and KT"
+    if len(clean) > 700:
+        raise HTTPException(status_code=400, detail="Focus too long. Max 700 chars.")
     return clean
 
 
@@ -296,6 +343,96 @@ async def generate_studio_artifact(
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Artifact generation failed: {str(e)}")
     return StudioArtifactResponse(**result)
+
+
+@router.post("/multi-agent-review", response_model=MultiAgentReviewResponse)
+async def run_multi_agent_review(
+    request: MultiAgentReviewRequest,
+    x_tenant_id: str = Header(default="default")
+):
+    """Run the multi-agent Project Review Board over indexed project sources."""
+    focus = validate_review_focus(request.focus)
+    try:
+        result = run_project_review_board(
+            tenant_id=x_tenant_id,
+            focus=focus,
+            language=request.language,
+        )
+        write_audit_event(
+            tenant_id=x_tenant_id,
+            action="multi_agent.review.generated",
+            details={
+                "focus_length": len(focus),
+                "chunks_used": result.get("chunks_used", 0),
+                "language": request.language,
+                "agents": len(result.get("agents", [])),
+                "streamed": False,
+            },
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Multi-agent review failed: {str(e)}")
+    return MultiAgentReviewResponse(**result)
+
+
+@router.post("/multi-agent-review/stream")
+async def stream_multi_agent_review(
+    request: MultiAgentReviewRequest,
+    x_tenant_id: str = Header(default="default")
+):
+    """Run the multi-agent Project Review Board and stream every specialist step."""
+    focus = validate_review_focus(request.focus)
+    events: Queue = Queue()
+
+    def progress_callback(payload: dict) -> None:
+        events.put(("progress", payload))
+
+    def worker() -> None:
+        try:
+            result = run_project_review_board(
+                tenant_id=x_tenant_id,
+                focus=focus,
+                language=request.language,
+                progress_callback=progress_callback,
+            )
+            write_audit_event(
+                tenant_id=x_tenant_id,
+                action="multi_agent.review.generated",
+                details={
+                    "focus_length": len(focus),
+                    "chunks_used": result.get("chunks_used", 0),
+                    "language": request.language,
+                    "agents": len(result.get("agents", [])),
+                    "streamed": True,
+                },
+            )
+            events.put(("final", result))
+        except Exception as e:
+            events.put(("error", {"detail": f"Multi-agent review failed: {str(e)}"}))
+        finally:
+            events.put((None, None))
+
+    def event_stream():
+        thread = Thread(target=worker, daemon=True)
+        thread.start()
+        yield sse_event("progress", {
+            "stage": "start",
+            "message": "Project Review Board is starting.",
+            "detail": "Opening the multi-agent orchestration stream.",
+        })
+        while True:
+            event, payload = events.get()
+            if event is None:
+                break
+            yield sse_event(event, payload)
+
+    return StreamingResponse(
+        event_stream(),
+        media_type="text/event-stream",
+        headers={
+            "Cache-Control": "no-cache",
+            "X-Accel-Buffering": "no",
+        },
+    )
 
 
 @router.post("/stream")

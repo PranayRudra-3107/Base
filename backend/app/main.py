@@ -45,3 +45,5 @@ def health():
         "document_storage_backend": settings.document_storage_backend,
         "vector_backend": settings.vector_backend,
     }
+
+
