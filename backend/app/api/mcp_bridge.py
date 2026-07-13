@@ -9,6 +9,7 @@ from app.core.config import get_settings, parse_csv_setting
 from app.services.audit_log import write_audit_event
 from app.services.connector_ingestion import ingest_connector_text
 from app.services.mcp_client import (
+    call_external_tool_batch,
     call_external_tool,
     discover_external_server,
     external_result_text,
@@ -48,6 +49,12 @@ class MCPRegistrationRequest(BaseModel):
     provider: Literal["github", "atlassian"]
     authentication: Literal["bearer", "oauth"] = "bearer"
     token: str = Field(default="", max_length=4000)
+
+
+class GitHubRepositorySyncRequest(BaseModel):
+    owner: str = Field(default="PranayRudra-3107", min_length=1, max_length=200)
+    repository: str = Field(default="Base", min_length=1, max_length=200)
+    ref: str = Field(default="", max_length=300)
 
 
 def _ensure_project(project_id: str) -> None:
@@ -293,6 +300,75 @@ async def import_external_mcp_data(
             "server": server_name,
             "source_type": request.source_type,
             **ingestion,
+        }
+    except Exception as exc:
+        raise _mcp_error(exc) from exc
+
+
+GITHUB_ARCHITECTURE_PATHS = [
+    "README.md",
+    "Dockerfile",
+    ".github/workflows/ci.yml",
+    ".github/workflows/deploy-aws.yml",
+    "backend/app/main.py",
+    "backend/app/core/config.py",
+    "backend/app/api/query.py",
+    "backend/app/api/mcp_bridge.py",
+    "backend/app/services/ingestion.py",
+    "backend/app/services/vector_store.py",
+    "backend/app/services/rag.py",
+    "backend/app/services/multi_agent.py",
+    "backend/app/services/mcp_client.py",
+    "backend/app/services/mcp_registry.py",
+    "frontend/index.html",
+]
+
+
+@router.post("/servers/github/sync-repository")
+async def sync_github_repository(
+    request: GitHubRepositorySyncRequest,
+    x_tenant_id: str = Header(default="default"),
+):
+    """Index the architecture-bearing files of a GitHub repository through official GitHub MCP."""
+    _ensure_project(x_tenant_id)
+    argument_sets = []
+    for path in GITHUB_ARCHITECTURE_PATHS:
+        arguments = {"owner": request.owner.strip(), "repo": request.repository.strip(), "path": path}
+        if request.ref.strip():
+            arguments["ref"] = request.ref.strip()
+        argument_sets.append(arguments)
+    try:
+        results = await call_external_tool_batch(
+            "github", "get_file_contents", argument_sets, project_id=x_tenant_id
+        )
+        indexed, failed = [], []
+        for path, result in zip(GITHUB_ARCHITECTURE_PATHS, results):
+            if result.get("is_error") or not result.get("text", "").strip():
+                failed.append(path)
+                continue
+            ingestion = ingest_connector_text(
+                tenant_id=x_tenant_id,
+                connector_id="mcp_github",
+                connector_name="GitHub MCP",
+                filename=f"github_{path.replace('/', '__')}",
+                text=f"GitHub repository: {request.owner}/{request.repository}\nSource path: {path}\n\n{result['text']}",
+                metadata={"mcp_server": "github", "repository": f"{request.owner}/{request.repository}", "source_path": path},
+            )
+            indexed.append({"path": path, "document_id": ingestion["document_id"], "chunks_created": ingestion["chunks_created"]})
+        if not indexed:
+            raise ValueError("GitHub MCP did not return any importable repository files.")
+        write_audit_event(
+            x_tenant_id,
+            "mcp.github.repository_synced",
+            details={"repository": f"{request.owner}/{request.repository}", "indexed": len(indexed), "failed": failed},
+        )
+        return {
+            "message": "GitHub repository context indexed into project RAG.",
+            "repository": f"{request.owner}/{request.repository}",
+            "indexed_count": len(indexed),
+            "failed_count": len(failed),
+            "indexed": indexed,
+            "failed": failed,
         }
     except Exception as exc:
         raise _mcp_error(exc) from exc

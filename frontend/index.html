@@ -2190,6 +2190,7 @@ function renderMcpRegistry() {
       </div>
       <div class="mcp-registry-actions">
         <button class="secondary-btn" data-mcp-server="${attr(server.name)}" onclick="discoverMcpServerFromButton(this)" ${server.credential_available ? '' : 'disabled'}>${capabilities ? 'Refresh' : 'Test & Discover'}</button>
+        ${server.name === 'github' ? `<button class="primary-btn" data-mcp-server="github" onclick="syncGitHubRepositoryFromButton(this)" ${server.credential_available ? '' : 'disabled'}>Sync Base Repo</button>` : ''}
         ${server.managed_by === 'project-registry' ? `<button class="icon-btn" title="Disconnect provider" data-mcp-server="${attr(server.name)}" onclick="disconnectMcpProviderFromButton(this)" aria-label="Disconnect ${attr(server.name)}">x</button>` : ''}
       </div>
     </div>`;
@@ -2292,6 +2293,27 @@ async function discoverMcpServerFromButton(button) {
     button.disabled = false;
     button.textContent = 'Discover';
     showToast(error.message || 'MCP discovery failed', 'error');
+  }
+}
+
+async function syncGitHubRepositoryFromButton(button) {
+  button.disabled = true;
+  const original = button.textContent;
+  button.textContent = 'Indexing repository...';
+  try {
+    const response = await fetch(`${API_BASE}/api/mcp/servers/github/sync-repository`, {
+      method:'POST', headers:{...projectHeaders(),'Content-Type':'application/json'},
+      body:JSON.stringify({owner:'PranayRudra-3107', repository:'Base'})
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.detail || 'Repository sync failed');
+    await refreshAll();
+    showToast(`Indexed ${data.indexed_count} GitHub source files into RAG`, 'success');
+  } catch(error) {
+    showToast(error.message || 'Repository sync failed', 'error');
+  } finally {
+    button.disabled = false;
+    button.textContent = original;
   }
 }
 

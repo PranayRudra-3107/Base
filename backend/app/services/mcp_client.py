@@ -216,6 +216,27 @@ async def call_external_tool(
     }
 
 
+async def call_external_tool_batch(
+    name: str,
+    tool_name: str,
+    argument_sets: List[Dict[str, Any]],
+    project_id: str = "",
+) -> List[Dict[str, Any]]:
+    """Call one external tool repeatedly over a single initialized MCP session."""
+    server = get_external_server(name, project_id)
+    results = []
+    async with external_mcp_session(server) as (session, _):
+        for arguments in argument_sets:
+            result = await session.call_tool(tool_name, arguments=arguments or {})
+            results.append({
+                "arguments": arguments,
+                "is_error": bool(getattr(result, "isError", False)),
+                "text": _extract_text(getattr(result, "content", [])),
+                "structured_content": _dump_model(getattr(result, "structuredContent", None)),
+            })
+    return results
+
+
 async def read_external_resource(name: str, uri: str, project_id: str = "") -> Dict[str, Any]:
     server = get_external_server(name, project_id)
     async with external_mcp_session(server) as (session, _):

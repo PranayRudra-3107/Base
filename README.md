@@ -254,6 +254,8 @@ The Connector Hub includes a project-scoped registry for two official remote pro
 
 Both providers support token registration. The registry can register, authorize, test, discover capabilities, import results into RAG, and disconnect a provider. Its reusable OAuth authorization-code implementation includes state validation and PKCE. Enable OAuth with provider application credentials:
 
+For GitHub, **Sync Base Repo** reads the architecture-bearing source files through one official GitHub MCP session and indexes each file into the selected project's RAG store with repository and source-path metadata.
+
 ```bash
 GITHUB_OAUTH_CLIENT_ID=
 GITHUB_OAUTH_CLIENT_SECRET=
@@ -608,6 +610,7 @@ Because this is still the document-focused MVP, use project docs, tickets export
 | POST | `/api/mcp/servers/{name}/tools/{tool}` | Call a tool on a configured external MCP server |
 | POST | `/api/mcp/servers/{name}/resources/read` | Read a resource URI from a configured external MCP server |
 | POST | `/api/mcp/servers/{name}/import` | Import external MCP tool/resource output into project RAG |
+| POST | `/api/mcp/servers/github/sync-repository` | Index the Base repository's architecture and source files through GitHub MCP |
 | GET | `/api/connectors/` | List supported connectors and project connection state |
 | POST | `/api/connectors/{id}/credentials` | Save API-token or endpoint credentials for a connector |
 | POST | `/api/connectors/{id}/authorize` | Start OAuth for Microsoft Graph or Atlassian connectors |
