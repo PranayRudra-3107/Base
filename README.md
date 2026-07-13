@@ -346,11 +346,13 @@ The current four-day AWS deployment is intentionally temporary:
 ```text
 Public URL:       https://d2llye5km5il24.cloudfront.net/
 AWS Region:      eu-central-1
-AWS budget:      USD 20 for July 2026
+AWS budget:      USD 20 custom period (2026-07-13T00:00:00Z to 2026-07-16T21:00:00Z)
 Teardown starts: 2026-07-16 23:00 Europe/Berlin (2026-07-16T21:00:00Z)
 ```
 
-AWS EventBridge Scheduler invokes the idempotent `base-demo-teardown` Lambda at the deadline, then repeats at `21:35Z` and `22:15Z` to finish asynchronous CloudFront, RDS, networking, and IAM cleanup. Each one-time schedule uses `ActionAfterCompletion=DELETE`. The manual backup is `.github/workflows/teardown-aws.yml`.
+AWS EventBridge Scheduler invokes the idempotent `base-demo-teardown` Lambda at the deadline, then repeats at `21:35Z` and `22:15Z` to finish asynchronous CloudFront, RDS, networking, and IAM cleanup. Each one-time schedule uses `ActionAfterCompletion=DELETE`. A 100% actual-spend budget notification also reaches the teardown Lambda through SNS topic `base-budget-stop`. The manual backup is `.github/workflows/teardown-aws.yml`.
+
+The AWS Budget is an expiring cost monitor, not a hard spending lock, and AWS cost data can arrive late. The budget notification is an additional stop signal; the scheduled teardown remains the authoritative control that stops and removes billable application infrastructure at the deadline.
 
 The public application intentionally has no user login for this short recruiter demo. The machine-facing `/mcp` endpoint remains protected by an independently generated `MCP_API_KEY` stored in AWS Secrets Manager. OpenAI-backed public actions can consume separate OpenAI API credit, so the AWS budget does not cap model-provider spending.
 

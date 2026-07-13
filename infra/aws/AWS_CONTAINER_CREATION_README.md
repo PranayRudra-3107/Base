@@ -13,11 +13,14 @@ ECS cluster:      base-cluster
 ECS service:      base-api-service
 RDS:              base / PostgreSQL 17.9 / db.t4g.micro / 20 GB gp3
 S3 region:        eu-central-1 for both buckets
-Budget:           base-four-day-demo / USD 20
+Budget:           base-four-day-demo / USD 20 / CUSTOM / expires at teardown
+Budget stop SNS:  base-budget-stop -> base-demo-teardown at 100% actual spend
 Automatic delete: 2026-07-16 23:00 Europe/Berlin / 21:00 UTC
 ```
 
 AWS Scheduler invokes `base-demo-teardown` at the deadline, with cleanup retries at `21:35Z` and `22:15Z`. The function source is `infra/aws/demo_teardown.py`; `.github/workflows/teardown-aws.yml` is the manual backup. The generated MCP key is stored in Secrets Manager as `base/mcp-api-key` and is not recorded in this file.
+
+The budget period is `2026-07-13T00:00:00Z` through `2026-07-16T21:00:00Z`. At 100% actual spend, SNS topic `base-budget-stop` invokes the teardown Lambda. AWS Budgets still does not enforce a hard payment ceiling and cost data can lag; the fixed teardown schedules stop and remove the billable runtime.
 
 Treat resource IDs in the historical sections below as a command log, not the current live identifiers. The current ECS task definition and the table above are authoritative for this temporary deployment.
 
@@ -40,14 +43,14 @@ These are the current values from the live AWS/GitHub setup.
 ```bash
 AWS_ACCOUNT_ID=626210706801
 AWS_REGION=eu-central-1
-S3_REGION=us-east-1
+S3_REGION=eu-central-1
 IAM_IDENTITY_CENTER_REGION=eu-central-1
 IAM_IDENTITY_CENTER_START_URL=https://d-996748b0aa.awsapps.com/start
 AWS_CLI_PROFILE=base-admin
 PROJECT_SLUG=base
 UNIQUE_SUFFIX=pranay
-CLOUDFRONT_DOMAIN=d13xa0pqwvaoqw.cloudfront.net
-ACTIVE_PUBLIC_DOMAIN=d13xa0pqwvaoqw.cloudfront.net
+CLOUDFRONT_DOMAIN=d2llye5km5il24.cloudfront.net
+ACTIVE_PUBLIC_DOMAIN=d2llye5km5il24.cloudfront.net
 ```
 
 Important: S3 bucket names must be globally unique across all AWS accounts, so always include a personal/random suffix in bucket names.

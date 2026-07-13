@@ -22,6 +22,7 @@ CLOUDFRONT_DISTRIBUTION_ID = os.getenv("CLOUDFRONT_DISTRIBUTION_ID", "")
 CLOUDFRONT_OAC_NAME = os.getenv("CLOUDFRONT_OAC_NAME", "base-frontend-oac")
 LOG_GROUP = os.getenv("LOG_GROUP", "/ecs/base-api-task")
 BUDGET_NAME = os.getenv("BUDGET_NAME", "base-four-day-demo")
+BUDGET_SNS_TOPIC_ARN = os.getenv("BUDGET_SNS_TOPIC_ARN", "")
 SECRET_PREFIX = os.getenv("SECRET_PREFIX", "base/")
 SECURITY_GROUP_NAMES = tuple(
     name.strip()
@@ -53,6 +54,8 @@ def _not_found(exc: ClientError) -> bool:
         "LoadBalancerNotFoundException",
         "NoSuchBucket",
         "NoSuchEntity",
+        "NotFound",
+        "NotFoundException",
         "RepositoryNotFoundException",
         "ResourceNotFoundException",
         "ServiceNotFoundException",
@@ -265,6 +268,13 @@ def _delete_budget() -> None:
     budgets.delete_budget(AccountId=ACCOUNT_ID, BudgetName=BUDGET_NAME)
 
 
+def _delete_budget_alert_topic() -> None:
+    if not BUDGET_SNS_TOPIC_ARN:
+        return
+    sns = boto3.client("sns", region_name=REGION)
+    sns.delete_topic(TopicArn=BUDGET_SNS_TOPIC_ARN)
+
+
 def lambda_handler(event: dict[str, Any], context: Any) -> dict[str, Any]:
     results: dict[str, str] = {}
     steps = (
@@ -277,6 +287,7 @@ def lambda_handler(event: dict[str, Any], context: Any) -> dict[str, Any]:
         ("security_groups", _delete_security_groups),
         ("deployment_iam", _delete_iam),
         ("budget", _delete_budget),
+        ("budget_alert_topic", _delete_budget_alert_topic),
     )
     for name, operation in steps:
         _run_step(name, operation, results)

@@ -17,11 +17,14 @@ ECS service:      base-api-service
 RDS:              base / PostgreSQL 17.9 / db.t4g.micro / 20 GB gp3
 Frontend bucket:  base-frontend-pranay
 Documents bucket: base-documents-pranay
-Budget:           base-four-day-demo / USD 20
+Budget:           base-four-day-demo / USD 20 / CUSTOM / expires at teardown
+Budget stop SNS:  base-budget-stop -> base-demo-teardown at 100% actual spend
 Teardown:         2026-07-16T21:00:00Z (23:00 Europe/Berlin)
 ```
 
 The primary AWS Scheduler job `base-demo-teardown-primary` invokes Lambda `base-demo-teardown`. Two one-time retries run at `21:35Z` and `22:15Z`; all three schedules delete themselves after completion. The Lambda stops ECS first, deletes the ALB and RDS without a final snapshot, disables/deletes CloudFront, empties S3, removes ECR and secrets, and retries dependency cleanup safely.
+
+The budget covers the custom period from `2026-07-13T00:00:00Z` through `2026-07-16T21:00:00Z`. At 100% actual spend, it publishes to SNS topic `base-budget-stop`, which invokes the teardown Lambda. AWS Budgets does not impose a hard payment ceiling and cost data can lag; the fixed teardown schedules remain the authoritative cost-stop mechanism.
 
 The public UI has no login for this time-limited demo. `/mcp` is still bearer-key protected. The MCP key and all other secret values are stored only in Secrets Manager.
 

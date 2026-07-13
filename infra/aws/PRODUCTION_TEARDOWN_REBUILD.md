@@ -18,11 +18,14 @@ The architecture was rebuilt for a four-day public demo using the same account a
 | ECS | cluster `base-cluster`, service `base-api-service`, task family `base-api` |
 | RDS | `base`, PostgreSQL `17.9`, `db.t4g.micro`, 20 GB gp3, private |
 | S3 | `base-frontend-pranay`, `base-documents-pranay` in `eu-central-1` |
-| Budget | `base-four-day-demo`, USD 20 |
+| Budget | `base-four-day-demo`, USD 20, `CUSTOM`, `2026-07-13T00:00:00Z` to `2026-07-16T21:00:00Z` |
+| Budget stop SNS | `base-budget-stop`, invokes `base-demo-teardown` at 100% actual spend |
 | Teardown Lambda | `base-demo-teardown` |
 | Deadline | `2026-07-16T21:00:00Z` / 23:00 Europe/Berlin |
 
 Scheduler jobs `base-demo-teardown-primary`, `base-demo-teardown-finalizer`, and `base-demo-teardown-last-pass` run at `21:00Z`, `21:35Z`, and `22:15Z`. The later runs finish resources whose deletion is asynchronous. The source is `infra/aws/demo_teardown.py`, and `.github/workflows/teardown-aws.yml` is the manual backup.
+
+The expiring AWS Budget monitors this four-day interval. Its 100% actual-spend notification invokes the teardown Lambda through SNS. It is not a hard spend lock and cost reporting can lag, so the fixed scheduler runs remain the authoritative controls for stopping costs.
 
 No final RDS snapshot is retained. The public UI has no login for the temporary demo, while `/mcp` remains protected with a generated key in `base/mcp-api-key`.
 
