@@ -27,7 +27,7 @@ Scheduler jobs `base-demo-teardown-primary`, `base-demo-teardown-finalizer`, and
 
 The expiring AWS Budget monitors this four-day interval. Its 100% actual-spend notification invokes the teardown Lambda through SNS. It is not a hard spend lock and cost reporting can lag, so the fixed scheduler runs remain the authoritative controls for stopping costs.
 
-No final RDS snapshot is retained. The public UI has no login for the temporary demo, while `/mcp` remains protected with a generated key in `base/mcp-api-key`.
+No final RDS snapshot is retained. The RDS-managed credential secret is also an explicit teardown target. The public UI has no login for the temporary demo, while `/mcp` remains protected with a generated key in `base/mcp-api-key`.
 
 No secret values are stored here. Recreate `OPENAI_API_KEY`, `DATABASE_URL`, and bucket secrets manually in AWS Secrets Manager when rebuilding.
 

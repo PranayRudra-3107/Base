@@ -13,6 +13,7 @@ ECS_CLUSTER = os.getenv("ECS_CLUSTER", "base-cluster")
 ECS_SERVICE = os.getenv("ECS_SERVICE", "base-api-service")
 ECS_TASK_FAMILY = os.getenv("ECS_TASK_FAMILY", "base-api")
 RDS_INSTANCE = os.getenv("RDS_INSTANCE", "base")
+RDS_MANAGED_SECRET_ARN = os.getenv("RDS_MANAGED_SECRET_ARN", "")
 ALB_NAME = os.getenv("ALB_NAME", "base-alb")
 TARGET_GROUP_NAME = os.getenv("TARGET_GROUP_NAME", "base-api-tg")
 FRONTEND_BUCKET = os.getenv("FRONTEND_BUCKET", "base-frontend-pranay")
@@ -217,6 +218,9 @@ def _delete_secrets_and_logs() -> None:
         for secret in page.get("SecretList", []):
             if secret.get("Name", "").startswith(SECRET_PREFIX):
                 secrets.delete_secret(SecretId=secret["ARN"], ForceDeleteWithoutRecovery=True)
+
+    if RDS_MANAGED_SECRET_ARN:
+        secrets.delete_secret(SecretId=RDS_MANAGED_SECRET_ARN, ForceDeleteWithoutRecovery=True)
 
     logs = boto3.client("logs", region_name=REGION)
     try:

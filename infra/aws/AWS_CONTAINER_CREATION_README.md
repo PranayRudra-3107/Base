@@ -18,7 +18,7 @@ Budget stop SNS:  base-budget-stop -> base-demo-teardown at 100% actual spend
 Automatic delete: 2026-07-16 23:00 Europe/Berlin / 21:00 UTC
 ```
 
-AWS Scheduler invokes `base-demo-teardown` at the deadline, with cleanup retries at `21:35Z` and `22:15Z`. The function source is `infra/aws/demo_teardown.py`; `.github/workflows/teardown-aws.yml` is the manual backup. The generated MCP key is stored in Secrets Manager as `base/mcp-api-key` and is not recorded in this file.
+AWS Scheduler invokes `base-demo-teardown` at the deadline, with cleanup retries at `21:35Z` and `22:15Z`. The function source is `infra/aws/demo_teardown.py`; `.github/workflows/teardown-aws.yml` is the manual backup. The generated MCP key is stored in Secrets Manager as `base/mcp-api-key` and is not recorded in this file. The Lambda also targets the RDS-managed credential secret by ARN after database deletion.
 
 The budget period is `2026-07-13T00:00:00Z` through `2026-07-16T21:00:00Z`. At 100% actual spend, SNS topic `base-budget-stop` invokes the teardown Lambda. AWS Budgets still does not enforce a hard payment ceiling and cost data can lag; the fixed teardown schedules stop and remove the billable runtime.
 
