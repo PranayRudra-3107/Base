@@ -1,0 +1,32 @@
+services:
+  enterprise-mcp:
+    build: .
+    command: python -m demo_mcp_server
+    ports:
+      - "8100:8100"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; socket.create_connection(('127.0.0.1', 8100), 3).close()"]
+      interval: 3s
+      timeout: 4s
+      retries: 20
+
+  base:
+    build: .
+    ports:
+      - "8010:8080"
+    environment:
+      PORT: "8080"
+      ENVIRONMENT: local
+      OPENAI_API_KEY: sk-demo-not-used
+      METADATA_BACKEND: local
+      DOCUMENT_STORAGE_BACKEND: local
+      VECTOR_BACKEND: chroma
+      DATA_DIR: /tmp/base-mcp-demo/data
+      DOCUMENT_STORAGE_DIR: /tmp/base-mcp-demo/documents
+      CHROMA_PERSIST_DIR: /tmp/base-mcp-demo/chroma
+      AUDIT_LOG_PATH: /tmp/base-mcp-demo/audit.jsonl
+      MCP_EXTERNAL_SERVERS_JSON: >-
+        [{"name":"acme_enterprise","url":"http://enterprise-mcp:8100/mcp","description":"Jira, Confluence, PagerDuty, and handoff-note demo","project_ids":[]}]
+    depends_on:
+      enterprise-mcp:
+        condition: service_healthy

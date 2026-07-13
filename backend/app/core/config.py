@@ -43,6 +43,10 @@ class Settings(BaseSettings):
     mcp_external_servers_json: str = "[]"
     mcp_request_timeout_seconds: float = 30
     mcp_max_import_chars: int = 200000
+    github_oauth_client_id: str = ""
+    github_oauth_client_secret: str = ""
+    github_oauth_redirect_uri: str = ""
+    atlassian_mcp_redirect_uri: str = ""
     microsoft_client_id: str = ""
     microsoft_client_secret: str = ""
     microsoft_tenant_id: str = "organizations"

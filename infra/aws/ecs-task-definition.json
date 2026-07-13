@@ -33,7 +33,9 @@
         {"name": "MCP_ALLOWED_ORIGINS", "value": "https://d2llye5km5il24.cloudfront.net"},
         {"name": "MCP_EXTERNAL_SERVERS_JSON", "value": "[]"},
         {"name": "MCP_REQUEST_TIMEOUT_SECONDS", "value": "30"},
-        {"name": "MCP_MAX_IMPORT_CHARS", "value": "200000"}
+        {"name": "MCP_MAX_IMPORT_CHARS", "value": "200000"},
+        {"name": "GITHUB_OAUTH_REDIRECT_URI", "value": "https://d2llye5km5il24.cloudfront.net/api/mcp/oauth/github/callback"},
+        {"name": "ATLASSIAN_MCP_REDIRECT_URI", "value": "https://d2llye5km5il24.cloudfront.net/api/mcp/oauth/atlassian/callback"}
       ],
       "secrets": [
         {

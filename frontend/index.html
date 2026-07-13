@@ -4,6 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Base - Project Intelligence & KT Copilot</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='10' fill='%237c5cff'/%3E%3Cpath d='M18 13h18c9 0 14 4 14 11 0 5-3 8-7 9 6 1 9 5 9 10 0 8-6 12-16 12H18V13zm10 9v8h8c3 0 5-1 5-4s-2-4-5-4h-8zm0 16v8h9c4 0 6-1 6-4s-2-4-6-4h-9z' fill='white'/%3E%3C/svg%3E" />
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
@@ -276,6 +277,7 @@ h3 { font-size: 14px; }
 .connector-modal-title { display: grid; gap: 5px; }
 .connector-form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .connector-form-field.full { grid-column: 1 / -1; }
+.connector-form-grid > .full { grid-column: 1 / -1; }
 .connector-form-field .field-label { margin-top: 0; }
 .connector-modal-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; border-top: 1px solid var(--border); padding-top: 12px; }
 .connector-secret-note { color: var(--text-muted); font-size: 12px; line-height: 1.5; }
@@ -697,6 +699,18 @@ h1, h2, h3 { color: #f7f8fa; }
 .tag, .status-badge, .source-chip, .graph-chip { border-radius: 3px; background: #0b1016; }
 .coverage-track, .bar-track, .agent-progress { height: 6px; border-radius: 2px; background: #171d26; }
 .coverage-fill, .bar-fill { border-radius: 1px; background: linear-gradient(90deg, var(--teal), var(--blue)); }
+.mcp-registry-band { margin: 18px 0; padding: 18px 0; border-top: 1px solid rgba(255,255,255,.11); border-bottom: 1px solid rgba(255,255,255,.11); }
+.mcp-registry-head { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-bottom: 10px; }
+.mcp-registry-head h2 { font-size: 15px; }
+.mcp-registry-list { display: grid; }
+.mcp-registry-row { display: grid; grid-template-columns: minmax(180px,1fr) minmax(260px,1.5fr) auto; align-items: center; gap: 16px; min-height: 72px; padding: 12px 0; border-top: 1px solid rgba(255,255,255,.08); }
+.mcp-registry-row:first-child { border-top: 0; }
+.mcp-registry-name { display: flex; align-items: center; gap: 9px; font-family: var(--display); font-weight: 600; }
+.mcp-registry-meta { display: grid; gap: 4px; color: var(--text-muted); font-family: var(--mono); font-size: 9px; line-height: 1.45; overflow-wrap: anywhere; }
+.mcp-registry-actions { display: flex; gap: 7px; flex-wrap: wrap; justify-content: flex-end; }
+.mcp-provider-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.mcp-provider-option { display: grid; gap: 8px; padding: 13px; border: 1px solid rgba(255,255,255,.11); background: #0b1017; }
+.mcp-provider-option p { color: var(--text-muted); font-size: 11px; line-height: 1.5; }
 .issue, .event, .insight, .quiz-card, .artifact-card, .review-agent-mini {
   border-radius: 4px;
   border-color: rgba(255,255,255,.1);
@@ -782,6 +796,7 @@ tr:hover td { background: rgba(255,255,255,.018); }
 @media(max-width:1100px){.value-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.topbar{padding:13px 20px}.workspace{padding-left:20px;padding-right:20px}}
 @media(max-width:900px){#app.active,.view.active{animation:none;transform:none}.sidebar::after{display:none}.sidebar{background:#090c11;box-shadow:none}.sidebar-logo{min-height:58px}.sidebar-nav{flex-direction:row;border-top:1px solid rgba(255,255,255,.08)}.nav-btn.active{box-shadow:inset 0 -2px 0 var(--teal)}.kpi-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.value-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.topbar{min-height:76px}.chat-shell{min-height:calc(100vh - 76px)}.chat-area{padding-bottom:100px}.input-bar{position:fixed;left:0;right:0;bottom:0;z-index:45}}
 @media(max-width:760px){.project-shell{padding:14px 14px 40px}.project-header{padding:16px 0 24px}.project-header h1{font-size:32px}.project-create-band{padding:38px 14px 14px}.project-create-band::before{left:14px}.project-grid{grid-template-columns:minmax(0,1fr)}.project-stats{grid-template-columns:repeat(3,minmax(0,1fr))}.project-stat{padding:10px 8px}.project-stat:first-child{padding-left:0}.workspace{padding:24px 14px 38px}.section-head{padding-top:24px}.section-head h1{font-size:26px}.kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.kpi{min-height:100px;padding:14px}.kpi-value{font-size:25px}.value-grid{grid-template-columns:1fr}.value-card{min-height:170px}.chat-toolbar{padding:30px 14px 12px}.chat-toolbar::before{left:14px}.chat-area{padding:28px 0}.input-bar{padding:12px 14px 14px}.graph-wrap{height:calc(100svh - 230px);min-height:480px}}
+@media(max-width:760px){.mcp-registry-head,.mcp-registry-row{align-items:flex-start}.mcp-registry-row{grid-template-columns:1fr}.mcp-registry-row .secondary-btn{width:100%}}
 @media(max-width:430px){.project-card{padding:16px}.project-stat span{font-size:8px}.project-stat strong{font-size:17px}.kpi-grid{grid-template-columns:1fr 1fr}.topbar-right{gap:6px}.pill{padding:4px 7px}.chat-inner{padding:0 14px}.msg-bubble{max-width:96%}}
 </style>
 </head>
@@ -1074,6 +1089,16 @@ tr:hover td { background: rgba(255,255,255,.018); }
               <div class="insight"><strong>Production layer</strong><br>Move secrets to AWS Secrets Manager, add scheduled refresh, and enforce source-level permissions.</div>
             </div>
           </div>
+        </div>
+        <div class="mcp-registry-band">
+          <div class="mcp-registry-head">
+            <div>
+              <h2>MCP Registry</h2>
+              <p class="muted" id="mcp-registry-count">Loading registered servers...</p>
+            </div>
+            <div class="toolbar"><button class="primary-btn" onclick="openMcpRegistryModal()">Register Server</button><button class="secondary-btn" onclick="loadMcpRegistry()">Refresh</button></div>
+          </div>
+          <div class="mcp-registry-list" id="mcp-registry-list"></div>
         </div>
         <div class="connector-grid" id="connector-grid"></div>
       </div>
@@ -1404,6 +1429,27 @@ tr:hover td { background: rgba(255,255,255,.018); }
     </div>
   </div>
 </div>
+<div class="connector-modal-overlay" id="mcp-registry-modal" onclick="closeMcpRegistryModal(event)">
+  <div class="connector-modal" onclick="event.stopPropagation()">
+    <div class="connector-modal-head">
+      <div class="connector-modal-title"><h2>Register Official MCP Server</h2><p class="muted">Connect a provider to the current project and discover its tools dynamically.</p></div>
+      <button class="icon-btn" onclick="hideMcpRegistryModal()" aria-label="Close MCP registry dialog">x</button>
+    </div>
+    <div class="mcp-provider-list" id="mcp-provider-list"></div>
+    <div class="connector-form-grid" id="mcp-provider-auth" style="display:none">
+      <label class="connector-form-field full">
+        <span class="field-label" id="mcp-token-label">Provider access token</span>
+        <input class="text-field" id="mcp-provider-token" type="password" autocomplete="off" placeholder="Paste a scoped read-only token">
+      </label>
+      <div class="connector-secret-note full">The token is stored with this project connection and is never returned by the registry API.</div>
+      <div class="connector-modal-actions full">
+        <button class="secondary-btn" id="mcp-oauth-register-btn" onclick="startMcpProviderOAuth()">Connect with OAuth</button>
+        <button class="primary-btn" id="mcp-token-register-btn" onclick="saveMcpProviderToken()">Register Token</button>
+      </div>
+    </div>
+    <div class="connector-modal-actions"><button class="secondary-btn" onclick="hideMcpRegistryModal()">Close</button></div>
+  </div>
+</div>
 <div class="toast-container" id="toast-container"></div>
 <div class="global-loader" id="global-loader" aria-hidden="true" aria-live="polite">
   <div class="global-loader-card" role="status">
@@ -1419,9 +1465,21 @@ tr:hover td { background: rgba(255,255,255,.018); }
 </div>
 
 <script>
-const API_BASE = location.protocol === 'file:' || location.port === '3000'
-  ? 'http://localhost:8000'
-  : window.location.origin;
+function resolveApiBase() {
+  const defaultBase = location.protocol === 'file:' || location.port === '3000'
+    ? 'http://localhost:8000'
+    : window.location.origin;
+  const override = new URLSearchParams(location.search).get('api');
+  if (!override || !['localhost', '127.0.0.1'].includes(location.hostname)) return defaultBase;
+  try {
+    const url = new URL(override);
+    if (!['http:', 'https:'].includes(url.protocol) || !['localhost', '127.0.0.1'].includes(url.hostname)) return defaultBase;
+    return url.origin;
+  } catch {
+    return defaultBase;
+  }
+}
+const API_BASE = resolveApiBase();
 const CHAT_STORAGE_KEY = 'base.project.chat.history.v1';
 const CHAT_HISTORY_LIMIT = 80;
 const GRAPH_MIN_SCALE = 0.12;
@@ -1444,6 +1502,8 @@ const LANDING_GRAPH_NODES = [
 const LANDING_GRAPH_EDGES = [[0,1],[0,2],[0,9],[1,2],[1,3],[2,3],[2,4],[2,5],[2,9],[3,4],[4,5],[4,6],[4,11],[5,7],[5,9],[5,10],[6,7],[6,8],[7,8],[7,10],[8,11]];
 let projects = [], currentProject = null;
 let messages = [], documents = [], dashboard = null, auditEvents = [], knowledgeGraph = null;
+let mcpRegistryProviders = [];
+let activeMcpProvider = null;
 let currentChatSessionId = null;
 let currentQuiz = null, quizAnswers = {}, currentArtifact = null;
 let isLoading = false, isKtLoading = false, isStudioLoading = false, graphAnimationId = null, graphDragging = null, graphHover = null, graphSelected = null;
@@ -1452,6 +1512,8 @@ let nextQueryOptions = {};
 let connectorCatalog = [];
 let activeConnectorForModal = null;
 let connectorSyncing = {};
+let mcpRegistryServers = [];
+let mcpCapabilities = {};
 let landingGraphState = null;
 let landingGraphAnimationId = null;
 let activeViewName = 'dashboard';
@@ -1981,6 +2043,8 @@ function openProject(project, view = 'dashboard', updateRoute = true) {
   knowledgeGraph = null;
   connectorCatalog = CONNECTOR_CATALOG;
   connectorSyncing = {};
+  mcpRegistryServers = [];
+  mcpCapabilities = {};
   document.getElementById('landing').classList.remove('active');
   document.getElementById('landing').setAttribute('aria-hidden', 'true');
   document.getElementById('project-hub').classList.remove('active');
@@ -2025,7 +2089,7 @@ function setView(v, updateRoute = true) {
   document.getElementById('topbar-title').textContent = v === 'dashboard' ? `${prefix}Dashboard` : (titles[v] || 'Project Intelligence');
   if (updateRoute && currentProject) setAppRoute(projectRoute(currentProject.project_id, v));
   if (v === 'agents') renderAgentGallery();
-  if (v === 'connectors') { renderConnectorHub(); loadConnectors(); }
+  if (v === 'connectors') { renderConnectorHub(); loadConnectors(); loadMcpRegistry(); }
   if (v === 'chat') messages.length ? renderMessages() : resetChat();
   if (v === 'studio') renderStudioState();
   if (v === 'documents') renderDocumentTable();
@@ -2081,6 +2145,153 @@ async function loadConnectors() {
   } catch(e) {
     connectorCatalog = connectorCatalog.length ? connectorCatalog : CONNECTOR_CATALOG;
     renderConnectorHub();
+  }
+}
+
+async function loadMcpRegistry() {
+  if (!currentProject) return;
+  const count = document.getElementById('mcp-registry-count');
+  if (count) count.textContent = 'Loading registered servers...';
+  try {
+    const response = await fetch(`${API_BASE}/api/mcp/registry`, {headers:projectHeaders()});
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.detail || 'MCP registry failed');
+    mcpRegistryServers = data.servers || [];
+    mcpRegistryProviders = data.providers || [];
+    renderMcpRegistry();
+  } catch (error) {
+    mcpRegistryServers = [];
+    if (count) count.textContent = 'Registry unavailable';
+    const list = document.getElementById('mcp-registry-list');
+    if (list) list.innerHTML = `<div class="issue">${esc(error.message || 'Cannot load the MCP registry.')}</div>`;
+  }
+}
+
+function renderMcpRegistry() {
+  const count = document.getElementById('mcp-registry-count');
+  const list = document.getElementById('mcp-registry-list');
+  if (!count || !list) return;
+  count.textContent = `${mcpRegistryServers.length} registered server${mcpRegistryServers.length === 1 ? '' : 's'}`;
+  if (!mcpRegistryServers.length) {
+    list.innerHTML = '<div class="issue">No external MCP servers are registered for this project.</div>';
+    return;
+  }
+  list.innerHTML = mcpRegistryServers.map(server => {
+    const capabilities = mcpCapabilities[server.name];
+    const tools = capabilities?.tools?.length || 0;
+    const resources = capabilities?.resources?.length || 0;
+    const templates = capabilities?.resource_templates?.length || 0;
+    const status = server.credential_available ? 'Ready' : 'Credential missing';
+    return `<div class="mcp-registry-row">
+      <div class="mcp-registry-name"><span class="status-dot"></span>${esc(server.name)} <span class="status-badge ${server.credential_available ? 'connected' : 'error'}">${status}</span></div>
+      <div class="mcp-registry-meta">
+        <span>${esc(server.description || 'Registered MCP server')}</span>
+        <span>${esc(server.url)} - ${esc(server.authentication || 'none')} auth${capabilities ? ` - ${tools} tools / ${resources + templates} resources` : ''}</span>
+      </div>
+      <div class="mcp-registry-actions">
+        <button class="secondary-btn" data-mcp-server="${attr(server.name)}" onclick="discoverMcpServerFromButton(this)" ${server.credential_available ? '' : 'disabled'}>${capabilities ? 'Refresh' : 'Test & Discover'}</button>
+        ${server.managed_by === 'project-registry' ? `<button class="icon-btn" title="Disconnect provider" data-mcp-server="${attr(server.name)}" onclick="disconnectMcpProviderFromButton(this)" aria-label="Disconnect ${attr(server.name)}">x</button>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openMcpRegistryModal() {
+  const list = document.getElementById('mcp-provider-list');
+  list.innerHTML = mcpRegistryProviders.map(provider => `<div class="mcp-provider-option">
+    <strong>${esc(provider.display_name)}</strong>
+    <p>${esc(provider.description)}</p>
+    <span class="status-badge">${provider.read_only ? 'Read only' : 'Provider permissions'}</span>
+    ${provider.registered ? '<button class="secondary-btn" disabled>Registered</button>' : `<button class="primary-btn" data-mcp-provider="${attr(provider.name)}" onclick="selectMcpProviderFromButton(this)">Connect</button>`}
+  </div>`).join('') || '<div class="issue">Provider catalog unavailable.</div>';
+  document.getElementById('mcp-registry-modal').classList.add('active');
+}
+
+function closeMcpRegistryModal(event) {
+  if (event.target === document.getElementById('mcp-registry-modal')) hideMcpRegistryModal();
+}
+
+function hideMcpRegistryModal() {
+  document.getElementById('mcp-registry-modal').classList.remove('active');
+  document.getElementById('mcp-provider-auth').style.display = 'none';
+  document.getElementById('mcp-provider-token').value = '';
+  activeMcpProvider = null;
+}
+
+function selectMcpProviderFromButton(button) {
+  activeMcpProvider = mcpRegistryProviders.find(item => item.name === button.dataset.mcpProvider) || null;
+  if (!activeMcpProvider) return;
+  document.getElementById('mcp-token-label').textContent = `${activeMcpProvider.display_name} access token`;
+  const oauthButton = document.getElementById('mcp-oauth-register-btn');
+  oauthButton.style.display = activeMcpProvider.oauth_available ? 'inline-flex' : 'none';
+  document.getElementById('mcp-provider-auth').style.display = 'grid';
+  document.getElementById('mcp-provider-token').focus();
+}
+
+async function saveMcpProviderToken() {
+  if (!activeMcpProvider) return;
+  const token = document.getElementById('mcp-provider-token').value.trim();
+  if (!token) return showToast('Enter a provider access token.', 'error');
+  const button = document.getElementById('mcp-token-register-btn');
+  button.disabled = true;
+  try {
+    const response = await fetch(`${API_BASE}/api/mcp/registry`, {
+      method:'POST', headers:{...projectHeaders(),'Content-Type':'application/json'},
+      body:JSON.stringify({provider:activeMcpProvider.name, authentication:'bearer', token})
+    });
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.detail || 'Registration failed');
+    const displayName = activeMcpProvider.display_name;
+    hideMcpRegistryModal();
+    await loadMcpRegistry();
+    showToast(`${displayName} registered`, 'success');
+  } catch(error) {
+    button.disabled = false;
+    showToast(error.message || 'Registration failed', 'error');
+  }
+}
+
+async function startMcpProviderOAuth() {
+  if (!activeMcpProvider?.oauth_available) return;
+  const button = document.getElementById('mcp-oauth-register-btn');
+  button.disabled = true;
+  try {
+    const response = await fetch(`${API_BASE}/api/mcp/registry/${encodeURIComponent(activeMcpProvider.name)}/authorize`, {method:'POST', headers:projectHeaders()});
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.detail || 'OAuth could not start');
+    location.href = data.authorization_url;
+  } catch(error) {
+    button.disabled = false;
+    showToast(error.message || 'OAuth could not start', 'error');
+  }
+}
+
+async function disconnectMcpProviderFromButton(button) {
+  const name = button.dataset.mcpServer;
+  if (!confirm(`Disconnect ${name} from this project?`)) return;
+  const response = await fetch(`${API_BASE}/api/mcp/registry/${encodeURIComponent(name)}`, {method:'DELETE', headers:projectHeaders()});
+  const data = await response.json();
+  if (!response.ok) return showToast(data.detail || 'Disconnect failed', 'error');
+  delete mcpCapabilities[name];
+  await loadMcpRegistry();
+  showToast(`${name} disconnected`, 'success');
+}
+
+async function discoverMcpServerFromButton(button) {
+  const serverName = button.dataset.mcpServer;
+  button.disabled = true;
+  button.textContent = 'Discovering...';
+  try {
+    const response = await fetch(`${API_BASE}/api/mcp/servers/${encodeURIComponent(serverName)}/capabilities`, {headers:projectHeaders()});
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.detail || 'MCP discovery failed');
+    mcpCapabilities[serverName] = data;
+    renderMcpRegistry();
+    showToast(`Discovered ${data.tools?.length || 0} tools from ${serverName}`, 'success');
+  } catch (error) {
+    button.disabled = false;
+    button.textContent = 'Discover';
+    showToast(error.message || 'MCP discovery failed', 'error');
   }
 }
 

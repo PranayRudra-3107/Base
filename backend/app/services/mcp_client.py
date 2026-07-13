@@ -11,6 +11,7 @@ from mcp.client.streamable_http import streamable_http_client
 from pydantic import AnyUrl
 
 from app.core.config import get_settings
+from app.services.mcp_registry import list_registered, mark_connection, registered_server
 
 settings = get_settings()
 
@@ -70,6 +71,9 @@ def _public_server(server: Dict[str, Any]) -> Dict[str, Any]:
             else "none"
         ),
         "credential_available": bool(
+            server.get("access_token")
+            or server.get("credential_available")
+            or
             (bearer_env and os.getenv(bearer_env))
             or (api_key_env and os.getenv(api_key_env))
             or (not bearer_env and not api_key_env)
@@ -85,10 +89,18 @@ def list_external_servers(project_id: str = "") -> List[Dict[str, Any]]:
             for item in servers
             if not item.get("project_ids") or project_id in item.get("project_ids", [])
         ]
-    return [_public_server(item) for item in servers]
+    configured = [_public_server(item) for item in servers]
+    if project_id:
+        configured_names = {item["name"] for item in configured}
+        configured.extend(item for item in list_registered(project_id) if item["name"] not in configured_names)
+    return configured
 
 
 def get_external_server(name: str, project_id: str = "") -> Dict[str, Any]:
+    if project_id:
+        registered = registered_server(project_id, name)
+        if registered:
+            return registered
     server = next((item for item in _configured_servers() if item["name"] == name), None)
     if not server:
         raise KeyError(name)
@@ -100,6 +112,8 @@ def get_external_server(name: str, project_id: str = "") -> Dict[str, Any]:
 
 def _request_headers(server: Dict[str, Any]) -> Dict[str, str]:
     headers = {}
+    if server.get("access_token"):
+        headers["Authorization"] = f"Bearer {server['access_token']}"
     bearer_env = server.get("bearer_token_env")
     if bearer_env:
         token = os.getenv(bearer_env, "").strip()
@@ -156,21 +170,29 @@ def _extract_text(contents: List[Any]) -> str:
 
 async def discover_external_server(name: str, project_id: str = "") -> Dict[str, Any]:
     server = get_external_server(name, project_id)
-    async with external_mcp_session(server) as (session, initialize):
-        capabilities = getattr(initialize, "capabilities", None)
-        tools = await session.list_tools() if getattr(capabilities, "tools", None) is not None else None
-        resources = await session.list_resources() if getattr(capabilities, "resources", None) is not None else None
-        templates = await session.list_resource_templates() if getattr(capabilities, "resources", None) is not None else None
-        prompts = await session.list_prompts() if getattr(capabilities, "prompts", None) is not None else None
-        return {
-            "server": _public_server(server),
-            "server_info": _dump_model(getattr(initialize, "serverInfo", None)),
-            "capabilities": _dump_model(capabilities),
-            "tools": _dump_model(getattr(tools, "tools", [])),
-            "resources": _dump_model(getattr(resources, "resources", [])),
-            "resource_templates": _dump_model(getattr(templates, "resourceTemplates", [])),
-            "prompts": _dump_model(getattr(prompts, "prompts", [])),
-        }
+    try:
+        async with external_mcp_session(server) as (session, initialize):
+            capabilities = getattr(initialize, "capabilities", None)
+            tools = await session.list_tools() if getattr(capabilities, "tools", None) is not None else None
+            resources = await session.list_resources() if getattr(capabilities, "resources", None) is not None else None
+            templates = await session.list_resource_templates() if getattr(capabilities, "resources", None) is not None else None
+            prompts = await session.list_prompts() if getattr(capabilities, "prompts", None) is not None else None
+            result = {
+                "server": _public_server(server),
+                "server_info": _dump_model(getattr(initialize, "serverInfo", None)),
+                "capabilities": _dump_model(capabilities),
+                "tools": _dump_model(getattr(tools, "tools", [])),
+                "resources": _dump_model(getattr(resources, "resources", [])),
+                "resource_templates": _dump_model(getattr(templates, "resourceTemplates", [])),
+                "prompts": _dump_model(getattr(prompts, "prompts", [])),
+            }
+        if project_id:
+            mark_connection(project_id, name)
+        return result
+    except Exception as exc:
+        if project_id:
+            mark_connection(project_id, name, str(exc))
+        raise
 
 
 async def call_external_tool(

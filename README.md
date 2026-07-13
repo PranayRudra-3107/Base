@@ -171,6 +171,8 @@ The streaming endpoint emits progress events that the frontend renders as the an
 
 ## MCP Interoperability
 
+For a complete local interview demonstration with an open-source enterprise dummy server, registry UI, Docker Compose stack, and automated read/write/import proof, see [`docs/MCP_INTERVIEW_DEMO.md`](docs/MCP_INTERVIEW_DEMO.md).
+
 Base uses the official [Model Context Protocol Python SDK](https://github.com/modelcontextprotocol/python-sdk) in both directions:
 
 - **Base as an MCP server:** MCP clients can access approved Base project data and actions through Streamable HTTP at `/mcp` or through a local stdio process.
@@ -244,6 +246,24 @@ python -m app.mcp_server
 The stdio transport does not pass through the HTTP API-key middleware, but `MCP_EXPOSED_PROJECT_IDS` still applies. Only launch it from a trusted local client process.
 
 ### External MCP Servers
+
+The Connector Hub includes a project-scoped registry for two official remote providers:
+
+- **GitHub MCP:** `https://api.githubcopilot.com/mcp/x/all/readonly` for repositories, source code, commits, issues, pull requests, and Actions.
+- **Atlassian Rovo MCP:** `https://mcp.atlassian.com/v1/mcp` for Jira, Confluence, and Compass.
+
+Both providers support token registration. The registry can register, authorize, test, discover capabilities, import results into RAG, and disconnect a provider. Its reusable OAuth authorization-code implementation includes state validation and PKCE. Enable OAuth with provider application credentials:
+
+```bash
+GITHUB_OAUTH_CLIENT_ID=
+GITHUB_OAUTH_CLIENT_SECRET=
+GITHUB_OAUTH_REDIRECT_URI=http://localhost:8000/api/mcp/oauth/github/callback
+ATLASSIAN_CLIENT_ID=
+ATLASSIAN_CLIENT_SECRET=
+ATLASSIAN_MCP_REDIRECT_URI=http://localhost:8000/api/mcp/oauth/atlassian/callback
+```
+
+Register the matching callback URL in the GitHub OAuth App or Atlassian developer console. In AWS, use the public application origin instead of `localhost:8000`.
 
 External MCP URLs are deployment configuration, not arbitrary request parameters. This prevents the REST API from becoming an unrestricted server-side request endpoint. Configure a JSON array in `MCP_EXTERNAL_SERVERS_JSON`:
 
@@ -578,6 +598,11 @@ Because this is still the document-focused MVP, use project docs, tickets export
 | GET | `/api/analytics/export.powerbi.json` | Export PowerBI-friendly JSON |
 | MCP | `/mcp` | Stateless Streamable HTTP MCP endpoint for Base resources and tools |
 | GET | `/api/mcp/status` | Show inbound MCP settings and configured external servers without secrets |
+| GET | `/api/mcp/registry` | Return the project-filtered, allowlisted external MCP server registry |
+| POST | `/api/mcp/registry` | Register an official GitHub or Atlassian provider for the selected project |
+| DELETE | `/api/mcp/registry/{provider}` | Disconnect a provider and remove its project authorization |
+| POST | `/api/mcp/registry/{provider}/authorize` | Start provider OAuth authorization with PKCE |
+| GET | `/api/mcp/oauth/{provider}/callback` | Complete provider OAuth and return to Connector Hub |
 | GET | `/api/mcp/servers` | List external MCP servers available to a selected project |
 | GET | `/api/mcp/servers/{name}/capabilities` | Discover an external server's tools, resources, templates, and prompts |
 | POST | `/api/mcp/servers/{name}/tools/{tool}` | Call a tool on a configured external MCP server |

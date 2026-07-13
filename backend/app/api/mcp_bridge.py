@@ -2,6 +2,7 @@ import re
 from typing import Any, Dict, Literal, Optional
 
 from fastapi import APIRouter, Header, HTTPException
+from fastapi.responses import RedirectResponse
 from pydantic import BaseModel, Field
 
 from app.core.config import get_settings, parse_csv_setting
@@ -15,6 +16,13 @@ from app.services.mcp_client import (
     read_external_resource,
 )
 from app.services.projects import get_project
+from app.services.mcp_registry import (
+    complete_oauth,
+    provider_catalog,
+    register_provider,
+    start_oauth,
+    unregister_provider,
+)
 
 router = APIRouter()
 settings = get_settings()
@@ -34,6 +42,12 @@ class MCPImportRequest(BaseModel):
     arguments: Dict[str, Any] = Field(default_factory=dict)
     resource_uri: Optional[str] = Field(default=None, max_length=2000)
     filename: Optional[str] = Field(default=None, max_length=180)
+
+
+class MCPRegistrationRequest(BaseModel):
+    provider: Literal["github", "atlassian"]
+    authentication: Literal["bearer", "oauth"] = "bearer"
+    token: str = Field(default="", max_length=4000)
 
 
 def _ensure_project(project_id: str) -> None:
@@ -87,6 +101,71 @@ async def mcp_status():
 async def external_servers(x_tenant_id: str = Header(default="default")):
     """List external MCP servers configured for the selected project."""
     return list_external_servers(x_tenant_id)
+
+
+@router.get("/registry")
+async def mcp_registry(x_tenant_id: str = Header(default="default")):
+    """Return the allowlisted MCP server catalog available to the selected project."""
+    servers = list_external_servers(x_tenant_id)
+    return {
+        "registry_type": "provider-and-configuration-backed",
+        "server_count": len(servers),
+        "project_id": x_tenant_id,
+        "servers": servers,
+        "providers": provider_catalog(x_tenant_id),
+    }
+
+
+@router.post("/registry")
+async def add_registry_provider(
+    request: MCPRegistrationRequest,
+    x_tenant_id: str = Header(default="default"),
+):
+    """Register an approved official MCP provider for one Base project."""
+    _ensure_project(x_tenant_id)
+    try:
+        connection = register_provider(x_tenant_id, request.provider, request.authentication, request.token)
+        write_audit_event(x_tenant_id, "mcp.registry.registered", details={"provider": request.provider})
+        return connection
+    except Exception as exc:
+        raise _mcp_error(exc) from exc
+
+
+@router.delete("/registry/{provider}")
+async def remove_registry_provider(provider: str, x_tenant_id: str = Header(default="default")):
+    """Remove a project-scoped provider and its saved authorization."""
+    _ensure_project(x_tenant_id)
+    try:
+        unregister_provider(x_tenant_id, provider)
+        write_audit_event(x_tenant_id, "mcp.registry.removed", details={"provider": provider})
+        return {"message": "MCP provider disconnected.", "provider": provider}
+    except Exception as exc:
+        raise _mcp_error(exc) from exc
+
+
+@router.post("/registry/{provider}/authorize")
+async def authorize_registry_provider(provider: str, x_tenant_id: str = Header(default="default")):
+    """Start a provider OAuth authorization-code flow with PKCE."""
+    _ensure_project(x_tenant_id)
+    try:
+        register_provider(x_tenant_id, provider, "oauth")
+        return start_oauth(x_tenant_id, provider)
+    except Exception as exc:
+        raise _mcp_error(exc) from exc
+
+
+@router.get("/oauth/{provider}/callback")
+async def registry_oauth_callback(provider: str, code: str = "", state: str = "", error: str = ""):
+    """Complete OAuth and return the browser to the project Connector Hub."""
+    if error:
+        return RedirectResponse(f"{settings.public_app_url or '/'}?mcp_oauth=error")
+    try:
+        result = await complete_oauth(provider, code, state)
+        project_id = result["project_id"]
+        target = (settings.public_app_url or "/").rstrip("/")
+        return RedirectResponse(f"{target}/?mcp_oauth=success#/project/{project_id}/connectors")
+    except Exception as exc:
+        raise _mcp_error(exc) from exc
 
 
 @router.get("/servers/{server_name}/capabilities")
