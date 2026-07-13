@@ -1,5 +1,5 @@
 import re
-from typing import Any, Dict, Literal, Optional
+from typing import Any, Dict, List, Literal, Optional
 
 from fastapi import APIRouter, Header, HTTPException
 from fastapi.responses import RedirectResponse
@@ -55,6 +55,7 @@ class GitHubRepositorySyncRequest(BaseModel):
     owner: str = Field(default="PranayRudra-3107", min_length=1, max_length=200)
     repository: str = Field(default="Base", min_length=1, max_length=200)
     ref: str = Field(default="", max_length=300)
+    paths: List[str] = Field(default_factory=list, max_length=40)
 
 
 def _ensure_project(project_id: str) -> None:
@@ -331,8 +332,14 @@ async def sync_github_repository(
 ):
     """Index the architecture-bearing files of a GitHub repository through official GitHub MCP."""
     _ensure_project(x_tenant_id)
+    selected_paths = request.paths or GITHUB_ARCHITECTURE_PATHS
+    selected_paths = [path.strip().lstrip("/") for path in selected_paths if path.strip()]
+    if not selected_paths:
+        raise HTTPException(status_code=400, detail="Select at least one repository file.")
+    if any(".." in path.split("/") for path in selected_paths):
+        raise HTTPException(status_code=400, detail="Repository paths cannot contain '..'.")
     argument_sets = []
-    for path in GITHUB_ARCHITECTURE_PATHS:
+    for path in selected_paths:
         arguments = {"owner": request.owner.strip(), "repo": request.repository.strip(), "path": path}
         if request.ref.strip():
             arguments["ref"] = request.ref.strip()
@@ -342,7 +349,7 @@ async def sync_github_repository(
             "github", "get_file_contents", argument_sets, project_id=x_tenant_id
         )
         indexed, failed = [], []
-        for path, result in zip(GITHUB_ARCHITECTURE_PATHS, results):
+        for path, result in zip(selected_paths, results):
             if result.get("is_error") or not result.get("text", "").strip():
                 failed.append(path)
                 continue

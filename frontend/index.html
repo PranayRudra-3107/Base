@@ -711,6 +711,19 @@ h1, h2, h3 { color: #f7f8fa; }
 .mcp-provider-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
 .mcp-provider-option { display: grid; gap: 8px; padding: 13px; border: 1px solid rgba(255,255,255,.11); background: #0b1017; }
 .mcp-provider-option p { color: var(--text-muted); font-size: 11px; line-height: 1.5; }
+.github-browser { width: min(920px, 100%); }
+.github-browser-grid { display: grid; grid-template-columns: minmax(220px,.8fr) minmax(320px,1.4fr); gap: 14px; min-height: 360px; }
+.github-browser-pane { min-width: 0; border: 1px solid rgba(255,255,255,.11); background: #0b1017; }
+.github-browser-pane-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 46px; padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,.1); }
+.github-browser-list { max-height: 430px; overflow: auto; padding: 6px; }
+.github-repo-row { width: 100%; display: grid; gap: 3px; padding: 10px; border: 0; border-bottom: 1px solid rgba(255,255,255,.07); background: transparent; color: var(--text); text-align: left; cursor: pointer; }
+.github-repo-row:hover, .github-repo-row.active { background: #121922; color: var(--teal); }
+.github-repo-row span { color: var(--text-muted); font-family: var(--mono); font-size: 9px; }
+.github-file-row { display: grid; grid-template-columns: 18px minmax(0,1fr) auto; align-items: center; gap: 8px; min-height: 34px; padding: 5px 7px; border-bottom: 1px solid rgba(255,255,255,.055); font-family: var(--mono); font-size: 9px; }
+.github-file-row input { accent-color: var(--teal); }
+.github-file-row span { overflow-wrap: anywhere; }
+.github-file-size { color: var(--text-muted); white-space: nowrap; }
+@media(max-width:760px){.github-browser-grid{grid-template-columns:1fr;min-height:0}.github-browser-list{max-height:260px}.github-browser-pane-head{align-items:flex-start;flex-wrap:wrap}.mcp-provider-list{grid-template-columns:1fr}}
 .issue, .event, .insight, .quiz-card, .artifact-card, .review-agent-mini {
   border-radius: 4px;
   border-color: rgba(255,255,255,.1);
@@ -1450,6 +1463,33 @@ tr:hover td { background: rgba(255,255,255,.018); }
     <div class="connector-modal-actions"><button class="secondary-btn" onclick="hideMcpRegistryModal()">Close</button></div>
   </div>
 </div>
+<div class="connector-modal-overlay" id="github-browser-modal" onclick="closeGitHubBrowser(event)">
+  <div class="connector-modal github-browser" onclick="event.stopPropagation()">
+    <div class="connector-modal-head">
+      <div class="connector-modal-title"><h2>GitHub Repository Browser</h2><p class="muted">Choose a repository and select the files to index into this project's RAG knowledge base.</p></div>
+      <button class="icon-btn" onclick="hideGitHubBrowser()" aria-label="Close GitHub repository browser">x</button>
+    </div>
+    <div class="toolbar">
+      <input class="text-field" id="github-owner-input" value="PranayRudra-3107" placeholder="GitHub owner" aria-label="GitHub owner">
+      <button class="secondary-btn" onclick="loadGitHubRepositories()">Load Repositories</button>
+    </div>
+    <div class="github-browser-grid">
+      <div class="github-browser-pane">
+        <div class="github-browser-pane-head"><strong>Repositories</strong><span class="status-badge" id="github-repo-count">0</span></div>
+        <div class="github-browser-list" id="github-repository-list"><div class="issue">Load repositories to begin.</div></div>
+      </div>
+      <div class="github-browser-pane">
+        <div class="github-browser-pane-head"><strong id="github-file-title">Files</strong><div class="toolbar"><button class="mini-action" onclick="selectRecommendedGitHubFiles()">Recommended</button><button class="mini-action" onclick="toggleAllGitHubFiles(true)">All</button><button class="mini-action" onclick="toggleAllGitHubFiles(false)">None</button></div></div>
+        <div class="github-browser-list" id="github-file-list"><div class="issue">Select a repository to inspect its tree.</div></div>
+      </div>
+    </div>
+    <div class="connector-modal-actions">
+      <span class="muted" id="github-selection-count">0 files selected</span>
+      <button class="secondary-btn" onclick="hideGitHubBrowser()">Cancel</button>
+      <button class="primary-btn" id="github-sync-selected-btn" onclick="syncSelectedGitHubFiles()" disabled>Sync Selected Files</button>
+    </div>
+  </div>
+</div>
 <div class="toast-container" id="toast-container"></div>
 <div class="global-loader" id="global-loader" aria-hidden="true" aria-live="polite">
   <div class="global-loader-card" role="status">
@@ -1504,6 +1544,7 @@ let projects = [], currentProject = null;
 let messages = [], documents = [], dashboard = null, auditEvents = [], knowledgeGraph = null;
 let mcpRegistryProviders = [];
 let activeMcpProvider = null;
+let githubRepositories = [], githubRepositoryFiles = [], activeGitHubRepository = null;
 let currentChatSessionId = null;
 let currentQuiz = null, quizAnswers = {}, currentArtifact = null;
 let isLoading = false, isKtLoading = false, isStudioLoading = false, graphAnimationId = null, graphDragging = null, graphHover = null, graphSelected = null;
@@ -2190,7 +2231,7 @@ function renderMcpRegistry() {
       </div>
       <div class="mcp-registry-actions">
         <button class="secondary-btn" data-mcp-server="${attr(server.name)}" onclick="discoverMcpServerFromButton(this)" ${server.credential_available ? '' : 'disabled'}>${capabilities ? 'Refresh' : 'Test & Discover'}</button>
-        ${server.name === 'github' ? `<button class="primary-btn" data-mcp-server="github" onclick="syncGitHubRepositoryFromButton(this)" ${server.credential_available ? '' : 'disabled'}>Sync Base Repo</button>` : ''}
+        ${server.name === 'github' ? `<button class="primary-btn" onclick="openGitHubBrowser()" ${server.credential_available ? '' : 'disabled'}>Browse Repositories</button>` : ''}
         ${server.managed_by === 'project-registry' ? `<button class="icon-btn" title="Disconnect provider" data-mcp-server="${attr(server.name)}" onclick="disconnectMcpProviderFromButton(this)" aria-label="Disconnect ${attr(server.name)}">x</button>` : ''}
       </div>
     </div>`;
@@ -2296,24 +2337,120 @@ async function discoverMcpServerFromButton(button) {
   }
 }
 
-async function syncGitHubRepositoryFromButton(button) {
+function openGitHubBrowser() {
+  document.getElementById('github-browser-modal').classList.add('active');
+  if (!githubRepositories.length) loadGitHubRepositories();
+}
+
+function closeGitHubBrowser(event) {
+  if (event.target === document.getElementById('github-browser-modal')) hideGitHubBrowser();
+}
+
+function hideGitHubBrowser() { document.getElementById('github-browser-modal').classList.remove('active'); }
+
+function parseMcpJsonText(data) {
+  try { return JSON.parse(data.text || '{}'); }
+  catch { throw new Error('GitHub MCP returned an unexpected response.'); }
+}
+
+async function loadGitHubRepositories() {
+  const owner = document.getElementById('github-owner-input').value.trim();
+  if (!owner) return showToast('Enter a GitHub owner or organization.', 'error');
+  const list = document.getElementById('github-repository-list');
+  list.innerHTML = '<div class="issue">Loading accessible repositories...</div>';
+  try {
+    const response = await fetch(`${API_BASE}/api/mcp/servers/github/tools/search_repositories`, {
+      method:'POST', headers:{...projectHeaders(),'Content-Type':'application/json'},
+      body:JSON.stringify({arguments:{query:`user:${owner}`, perPage:100, minimal_output:true, sort:'updated', order:'desc'}})
+    });
+    const data = await response.json();
+    if (!response.ok || data.is_error) throw new Error(data.detail || data.text || 'Repository lookup failed');
+    githubRepositories = parseMcpJsonText(data).items || [];
+    document.getElementById('github-repo-count').textContent = githubRepositories.length;
+    list.innerHTML = githubRepositories.map((repo, index) => `<button class="github-repo-row" data-repo-index="${index}" onclick="loadGitHubRepositoryTreeFromButton(this)"><strong>${esc(repo.name)}</strong><span>${esc(repo.language || 'Mixed')} - ${repo.private ? 'private' : 'public'} - ${esc(repo.default_branch || 'main')}</span></button>`).join('') || '<div class="issue">No accessible repositories found for this owner.</div>';
+  } catch(error) {
+    list.innerHTML = `<div class="issue">${esc(error.message || 'Repository lookup failed')}</div>`;
+  }
+}
+
+async function loadGitHubRepositoryTreeFromButton(button) {
+  activeGitHubRepository = githubRepositories[Number(button.dataset.repoIndex)] || null;
+  if (!activeGitHubRepository) return;
+  document.querySelectorAll('.github-repo-row').forEach(row => row.classList.toggle('active', row === button));
+  document.getElementById('github-file-title').textContent = `${activeGitHubRepository.name} files`;
+  const list = document.getElementById('github-file-list');
+  list.innerHTML = '<div class="issue">Reading repository tree...</div>';
+  const [owner, repo] = activeGitHubRepository.full_name.split('/');
+  try {
+    const response = await fetch(`${API_BASE}/api/mcp/servers/github/tools/get_repository_tree`, {
+      method:'POST', headers:{...projectHeaders(),'Content-Type':'application/json'},
+      body:JSON.stringify({arguments:{owner, repo, tree_sha:activeGitHubRepository.default_branch, recursive:true}})
+    });
+    const data = await response.json();
+    if (!response.ok || data.is_error) throw new Error(data.detail || data.text || 'Repository tree failed');
+    const allowed = /\.(md|txt|py|js|jsx|ts|tsx|java|go|rs|rb|php|cs|cpp|c|h|html|css|scss|json|ya?ml|toml|ini|sql|sh|dockerfile)$/i;
+    githubRepositoryFiles = (parseMcpJsonText(data).tree || []).filter(file => file.type === 'blob' && Number(file.size || 0) <= 750000 && (allowed.test(file.path) || /(^|\/)Dockerfile$/i.test(file.path)));
+    renderGitHubFiles();
+    selectRecommendedGitHubFiles();
+  } catch(error) {
+    githubRepositoryFiles = [];
+    list.innerHTML = `<div class="issue">${esc(error.message || 'Repository tree failed')}</div>`;
+    updateGitHubSelectionCount();
+  }
+}
+
+function renderGitHubFiles() {
+  const list = document.getElementById('github-file-list');
+  list.innerHTML = githubRepositoryFiles.map((file, index) => `<label class="github-file-row"><input type="checkbox" data-github-file="${index}" onchange="updateGitHubSelectionCount()"><span>${esc(file.path)}</span><span class="github-file-size">${formatBytes(file.size || 0)}</span></label>`).join('') || '<div class="issue">No supported text or source files found.</div>';
+  updateGitHubSelectionCount();
+}
+
+function selectRecommendedGitHubFiles() {
+  const preferred = /(^README\.md$|Dockerfile|(^|\/)(main|app|index|config|query|rag|ingestion|vector_store|mcp_client|mcp_registry)\.(py|js|ts|tsx|html)$|\.github\/workflows\/)/i;
+  document.querySelectorAll('[data-github-file]').forEach(input => { input.checked = preferred.test(githubRepositoryFiles[Number(input.dataset.githubFile)]?.path || ''); });
+  if (![...document.querySelectorAll('[data-github-file]')].some(input => input.checked)) {
+    [...document.querySelectorAll('[data-github-file]')].slice(0, 20).forEach(input => { input.checked = true; });
+  }
+  updateGitHubSelectionCount();
+}
+
+function toggleAllGitHubFiles(checked) {
+  document.querySelectorAll('[data-github-file]').forEach((input, index) => { input.checked = checked && index < 40; });
+  updateGitHubSelectionCount();
+}
+
+function selectedGitHubPaths() {
+  return [...document.querySelectorAll('[data-github-file]:checked')].map(input => githubRepositoryFiles[Number(input.dataset.githubFile)]?.path).filter(Boolean).slice(0, 40);
+}
+
+function updateGitHubSelectionCount() {
+  const count = selectedGitHubPaths().length;
+  document.getElementById('github-selection-count').textContent = `${count} file${count === 1 ? '' : 's'} selected`;
+  document.getElementById('github-sync-selected-btn').disabled = !count || !activeGitHubRepository;
+}
+
+async function syncSelectedGitHubFiles() {
+  const paths = selectedGitHubPaths();
+  if (!activeGitHubRepository || !paths.length) return;
+  const button = document.getElementById('github-sync-selected-btn');
   button.disabled = true;
-  const original = button.textContent;
   button.textContent = 'Indexing repository...';
+  const [owner, repository] = activeGitHubRepository.full_name.split('/');
   try {
     const response = await fetch(`${API_BASE}/api/mcp/servers/github/sync-repository`, {
       method:'POST', headers:{...projectHeaders(),'Content-Type':'application/json'},
-      body:JSON.stringify({owner:'PranayRudra-3107', repository:'Base'})
+      body:JSON.stringify({owner, repository, ref:activeGitHubRepository.default_branch || '', paths})
     });
     const data = await response.json();
     if (!response.ok) throw new Error(data.detail || 'Repository sync failed');
     await refreshAll();
-    showToast(`Indexed ${data.indexed_count} GitHub source files into RAG`, 'success');
+    hideGitHubBrowser();
+    showToast(`Indexed ${data.indexed_count} files from ${activeGitHubRepository.name} into RAG`, 'success');
   } catch(error) {
     showToast(error.message || 'Repository sync failed', 'error');
   } finally {
     button.disabled = false;
-    button.textContent = original;
+    button.textContent = 'Sync Selected Files';
   }
 }
 
@@ -4434,6 +4571,12 @@ function pct(v) { return Math.round(Number(v || 0) * 100) + '%'; }
 function health(v) { return Math.round(Number(v || 0)) + '%'; }
 function escPlain(s) { return String(s ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 function esc(s) { return escPlain(s).replace(/\n/g,'<br>'); }
+function formatBytes(value) {
+  const bytes = Number(value || 0);
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
 function attr(s) { return esc(s).replace(/<br>/g, ' '); }
 </script>
 </body>

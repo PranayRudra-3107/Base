@@ -254,7 +254,7 @@ The Connector Hub includes a project-scoped registry for two official remote pro
 
 Both providers support token registration. The registry can register, authorize, test, discover capabilities, import results into RAG, and disconnect a provider. Its reusable OAuth authorization-code implementation includes state validation and PKCE. Enable OAuth with provider application credentials:
 
-For GitHub, **Sync Base Repo** reads the architecture-bearing source files through one official GitHub MCP session and indexes each file into the selected project's RAG store with repository and source-path metadata.
+For GitHub, **Browse Repositories** queries every repository visible to the token. Select a repository, inspect its recursive source tree, choose recommended files or up to 40 custom files, and index the selection through one official GitHub MCP session. Each RAG document retains repository and source-path metadata. Calling the sync endpoint without `paths` still uses the Base architecture file set for backwards compatibility.
 
 ```bash
 GITHUB_OAUTH_CLIENT_ID=
