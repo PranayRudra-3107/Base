@@ -40,6 +40,65 @@ body::before {
   animation: ambient-sweep 16s ease-in-out infinite alternate;
 }
 body > * { position: relative; z-index: 1; }
+.landing { display: none; min-height: 100vh; background: #080a0f; overflow-x: hidden; }
+.landing.active { display: block; animation: landing-enter .55s ease-out both; }
+.landing-hero { position: relative; height: calc(100svh - 92px); min-height: 610px; overflow: hidden; background: #080a0f; border-bottom: 1px solid rgba(255,255,255,.1); }
+.landing-graph { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.landing-nav { position: relative; z-index: 3; width: min(1240px, calc(100% - 48px)); height: 76px; margin: 0 auto; display: flex; align-items: center; justify-content: space-between; gap: 20px; border-bottom: 1px solid rgba(255,255,255,.11); }
+.landing-brand { display: flex; align-items: center; gap: 12px; color: var(--text); text-decoration: none; }
+.landing-brand .logo-mark { width: 38px; height: 38px; }
+.landing-brand-copy { display: grid; gap: 1px; }
+.landing-brand-copy strong { font-family: var(--display); font-size: 18px; }
+.landing-brand-copy span { color: var(--text-muted); font-family: var(--mono); font-size: 9px; text-transform: uppercase; }
+.landing-nav-right { display: flex; align-items: center; gap: 14px; }
+.landing-live { display: inline-flex; align-items: center; gap: 8px; color: var(--text-dim); font-family: var(--mono); font-size: 10px; text-transform: uppercase; }
+.landing-live::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--green); box-shadow: 0 0 0 4px rgba(66,211,146,.1), 0 0 18px rgba(66,211,146,.75); animation: status-breathe 1.8s ease-in-out infinite; }
+.landing-nav-action, .landing-primary, .landing-secondary { border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; transition: transform .18s ease, border-color .18s ease, background .18s ease, color .18s ease, box-shadow .18s ease; }
+.landing-nav-action { min-height: 38px; padding: 0 15px; border: 1px solid rgba(255,255,255,.2); background: rgba(8,10,15,.66); color: var(--text); font-size: 12px; backdrop-filter: blur(12px); }
+.landing-nav-action:hover, .landing-secondary:hover { border-color: var(--teal); transform: translateY(-1px); }
+.landing-copy { position: relative; z-index: 2; width: min(1240px, calc(100% - 48px)); height: calc(100% - 76px); margin: 0 auto; display: flex; flex-direction: column; justify-content: center; align-items: flex-start; padding: 0 0 28px; pointer-events: none; }
+.landing-copy > * { pointer-events: auto; }
+.landing-kicker { display: inline-flex; align-items: center; gap: 10px; margin-bottom: 22px; color: var(--teal); font-family: var(--mono); font-size: 11px; text-transform: uppercase; animation: landing-rise .55s ease-out .08s both; }
+.landing-kicker::before { content: ""; width: 34px; height: 1px; background: var(--teal); }
+.landing h1 { max-width: 780px; font-size: clamp(76px, 10vw, 146px); line-height: .82; font-weight: 800; color: #f8fafc; animation: landing-rise .65s cubic-bezier(.2,.8,.2,1) .13s both; }
+.landing-statement { max-width: 710px; margin-top: 30px; color: #c4cad5; font-size: clamp(18px, 2vw, 26px); line-height: 1.35; font-weight: 300; animation: landing-rise .62s ease-out .22s both; }
+.landing-statement strong { color: #fff; font-weight: 500; }
+.landing-actions { display: flex; align-items: center; gap: 11px; margin-top: 32px; animation: landing-rise .62s ease-out .3s both; }
+.landing-primary, .landing-secondary { min-height: 48px; padding: 0 19px; border: 1px solid transparent; font-size: 13px; }
+.landing-primary { background: #f5f7fa; color: #080a0f; font-weight: 600; box-shadow: 0 18px 46px rgba(0,0,0,.28); }
+.landing-primary:hover { transform: translateY(-2px); background: var(--teal); box-shadow: 0 20px 52px rgba(45,212,191,.17); }
+.landing-secondary { border-color: rgba(255,255,255,.22); color: var(--text-dim); background: rgba(8,10,15,.58); backdrop-filter: blur(12px); }
+.landing-secondary:hover { color: var(--text); }
+.landing-proofline { display: flex; align-items: center; gap: 24px; margin-top: 32px; color: var(--text-muted); font-family: var(--mono); font-size: 10px; text-transform: uppercase; animation: landing-rise .6s ease-out .38s both; }
+.landing-proofline span { display: inline-flex; align-items: center; gap: 8px; }
+.landing-proofline span::before { content: ""; width: 5px; height: 5px; border-radius: 50%; background: var(--amber); }
+.landing-proofline span:nth-child(2)::before { background: var(--teal); }
+.landing-proofline span:nth-child(3)::before { background: var(--rose); }
+.landing-scroll-cue { position: absolute; z-index: 3; right: max(24px, calc((100vw - 1240px) / 2)); bottom: 25px; display: flex; align-items: center; gap: 10px; color: var(--text-muted); font-family: var(--mono); font-size: 9px; text-transform: uppercase; writing-mode: vertical-rl; }
+.landing-scroll-cue::after { content: ""; width: 1px; height: 42px; background: rgba(255,255,255,.28); transform-origin: top; animation: landing-scroll 2s ease-in-out infinite; }
+.landing-source-band { min-height: 92px; display: grid; grid-template-columns: minmax(180px, .8fr) minmax(0, 3fr); align-items: center; gap: 32px; padding: 18px max(24px, calc((100vw - 1240px) / 2)); border-bottom: 1px solid rgba(255,255,255,.09); background: #0d1118; }
+.landing-source-band strong { font-family: var(--display); font-size: 15px; }
+.landing-source-band p { margin-top: 4px; color: var(--text-muted); font-family: var(--mono); font-size: 9px; text-transform: uppercase; }
+.landing-source-list { display: flex; align-items: center; justify-content: space-between; gap: 18px; min-width: 0; overflow: hidden; color: var(--text-dim); font-family: var(--mono); font-size: 10px; text-transform: uppercase; }
+.landing-source-list::-webkit-scrollbar { display: none; }
+.landing-source-list span { flex: 0 0 auto; }
+.landing-source-list i { width: 3px; height: 3px; border-radius: 50%; background: var(--text-muted); flex: 0 0 auto; }
+.landing-system { padding: 104px max(24px, calc((100vw - 1240px) / 2)) 112px; background: #090c11; border-bottom: 1px solid rgba(255,255,255,.09); }
+.landing-system-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 32px; margin-bottom: 60px; }
+.landing-system-head h2 { max-width: 680px; font-size: clamp(38px, 5vw, 66px); line-height: 1; }
+.landing-system-head p { max-width: 430px; color: var(--text-dim); font-size: 15px; line-height: 1.7; }
+.landing-agent-track { position: relative; display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px; }
+.landing-agent-track::before { content: ""; position: absolute; top: 27px; left: 6%; right: 6%; height: 1px; background: rgba(255,255,255,.18); }
+.landing-agent-step { position: relative; min-height: 164px; padding: 13px; border: 1px solid rgba(255,255,255,.11); border-radius: 6px; background: #10151e; display: flex; flex-direction: column; gap: 12px; transition: transform .2s ease, border-color .2s ease, background .2s ease; }
+.landing-agent-step:hover { transform: translateY(-5px); border-color: rgba(45,212,191,.48); background: #131a24; }
+.landing-agent-index { position: relative; z-index: 1; width: 28px; height: 28px; display: grid; place-items: center; border: 1px solid rgba(255,255,255,.18); border-radius: 50%; background: #10151e; color: var(--teal); font-family: var(--mono); font-size: 9px; }
+.landing-agent-step strong { margin-top: 12px; font-family: var(--display); font-size: 14px; }
+.landing-agent-step span:last-child { color: var(--text-muted); font-size: 11px; line-height: 1.55; }
+.landing-close { padding: 94px 24px 100px; text-align: center; background: #080a0f; }
+.landing-close .logo-mark { width: 48px; height: 48px; margin: 0 auto 24px; }
+.landing-close h2 { font-size: clamp(36px, 5vw, 62px); }
+.landing-close p { margin: 14px auto 26px; color: var(--text-dim); font-size: 15px; }
+.landing-close .landing-primary { margin: 0 auto; }
 button, textarea, input, select { font: inherit; min-width: 0; }
 button { cursor: pointer; }
 #app { display: none; height: 100vh; overflow: hidden; background: rgba(8,10,15,.72); }
@@ -369,13 +428,84 @@ td:first-child { color: var(--text); }
 @keyframes scan-line { 0%, 100% { transform: translateX(-70%); opacity: .25; } 50% { transform: translateX(70%); opacity: .9; } }
 @keyframes bar-grow { from { transform: scaleX(.08); opacity: .55; } to { transform: scaleX(1); opacity: 1; } }
 @keyframes coverage-load { from { transform: scaleX(.08); opacity: .55; } to { transform: scaleX(1); opacity: 1; } }
-@media(max-width:1100px){.kpi-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.topbar{align-items:flex-start;height:auto;min-height:60px;padding:12px 18px;flex-wrap:wrap}.topbar-right{width:100%;margin-left:0;flex-wrap:wrap}.project-create{grid-template-columns:1fr 1fr}.connector-form-grid{grid-template-columns:1fr}}
+@keyframes landing-enter { from { opacity: 0; } to { opacity: 1; } }
+@keyframes landing-rise { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes landing-scroll { 0%,100% { transform: scaleY(.25); opacity: .35; } 50% { transform: scaleY(1); opacity: 1; } }
+@media(max-width:1100px){.landing-agent-track{grid-template-columns:repeat(4,minmax(0,1fr))}.landing-agent-track::before{display:none}.landing-system-head{align-items:flex-start;flex-direction:column}.kpi-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.topbar{align-items:flex-start;height:auto;min-height:60px;padding:12px 18px;flex-wrap:wrap}.topbar-right{width:100%;margin-left:0;flex-wrap:wrap}.project-create{grid-template-columns:1fr 1fr}.connector-form-grid{grid-template-columns:1fr}}
 @media(max-width:900px){#app.active{display:block;height:auto;min-height:100vh;overflow:auto}.main{min-height:100vh}.kpi-grid,.grid-2,.value-grid,.studio-layout{grid-template-columns:1fr}.sidebar{position:sticky;top:0;z-index:30;width:100%;min-width:0;display:block;border-right:0;border-bottom:1px solid rgba(255,255,255,.08);box-shadow:0 14px 30px rgba(0,0,0,.22)}.sidebar-logo{padding:12px 14px}.sidebar-nav{display:flex;gap:8px;overflow-x:auto;padding:9px 10px 11px}.sidebar-nav .nav-label,.sidebar > .nav-label,.sidebar-docs,.sidebar-upload{display:none}.nav-btn{width:auto;flex:0 0 auto;white-space:nowrap;padding:8px 11px}.nav-btn:hover{transform:translateY(-1px)}.nav-btn.active{box-shadow:inset 0 -2px 0 var(--teal)}.bar-row{grid-template-columns:90px 1fr 58px}.coverage-row{grid-template-columns:1fr}.chat-shell{height:auto;min-height:calc(100vh - 60px)}.input-bar{position:sticky;bottom:0}.msg-bubble{max-width:92%}}
-@media(max-width:760px){.project-header,.section-head{align-items:flex-start;flex-direction:column}.project-create{grid-template-columns:minmax(0,1fr);width:100%}.project-create .primary-btn{width:100%}.project-shell{padding:18px 14px 32px}.project-header{width:100%;padding:18px}.project-header .secondary-btn{align-self:flex-start}.workspace{width:100%;padding:22px 14px 32px}.graph-tip{bottom:66px}.toolbar{justify-content:flex-start}.project-grid{grid-template-columns:minmax(0,1fr)}.project-stats{grid-template-columns:1fr}.connector-foot button{flex-basis:100%}.chat-toolbar{padding:10px 14px}.chat-toolbar-inner{align-items:flex-start;flex-direction:column}.chat-history-tools{width:100%;flex-wrap:wrap}.chat-session-select{width:100%}.input-inner{gap:8px}.toast-container{left:14px;right:14px;bottom:14px}.toast{max-width:none}}
+@media(max-width:760px){.landing-hero{height:calc(100svh - 72px);min-height:560px}.landing-nav{width:calc(100% - 28px);height:62px}.landing-brand-copy span,.landing-live{display:none}.landing-nav-right{gap:7px}.landing-nav-action{min-height:34px;padding:0 10px;font-size:11px}.landing-copy{width:calc(100% - 28px);height:calc(100% - 62px);padding-bottom:18px}.landing-kicker{font-size:9px;margin-bottom:16px}.landing-kicker::before{width:22px}.landing h1{font-size:clamp(66px,21vw,86px)}.landing-statement{max-width:520px;margin-top:23px;font-size:17px;line-height:1.4}.landing-actions{align-items:stretch;flex-direction:column;width:100%;margin-top:24px}.landing-primary,.landing-secondary{width:100%;min-height:44px}.landing-proofline{gap:12px;flex-wrap:wrap;margin-top:20px;font-size:8px}.landing-scroll-cue{display:none}.landing-source-band{min-height:72px;grid-template-columns:1fr;padding:14px;gap:10px}.landing-source-band>div:first-child{display:none}.landing-source-list{gap:16px;justify-content:flex-start;overflow-x:auto;padding-bottom:2px;scrollbar-width:none}.landing-system{padding:70px 14px 76px}.landing-system-head{margin-bottom:36px}.landing-system-head h2{font-size:38px}.landing-system-head p{font-size:14px}.landing-agent-track{grid-template-columns:repeat(2,minmax(0,1fr))}.landing-agent-step{min-height:150px}.landing-close{padding:70px 14px 76px}.project-header,.section-head{align-items:flex-start;flex-direction:column}.project-create{grid-template-columns:minmax(0,1fr);width:100%}.project-create .primary-btn{width:100%}.project-shell{padding:18px 14px 32px}.project-header{width:100%;padding:18px}.project-header .secondary-btn{align-self:flex-start}.workspace{width:100%;padding:22px 14px 32px}.graph-tip{bottom:66px}.toolbar{justify-content:flex-start}.project-grid{grid-template-columns:minmax(0,1fr)}.project-stats{grid-template-columns:1fr}.connector-foot button{flex-basis:100%}.chat-toolbar{padding:10px 14px}.chat-toolbar-inner{align-items:flex-start;flex-direction:column}.chat-history-tools{width:100%;flex-wrap:wrap}.chat-session-select{width:100%}.input-inner{gap:8px}.toast-container{left:14px;right:14px;bottom:14px}.toast{max-width:none}}
+@media(max-width:430px){.landing-proofline span:nth-child(3){display:none}.landing-agent-track{grid-template-columns:1fr 1fr}.landing-agent-step{padding:11px}.landing-system-head h2{font-size:34px}}
 </style>
 </head>
 <body>
-<section class="project-hub active" id="project-hub">
+<section class="landing active" id="landing">
+  <div class="landing-hero" id="landing-top">
+    <canvas class="landing-graph" id="landing-graph" aria-hidden="true"></canvas>
+    <header class="landing-nav">
+      <a class="landing-brand" href="#landing-top" aria-label="Base home">
+        <span class="logo-mark">B</span>
+        <span class="landing-brand-copy">
+          <strong>Base</strong>
+          <span>Project intelligence</span>
+        </span>
+      </a>
+      <div class="landing-nav-right">
+        <span class="landing-live">System ready</span>
+        <button class="landing-nav-action" onclick="enterBase()">Open Base</button>
+      </div>
+    </header>
+    <div class="landing-copy">
+      <div class="landing-kicker">AI-native project memory</div>
+      <h1>Base</h1>
+      <p class="landing-statement">Turn <strong>years of project history</strong> into decisions your team can inspect, question, and hand over.</p>
+      <div class="landing-actions">
+        <button class="landing-primary" onclick="enterBase()">Enter workspace &rarr;</button>
+        <a class="landing-secondary" href="#landing-system">See the system</a>
+      </div>
+      <div class="landing-proofline">
+        <span>35 connectors</span>
+        <span>9-agent review</span>
+        <span>Source-grounded</span>
+      </div>
+    </div>
+    <div class="landing-scroll-cue">Explore</div>
+  </div>
+
+  <section class="landing-source-band" aria-label="Supported project sources">
+    <div>
+      <strong>Every signal, one memory</strong>
+      <p>Live APIs and upload-ready exports</p>
+    </div>
+    <div class="landing-source-list">
+      <span>Jira</span><i></i><span>Teams</span><i></i><span>GitHub</span><i></i><span>Grafana</span><i></i><span>Confluence</span><i></i><span>PagerDuty</span>
+    </div>
+  </section>
+
+  <section class="landing-system" id="landing-system">
+    <div class="landing-system-head">
+      <h2>From scattered evidence to one verified briefing.</h2>
+      <p>A coordinated review board traces the project across source systems, challenges weak conclusions, and returns a response grounded in the evidence your team produced.</p>
+    </div>
+    <div class="landing-agent-track">
+      <div class="landing-agent-step"><span class="landing-agent-index">01</span><strong>Plan</strong><span>Route the question to the right specialists.</span></div>
+      <div class="landing-agent-step"><span class="landing-agent-index">02</span><strong>Retrieve</strong><span>Find the strongest project evidence.</span></div>
+      <div class="landing-agent-step"><span class="landing-agent-index">03</span><strong>Risk</strong><span>Surface blockers, gaps, and owners.</span></div>
+      <div class="landing-agent-step"><span class="landing-agent-index">04</span><strong>Incident</strong><span>Connect failures to operational context.</span></div>
+      <div class="landing-agent-step"><span class="landing-agent-index">05</span><strong>Release</strong><span>Judge readiness from code and delivery signals.</span></div>
+      <div class="landing-agent-step"><span class="landing-agent-index">06</span><strong>Verify</strong><span>Challenge claims against cited sources.</span></div>
+      <div class="landing-agent-step"><span class="landing-agent-index">07</span><strong>Synthesize</strong><span>Deliver one decision-ready briefing.</span></div>
+    </div>
+  </section>
+
+  <section class="landing-close">
+    <div class="logo-mark">B</div>
+    <h2>Your project already knows the answer.</h2>
+    <p>Base makes the evidence findable.</p>
+    <button class="landing-primary" onclick="enterBase()">Open Base &rarr;</button>
+  </section>
+</section>
+
+<section class="project-hub" id="project-hub">
   <div class="project-shell">
     <div class="project-header">
       <div>
@@ -389,7 +519,10 @@ td:first-child { color: var(--text); }
         <h1>Projects</h1>
         <p class="muted">Create a project workspace, then upload the related Jira, Teams, GitHub, metrics, database, Confluence, and incident files inside it.</p>
       </div>
-      <button class="secondary-btn" onclick="loadProjects()">Refresh</button>
+      <div class="toolbar">
+        <button class="secondary-btn" onclick="showLanding()">Home</button>
+        <button class="secondary-btn" onclick="loadProjects()">Refresh</button>
+      </div>
     </div>
 
     <form class="project-create" onsubmit="createProject(event)">
@@ -930,6 +1063,21 @@ const CHAT_STORAGE_KEY = 'base.project.chat.history.v1';
 const CHAT_HISTORY_LIMIT = 80;
 const GRAPH_MIN_SCALE = 0.12;
 const GRAPH_MAX_SCALE = 3.2;
+const LANDING_GRAPH_NODES = [
+  {x:.66, y:.15, label:'Jira / BASE-431', color:'#38bdf8', size:5, phase:.2},
+  {x:.82, y:.12, label:'PR #1842', color:'#42d392', size:6, phase:1.1},
+  {x:.73, y:.31, label:'checkout-api', color:'#7c5cff', size:8, phase:2.2},
+  {x:.91, y:.34, label:'Release 2.8', color:'#f3b950', size:6, phase:.7},
+  {x:.79, y:.51, label:'PD-102', color:'#ff5d6c', size:7, phase:2.8},
+  {x:.62, y:.58, label:'p95 / 218ms', color:'#2dd4bf', size:6, phase:1.7},
+  {x:.88, y:.66, label:'Runbook', color:'#f472b6', size:5, phase:3.4},
+  {x:.70, y:.76, label:'ADR-42', color:'#38bdf8', size:7, phase:4.1},
+  {x:.94, y:.82, label:'DB health', color:'#42d392', size:5, phase:2.4},
+  {x:.56, y:.37, label:'Teams / decision', color:'#f472b6', size:5, phase:3.8},
+  {x:.57, y:.83, label:'Confluence', color:'#7c5cff', size:5, phase:.9},
+  {x:.96, y:.52, label:'Grafana', color:'#2dd4bf', size:5, phase:4.7}
+];
+const LANDING_GRAPH_EDGES = [[0,1],[0,2],[0,9],[1,2],[1,3],[2,3],[2,4],[2,5],[2,9],[3,4],[4,5],[4,6],[4,11],[5,7],[5,9],[5,10],[6,7],[6,8],[7,8],[7,10],[8,11]];
 let projects = [], currentProject = null;
 let messages = [], documents = [], dashboard = null, auditEvents = [], knowledgeGraph = null;
 let currentChatSessionId = null;
@@ -940,6 +1088,8 @@ let nextQueryOptions = {};
 let connectorCatalog = [];
 let activeConnectorForModal = null;
 let connectorSyncing = {};
+let landingGraphState = null;
+let landingGraphAnimationId = null;
 
 const AGENT_TEMPLATES = [
   {
@@ -1016,8 +1166,205 @@ const CONNECTOR_CATALOG = [
 connectorCatalog = CONNECTOR_CATALOG;
 
 document.addEventListener('DOMContentLoaded', () => {
+  initLandingGraph();
   loadProjects();
 });
+
+function enterBase() {
+  document.getElementById('landing').classList.remove('active');
+  document.getElementById('landing').setAttribute('aria-hidden', 'true');
+  document.getElementById('project-hub').classList.add('active');
+  document.getElementById('project-hub').removeAttribute('aria-hidden');
+  stopLandingGraph();
+  resetPageScroll();
+}
+
+function showLanding() {
+  currentProject = null;
+  document.getElementById('app').classList.remove('active');
+  document.getElementById('project-hub').classList.remove('active');
+  document.getElementById('project-hub').setAttribute('aria-hidden', 'true');
+  document.getElementById('landing').classList.add('active');
+  document.getElementById('landing').removeAttribute('aria-hidden');
+  resetPageScroll();
+  resizeLandingGraph();
+  startLandingGraph();
+}
+
+function resetPageScroll() {
+  if (location.hash) history.replaceState(null, '', `${location.pathname}${location.search}`);
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+  document.getElementById('landing').scrollTop = 0;
+  window.scrollTo(0, 0);
+}
+
+function initLandingGraph() {
+  const canvas = document.getElementById('landing-graph');
+  if (!canvas || landingGraphState) return;
+  landingGraphState = {
+    canvas,
+    context: canvas.getContext('2d'),
+    width: 0,
+    height: 0,
+    dpr: 1,
+    pointer: {x: 0, y: 0, active: false},
+    reducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  };
+  canvas.addEventListener('pointermove', event => {
+    const rect = canvas.getBoundingClientRect();
+    landingGraphState.pointer = {
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top,
+      active: true
+    };
+    if (landingGraphState.reducedMotion) drawLandingGraph(0);
+  });
+  canvas.addEventListener('pointerleave', () => {
+    landingGraphState.pointer.active = false;
+    if (landingGraphState.reducedMotion) drawLandingGraph(0);
+  });
+  window.addEventListener('resize', resizeLandingGraph);
+  resizeLandingGraph();
+  startLandingGraph();
+}
+
+function resizeLandingGraph() {
+  if (!landingGraphState) return;
+  const {canvas} = landingGraphState;
+  const rect = canvas.getBoundingClientRect();
+  if (!rect.width || !rect.height) return;
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
+  landingGraphState.width = rect.width;
+  landingGraphState.height = rect.height;
+  landingGraphState.dpr = dpr;
+  canvas.width = Math.round(rect.width * dpr);
+  canvas.height = Math.round(rect.height * dpr);
+  drawLandingGraph(0);
+}
+
+function startLandingGraph() {
+  if (!landingGraphState || landingGraphAnimationId !== null) return;
+  if (landingGraphState.reducedMotion) {
+    drawLandingGraph(0);
+    return;
+  }
+  const frame = time => {
+    if (!document.getElementById('landing').classList.contains('active')) {
+      landingGraphAnimationId = null;
+      return;
+    }
+    drawLandingGraph(time);
+    landingGraphAnimationId = requestAnimationFrame(frame);
+  };
+  landingGraphAnimationId = requestAnimationFrame(frame);
+}
+
+function stopLandingGraph() {
+  if (landingGraphAnimationId !== null) cancelAnimationFrame(landingGraphAnimationId);
+  landingGraphAnimationId = null;
+}
+
+function drawLandingGraph(time) {
+  if (!landingGraphState) return;
+  const {context: ctx, width, height, dpr, pointer} = landingGraphState;
+  if (!width || !height) return;
+  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = '#080a0f';
+  ctx.fillRect(0, 0, width, height);
+
+  const mobileAlpha = width < 760 ? .48 : 1;
+  ctx.save();
+  ctx.globalAlpha = .16 * mobileAlpha;
+  ctx.strokeStyle = '#677184';
+  ctx.lineWidth = 1;
+  for (let x = 18; x < width; x += 46) {
+    ctx.beginPath();
+    ctx.moveTo(x, 0);
+    ctx.lineTo(x, height);
+    ctx.stroke();
+  }
+  for (let y = 18; y < height; y += 46) {
+    ctx.beginPath();
+    ctx.moveTo(0, y);
+    ctx.lineTo(width, y);
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  const seconds = time / 1000;
+  const pointerShiftX = pointer.active ? (pointer.x / width - .5) * 13 : 0;
+  const pointerShiftY = pointer.active ? (pointer.y / height - .5) * 9 : 0;
+  const positions = LANDING_GRAPH_NODES.map((node, index) => ({
+    x: node.x * width + Math.sin(seconds * .36 + node.phase) * (4 + index % 3) + pointerShiftX * (node.x - .4),
+    y: node.y * height + Math.cos(seconds * .3 + node.phase) * (4 + index % 2) + pointerShiftY * (node.y - .4)
+  }));
+
+  let nearest = -1;
+  let nearestDistance = 78;
+  if (pointer.active) {
+    positions.forEach((position, index) => {
+      const distance = Math.hypot(pointer.x - position.x, pointer.y - position.y);
+      if (distance < nearestDistance) {
+        nearest = index;
+        nearestDistance = distance;
+      }
+    });
+  }
+
+  ctx.save();
+  ctx.globalAlpha = .58 * mobileAlpha;
+  LANDING_GRAPH_EDGES.forEach(([from, to]) => {
+    const highlighted = from === nearest || to === nearest;
+    ctx.beginPath();
+    ctx.moveTo(positions[from].x, positions[from].y);
+    ctx.lineTo(positions[to].x, positions[to].y);
+    ctx.strokeStyle = highlighted ? LANDING_GRAPH_NODES[nearest].color : '#586275';
+    ctx.lineWidth = highlighted ? 1.5 : 1;
+    ctx.stroke();
+  });
+  if (nearest >= 0) {
+    ctx.beginPath();
+    ctx.moveTo(pointer.x, pointer.y);
+    ctx.lineTo(positions[nearest].x, positions[nearest].y);
+    ctx.setLineDash([3, 5]);
+    ctx.strokeStyle = LANDING_GRAPH_NODES[nearest].color;
+    ctx.globalAlpha = .55;
+    ctx.stroke();
+    ctx.setLineDash([]);
+  }
+  ctx.restore();
+
+  positions.forEach((position, index) => {
+    const node = LANDING_GRAPH_NODES[index];
+    const selected = index === nearest;
+    const pulse = selected ? 1.35 : 1 + Math.sin(seconds * 1.2 + node.phase) * .08;
+    ctx.save();
+    ctx.globalAlpha = (selected ? 1 : .8) * mobileAlpha;
+    ctx.shadowColor = node.color;
+    ctx.shadowBlur = selected ? 24 : 12;
+    ctx.fillStyle = node.color;
+    ctx.beginPath();
+    ctx.arc(position.x, position.y, node.size * pulse, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+    ctx.strokeStyle = node.color;
+    ctx.globalAlpha = (selected ? .7 : .24) * mobileAlpha;
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.arc(position.x, position.y, node.size * pulse + (selected ? 10 : 6), 0, Math.PI * 2);
+    ctx.stroke();
+
+    ctx.font = `${width < 760 ? 8 : 10}px IBM Plex Mono, monospace`;
+    const labelWidth = ctx.measureText(node.label).width;
+    const labelX = position.x + labelWidth + 18 > width ? position.x - labelWidth - 12 : position.x + 12;
+    ctx.globalAlpha = (selected ? .98 : .62) * mobileAlpha;
+    ctx.fillStyle = selected ? '#f8fafc' : '#a4adbd';
+    ctx.fillText(node.label, labelX, position.y + 3);
+    ctx.restore();
+  });
+}
 
 window.addEventListener('message', event => {
   if (event?.data?.type === 'base.connector.connected') {
@@ -1120,8 +1467,10 @@ function openProject(project) {
   knowledgeGraph = null;
   connectorCatalog = CONNECTOR_CATALOG;
   connectorSyncing = {};
+  document.getElementById('landing').classList.remove('active');
   document.getElementById('project-hub').classList.remove('active');
   document.getElementById('app').classList.add('active');
+  stopLandingGraph();
   document.getElementById('tenant-label').textContent = project.name;
   document.getElementById('topbar-title').textContent = `${project.name} Dashboard`;
   document.getElementById('topbar-doc-count').textContent = 'Loading sources...';
@@ -1135,6 +1484,7 @@ function backToProjects() {
   currentProject = null;
   document.getElementById('app').classList.remove('active');
   document.getElementById('project-hub').classList.add('active');
+  document.getElementById('project-hub').removeAttribute('aria-hidden');
   loadProjects();
 }
 

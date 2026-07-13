@@ -61,7 +61,7 @@ The current app can:
 - Generate NotebookLM-style study artifacts: interactive quizzes, host conversations, audio overview playback scripts, video storyboards, slide deck outlines, flashcards, and infographics over uploaded project files.
 - Show a static web UI with project picker, dashboard, agent gallery, connector hub, knowledge graph, chat, KT brief, source library, and activity log views.
 - Run demo-ready project agents for risk review, incident review, release notes, handoff briefs, metrics investigation, and source gap analysis.
-- Run a multi-agent Project Review Board that coordinates planner, source retriever, risk, incident, release, metrics, KT, verifier, and synthesizer agents into one source-grounded project review.
+- Run a LangGraph-based multi-agent Project Review Board that coordinates planner, source retriever, risk, incident, release, metrics, KT, verifier, and synthesizer agents into one source-grounded project review, with optional Langfuse tracing.
 - Connect and sync project data from live APIs or credential-based connectors, then index the fetched records through the same RAG path as uploaded files.
 - Track connector coverage for Jira, Linear, Azure Boards, Slack, Teams, email, GitHub, GitLab, Bitbucket, product analytics, observability, database health, incidents, docs, support, and BI sources.
 - Export project intelligence analytics as CSV, Tableau-style JSON, and PowerBI-style JSON.
@@ -108,8 +108,8 @@ OAuth support is currently scaffolded for Microsoft Graph and Atlassian. API-tok
 
 1. Connect or upload project sources from Jira, GitHub, Teams, Confluence, Grafana, database health exports, PagerDuty, and release notes.
 2. Open **Agents** and run **Project Review Board**, or use the dashboard's **Run Multi-Agent Review** action.
-3. Base streams each stage as it runs: planner, source retriever, risk analyst, incident analyst, release/code analyst, metrics analyst, KT/onboarding analyst, verifier, and synthesizer.
-4. Each specialist retrieves its own evidence, produces structured findings, and returns confidence and missing-evidence notes.
+3. Base streams each stage as it runs: planner, source retriever, parallel specialist agents, verifier, and synthesizer.
+4. Each specialist retrieves its own evidence in parallel, produces structured findings, and returns confidence and missing-evidence notes.
 5. The verifier checks for weak or unsupported claims before the synthesizer creates the final project review.
 6. The final answer includes source citations, chunks reviewed, token usage, and a compact specialist-agent summary in the chat.
 
@@ -123,7 +123,7 @@ OAuth support is currently scaffolded for Microsoft Graph and Atlassian. API-tok
 
 ## Multi-Agent Orchestration
 
-Base now includes a real source-grounded multi-agent workflow for project review, implemented in `backend/app/services/multi_agent.py`.
+Base includes a source-grounded multi-agent workflow implemented as a LangGraph `StateGraph` in `backend/app/services/multi_agent.py`. LangChain's `ChatOpenAI` integration handles model calls and schema-validated specialist output, while optional Langfuse callbacks trace graph nodes, retrieval prompts, model latency, token usage, and failures.
 
 The current orchestration is intentionally pragmatic for an MVP:
 
@@ -137,7 +137,25 @@ The current orchestration is intentionally pragmatic for an MVP:
 - **Verifier Agent:** checks whether specialist findings are supported by the retrieved source snippets and highlights evidence gaps.
 - **Synthesizer Agent:** combines the specialist outputs into one final project review.
 
-The specialist agents run as separate source-grounded LLM calls. Planner and retriever are orchestration stages in the current implementation, not separate model calls. This keeps the demo fast and understandable while still showing the architecture needed for production-grade agent collaboration.
+LangGraph fans out from the planner to all five specialist nodes and executes them concurrently. Their state updates are collected in a deterministic order before the verifier and synthesizer run sequentially. Planner, retriever, and collector are deterministic orchestration stages rather than extra model calls.
+
+```mermaid
+graph LR
+  Start --> Planner
+  Planner --> Risk[Risk Agent]
+  Planner --> Incident[Incident Agent]
+  Planner --> Release[Release Agent]
+  Planner --> Metrics[Metrics Agent]
+  Planner --> KT[KT Agent]
+  Risk --> Collect[Collect Results]
+  Incident --> Collect
+  Release --> Collect
+  Metrics --> Collect
+  KT --> Collect
+  Collect --> Verifier
+  Verifier --> Synthesizer
+  Synthesizer --> End
+```
 
 The response is returned as:
 
@@ -165,9 +183,11 @@ graph TD
   RAG --> Keyword
   RAG --> OpenAI[OpenAI Chat Model]
   API --> ReviewBoard[Multi-Agent Review Board]
-  ReviewBoard --> VectorDB
-  ReviewBoard --> Keyword
-  ReviewBoard --> OpenAI
+  ReviewBoard --> LangGraph[LangGraph Orchestration]
+  LangGraph --> VectorDB
+  LangGraph --> Keyword
+  LangGraph --> OpenAI
+  LangGraph -. optional traces .-> Langfuse[Langfuse Observability]
   API --> Analytics[Project Health Analytics]
   Analytics --> Dashboard[Dashboard Data]
   API --> ActivityLog[JSONL Activity Log]
@@ -270,7 +290,7 @@ base-platform/
 
 ### Prerequisites
 
-- Python 3.9+
+- Python 3.10+
 - An OpenAI API key
 
 Uploading and querying documents currently uses OpenAI embeddings and chat completions.
@@ -293,6 +313,19 @@ ANTHROPIC_API_KEY=optional-placeholder
 ```
 
 `OPENAI_API_KEY` is required for the current app. `ANTHROPIC_API_KEY` is present as a placeholder only; the current code does not call Anthropic.
+
+To trace the multi-agent graph in Langfuse, create a Langfuse project and optionally add:
+
+```bash
+LANGFUSE_PUBLIC_KEY=pk-lf-...
+LANGFUSE_SECRET_KEY=sk-lf-...
+LANGFUSE_BASE_URL=https://cloud.langfuse.com
+LANGFUSE_TRACING_ENVIRONMENT=local
+```
+
+Tracing stays disabled when either Langfuse key is empty.
+
+When tracing is enabled, retrieved project excerpts can appear in model inputs and outputs sent to the configured Langfuse host. Use an approved Langfuse deployment and retention policy before enabling it for sensitive company data.
 
 ### 2. Start The Backend API
 
@@ -438,6 +471,10 @@ OPENAI_API_KEY=sk-...
 ANTHROPIC_API_KEY=
 LLM_MODEL=gpt-4o
 EMBEDDING_MODEL=text-embedding-3-small
+LANGFUSE_PUBLIC_KEY=
+LANGFUSE_SECRET_KEY=
+LANGFUSE_BASE_URL=https://cloud.langfuse.com
+LANGFUSE_TRACING_ENVIRONMENT=local
 WEB_SEARCH_ENABLED=true
 WEB_SEARCH_MODEL=gpt-4o-mini
 WEB_SEARCH_TOOL=web_search
@@ -464,7 +501,7 @@ Still not production-grade:
 - Deep metric normalization across every external tool.
 - Scheduled sync jobs.
 - Background ingestion workers.
-- Multi-agent execution is request-scoped and sequential; production should move long reviews into background jobs, add cancellation, retry policies, and optionally parallel specialist execution.
+- Multi-agent execution is request-scoped; production should move long reviews into background jobs and add cancellation, durable LangGraph checkpoints, and node-specific retry policies.
 - OCR for scanned documents or images.
 - Enterprise-grade tenant isolation.
 - Production secrets management for connector credentials.

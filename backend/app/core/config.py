@@ -21,6 +21,10 @@ class Settings(BaseSettings):
     embedding_model: str = "text-embedding-3-small"
     embedding_dimensions: int = 1536
     llm_model: str = "gpt-4o"
+    langfuse_public_key: str = ""
+    langfuse_secret_key: str = ""
+    langfuse_base_url: str = "https://cloud.langfuse.com"
+    langfuse_tracing_environment: str = "local"
     web_search_enabled: bool = True
     web_search_model: str = "gpt-4o-mini"
     web_search_tool: str = "web_search"

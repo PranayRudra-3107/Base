@@ -222,3 +222,9 @@
 {"timestamp": "2026-05-23T13:11:49.228426", "tenant_id": "shiparu-fd42cd30", "actor": "system", "action": "rag.query", "details": {"question_length": 61, "chunks_used": 5, "language": "en", "streamed": true, "answer_mode": "project"}}
 {"timestamp": "2026-06-07T17:35:06.190242", "tenant_id": "shiparu-fd42cd30", "actor": "system", "action": "analytics.dashboard.viewed", "details": {}}
 {"timestamp": "2026-06-07T17:35:08.193657", "tenant_id": "shiparu-fd42cd30", "actor": "system", "action": "analytics.knowledge_graph.viewed", "details": {"nodes": 926, "edges": 2050}}
+{"timestamp": "2026-06-10T09:09:13.757472", "tenant_id": "shiparu-fd42cd30", "actor": "system", "action": "analytics.dashboard.viewed", "details": {}}
+{"timestamp": "2026-06-10T09:09:42.153234", "tenant_id": "shiparu-fd42cd30", "actor": "system", "action": "kt.brief.generated", "details": {"focus_length": 133, "audience": "new backend engineer", "chunks_used": 5, "language": "en", "streamed": true}}
+{"timestamp": "2026-06-10T09:13:00.283976", "tenant_id": "shiparu-fd42cd30", "actor": "system", "action": "multi_agent.review.generated", "details": {"focus_length": 121, "chunks_used": 30, "language": "en", "agents": 5, "streamed": true}}
+{"timestamp": "2026-06-10T11:36:55.188053", "tenant_id": "shiparu-fd42cd30", "actor": "system", "action": "analytics.dashboard.viewed", "details": {}}
+{"timestamp": "2026-06-10T11:36:58.447693", "tenant_id": "shiparu-fd42cd30", "actor": "system", "action": "analytics.knowledge_graph.viewed", "details": {"nodes": 926, "edges": 2050}}
+{"timestamp": "2026-06-10T11:37:30.292895", "tenant_id": "shiparu-fd42cd30", "actor": "system", "action": "multi_agent.review.generated", "details": {"focus_length": 75, "chunks_used": 30, "language": "en", "agents": 5, "streamed": true}}
