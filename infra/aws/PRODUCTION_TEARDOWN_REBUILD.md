@@ -121,7 +121,7 @@ base/s3-bucket         JSON key DOCUMENTS_BUCKET
 8. Create the target group and ALB.
 9. Create the ECS service attached to the target group.
 10. Upload `frontend/index.html` to the frontend S3 bucket.
-11. Create CloudFront with the S3 frontend origin and `/api/*` ALB origin.
+11. Create CloudFront with the S3 frontend origin and `/api/*` ALB origin. Keep custom error responses empty because the frontend uses hash routes and API errors must retain their original status and JSON body.
 12. Configure GitHub Actions variables/secrets again if CI/CD should redeploy production.
 
 More detailed historical commands are in `infra/aws/AWS_CONTAINER_CREATION_README.md`.

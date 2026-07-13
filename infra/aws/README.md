@@ -48,6 +48,8 @@ ECS Fargate backend
   |-- CloudWatch Logs
 ```
 
+The frontend uses hash routes such as `#/projects` and `#/project/{id}/{view}`, so CloudFront does not need custom `403` or `404` responses that rewrite errors to `/index.html`. Keep `CustomErrorResponses` empty; otherwise genuine API `404` responses are incorrectly returned as frontend HTML with status `200`.
+
 ## Required AWS Resources
 
 - ECR repository for the backend image.
