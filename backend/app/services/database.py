@@ -145,6 +145,28 @@ def read_audit_records(tenant_id: str, limit: int = 100) -> List[Dict]:
     return rows
 
 
+def delete_tenant_records(tenant_id: str) -> Dict[str, int]:
+    """Delete project-scoped metadata and audit rows from Postgres."""
+    init_metadata_schema()
+    with _connect() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                "DELETE FROM base_json_store WHERE tenant_id = %s RETURNING name",
+                (tenant_id,),
+            )
+            metadata_deleted = len(cur.fetchall())
+            cur.execute(
+                "DELETE FROM base_audit_events WHERE tenant_id = %s RETURNING id",
+                (tenant_id,),
+            )
+            audit_deleted = len(cur.fetchall())
+        conn.commit()
+    return {
+        "metadata_records_deleted": metadata_deleted,
+        "audit_events_deleted": audit_deleted,
+    }
+
+
 def init_vector_schema() -> None:
     global _vector_schema_ready
     if _vector_schema_ready:
@@ -207,3 +229,17 @@ def init_vector_schema() -> None:
 def vector_connection():
     init_vector_schema()
     return _connect()
+
+
+def delete_tenant_vectors(tenant_id: str) -> int:
+    """Delete all pgvector chunks owned by one project."""
+    init_vector_schema()
+    with _connect() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                "DELETE FROM base_vector_chunks WHERE tenant_id = %s RETURNING id",
+                (tenant_id,),
+            )
+            deleted = len(cur.fetchall())
+        conn.commit()
+    return deleted

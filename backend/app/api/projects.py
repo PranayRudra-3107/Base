@@ -2,7 +2,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import List
 
-from app.services.projects import create_project, get_project, list_projects
+from app.services.projects import create_project, delete_project, get_project, list_projects
 
 router = APIRouter()
 
@@ -47,5 +47,14 @@ async def get_project_details(project_id: str):
     """Return one project and its lightweight dashboard summary."""
     try:
         return get_project(project_id)
+    except KeyError:
+        raise HTTPException(status_code=404, detail="Project not found.")
+
+
+@router.delete("/{project_id}")
+async def remove_project(project_id: str):
+    """Delete a project and all project-scoped documents, vectors, metadata, and audit data."""
+    try:
+        return delete_project(project_id)
     except KeyError:
         raise HTTPException(status_code=404, detail="Project not found.")

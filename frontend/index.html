@@ -125,6 +125,7 @@ button { cursor: pointer; }
 .project-stat span { display: block; color: var(--text-muted); font-size: 10px; font-family: var(--mono); text-transform: uppercase; }
 .project-stat strong { display: block; margin-top: 7px; font-family: var(--display); font-size: 18px; }
 .project-card-actions { display: flex; justify-content: space-between; align-items: center; gap: 10px; margin-top: auto; }
+.project-card-actions-right { display: flex; align-items: center; gap: 8px; }
 .project-updated { color: var(--text-muted); font-family: var(--mono); font-size: 10px; }
 .sidebar { width: var(--sidebar-w); min-width: var(--sidebar-w); background: rgba(15,19,27,.88); border-right: 1px solid rgba(255,255,255,.08); display: flex; flex-direction: column; overflow: hidden; box-shadow: 18px 0 42px rgba(0,0,0,.22); backdrop-filter: blur(16px); }
 .sidebar-logo { padding: 24px 20px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 10px; background: linear-gradient(180deg, rgba(124,92,255,.09), transparent); }
@@ -415,6 +416,36 @@ td:first-child { color: var(--text); }
 .toast-success { color: #4ade80; border-color: rgba(34,197,94,.35); }
 .toast-error { color: #f87171; border-color: rgba(239,68,68,.35); }
 .toast-info { color: var(--teal); border-color: rgba(45,212,191,.35); }
+.brand-home-button { display: flex; align-items: center; gap: 10px; border: 0; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; appearance: none; }
+.sidebar > .brand-home-button { width: 100%; }
+.brand-home-button:hover .logo-mark { transform: translateY(-2px) scale(1.03); }
+.danger-btn { border-color: rgba(255,93,108,.42); color: #ff8b96; }
+.danger-btn:hover { border-color: var(--red); background: rgba(255,93,108,.12); color: #ffd4d8; }
+.global-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: rgba(5,7,10,.74);
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .2s ease, visibility .2s ease;
+}
+.global-loader.active { opacity: 1; visibility: visible; }
+.global-loader-card { width: min(410px, 100%); padding: 22px; border: 1px solid rgba(255,255,255,.16); border-radius: 6px; background: #0d1219; box-shadow: 0 30px 90px rgba(0,0,0,.58); }
+.global-loader-head { display: flex; align-items: center; gap: 14px; }
+.global-loader-mark { position: relative; width: 42px; height: 42px; flex: 0 0 42px; border: 1px solid rgba(45,212,191,.38); border-radius: 4px; display: grid; place-items: center; color: var(--teal); font-family: var(--display); font-weight: 700; overflow: hidden; }
+.global-loader-mark::before { content: ""; position: absolute; inset: -20px; border: 1px solid var(--teal); animation: loader-orbit 1.35s linear infinite; }
+.global-loader-title { font-family: var(--display); font-size: 16px; }
+.global-loader-detail { margin-top: 4px; color: var(--text-muted); font-family: var(--mono); font-size: 10px; line-height: 1.5; }
+.global-loader-track { height: 2px; margin-top: 18px; overflow: hidden; background: #202834; }
+.global-loader-track::after { content: ""; display: block; width: 42%; height: 100%; background: linear-gradient(90deg, var(--teal), var(--blue)); animation: loader-scan 1.1s ease-in-out infinite; }
+@keyframes loader-orbit { to { transform: rotate(360deg); } }
+@keyframes loader-scan { from { transform: translateX(-110%); } to { transform: translateX(340%); } }
+@media(prefers-reduced-motion:reduce){.global-loader-mark::before,.global-loader-track::after{animation:none}.global-loader-track::after{width:100%}}
 
 /* Workspace visual system: extends the landing page language into the product. */
 :root {
@@ -576,6 +607,8 @@ button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visib
 .topbar-title::before { content: ""; width: 6px; height: 6px; border-radius: 50%; background: var(--teal); box-shadow: 0 0 12px rgba(45,212,191,.72); }
 .topbar-sub { color: var(--text-muted); font-family: var(--mono); font-size: 10px; }
 .pill { min-height: 30px; border-radius: 4px; background: #10151d; font-size: 10px; }
+.pill.api-error { border-color: rgba(255,93,108,.45); color: #ff9ba4; }
+.pill.api-error .status-dot { background: var(--red); box-shadow: 0 0 12px rgba(255,93,108,.65); }
 .view { background: rgba(8,10,15,.28); }
 .workspace { max-width: 1240px; padding: 36px 30px 54px; }
 .section-head { position: relative; align-items: flex-start; margin-bottom: 24px; padding: 25px 0 21px; border-bottom: 1px solid rgba(255,255,255,.11); }
@@ -825,13 +858,13 @@ tr:hover td { background: rgba(255,255,255,.018); }
     <div class="project-header">
       <div>
         <div class="workspace-kicker">Project memory / directory</div>
-        <div class="project-brand">
+        <button class="project-brand brand-home-button" type="button" onclick="showLanding()" aria-label="Go to Base landing page">
           <div class="logo-mark">B</div>
           <div>
             <div class="logo-text">Base</div>
             <div class="muted">Project Intelligence & KT Copilot</div>
           </div>
-        </div>
+        </button>
         <h1>Projects</h1>
         <p class="muted">Create a project workspace, then upload the related Jira, Teams, GitHub, metrics, database, Confluence, and incident files inside it.</p>
       </div>
@@ -867,11 +900,11 @@ tr:hover td { background: rgba(255,255,255,.018); }
 
 <div id="app">
   <aside class="sidebar">
-    <div class="sidebar-logo">
+    <button class="sidebar-logo brand-home-button" type="button" onclick="showLanding()" aria-label="Go to Base landing page">
       <div class="logo-mark">B</div>
       <span class="logo-text">Base</span>
       <span class="logo-badge">KT</span>
-    </div>
+    </button>
     <nav class="sidebar-nav">
       <button class="nav-btn" onclick="backToProjects()">All Projects</button>
       <div class="nav-label">Workspace</div>
@@ -907,7 +940,7 @@ tr:hover td { background: rgba(255,255,255,.018); }
           <option value="hi">Hindi</option>
         </select>
         <div class="pill"><span id="tenant-label">No project</span></div>
-        <div class="pill"><span class="status-dot"></span><span>API Ready</span></div>
+        <div class="pill" id="api-status-pill"><span class="status-dot"></span><span id="api-status-text">API Ready</span></div>
       </div>
     </div>
 
@@ -1372,6 +1405,18 @@ tr:hover td { background: rgba(255,255,255,.018); }
   </div>
 </div>
 <div class="toast-container" id="toast-container"></div>
+<div class="global-loader" id="global-loader" aria-hidden="true" aria-live="polite">
+  <div class="global-loader-card" role="status">
+    <div class="global-loader-head">
+      <div class="global-loader-mark">B</div>
+      <div>
+        <div class="global-loader-title" id="global-loader-title">Loading project data</div>
+        <div class="global-loader-detail" id="global-loader-detail">Connecting to the Base service...</div>
+      </div>
+    </div>
+    <div class="global-loader-track"></div>
+  </div>
+</div>
 
 <script>
 const API_BASE = location.protocol === 'file:' || location.port === '3000'
@@ -1381,6 +1426,7 @@ const CHAT_STORAGE_KEY = 'base.project.chat.history.v1';
 const CHAT_HISTORY_LIMIT = 80;
 const GRAPH_MIN_SCALE = 0.12;
 const GRAPH_MAX_SCALE = 3.2;
+const VALID_VIEWS = new Set(['dashboard','agents','connectors','graph','chat','kt','studio','documents','audit']);
 const LANDING_GRAPH_NODES = [
   {x:.66, y:.15, label:'Jira / BASE-431', color:'#38bdf8', size:5, phase:.2},
   {x:.82, y:.12, label:'PR #1842', color:'#42d392', size:6, phase:1.1},
@@ -1408,6 +1454,82 @@ let activeConnectorForModal = null;
 let connectorSyncing = {};
 let landingGraphState = null;
 let landingGraphAnimationId = null;
+let activeViewName = 'dashboard';
+let pendingNetworkRequests = 0;
+let networkLoaderTimer = null;
+let networkDelayTimer = null;
+
+const nativeFetch = window.fetch.bind(window);
+window.fetch = async function trackedFetch(resource, options = {}) {
+  const rawUrl = typeof resource === 'string' ? resource : resource?.url || '';
+  let requestUrl;
+  try { requestUrl = new URL(rawUrl, window.location.href); } catch { return nativeFetch(resource, options); }
+  const apiUrl = new URL(API_BASE, window.location.href);
+  const shouldTrack = requestUrl.origin === apiUrl.origin && requestUrl.pathname.startsWith('/api/');
+  if (!shouldTrack) return nativeFetch(resource, options);
+
+  beginNetworkActivity(networkLabel(requestUrl.pathname, options.method));
+  try {
+    const response = await nativeFetch(resource, options);
+    setApiStatus(response.status < 500, response.status < 500 ? 'API Ready' : 'API Issue');
+    return response;
+  } catch (error) {
+    setApiStatus(false, 'API Unavailable');
+    throw error;
+  } finally {
+    endNetworkActivity();
+  }
+};
+
+function setApiStatus(ready, label) {
+  const pill = document.getElementById('api-status-pill');
+  const text = document.getElementById('api-status-text');
+  if (!pill || !text) return;
+  pill.classList.toggle('api-error', !ready);
+  text.textContent = label;
+}
+
+function networkLabel(path, method = 'GET') {
+  if (path.includes('/query/')) return 'Contacting AI agents';
+  if (path.includes('/ingest')) return 'Uploading and indexing sources';
+  if (path.includes('/knowledge-graph')) return 'Building the knowledge graph';
+  if (path.includes('/connectors')) return 'Connecting project sources';
+  if (path.includes('/mcp')) return 'Contacting MCP services';
+  if (path.includes('/projects') && String(method).toUpperCase() === 'DELETE') return 'Deleting project data';
+  if (path.includes('/projects')) return 'Loading project workspaces';
+  return 'Loading project data';
+}
+
+function beginNetworkActivity(label) {
+  pendingNetworkRequests += 1;
+  document.getElementById('global-loader-title').textContent = label;
+  if (pendingNetworkRequests > 1 || networkLoaderTimer) return;
+  networkLoaderTimer = setTimeout(() => {
+    networkLoaderTimer = null;
+    if (!pendingNetworkRequests) return;
+    const loader = document.getElementById('global-loader');
+    loader.classList.add('active');
+    loader.setAttribute('aria-hidden', 'false');
+    networkDelayTimer = setTimeout(() => {
+      if (pendingNetworkRequests) {
+        document.getElementById('global-loader-detail').textContent = 'AWS is taking longer than usual. Your request is still running.';
+      }
+    }, 2600);
+  }, 320);
+}
+
+function endNetworkActivity() {
+  pendingNetworkRequests = Math.max(0, pendingNetworkRequests - 1);
+  if (pendingNetworkRequests) return;
+  clearTimeout(networkLoaderTimer);
+  clearTimeout(networkDelayTimer);
+  networkLoaderTimer = null;
+  networkDelayTimer = null;
+  const loader = document.getElementById('global-loader');
+  loader.classList.remove('active');
+  loader.setAttribute('aria-hidden', 'true');
+  document.getElementById('global-loader-detail').textContent = 'Connecting to the Base service...';
+}
 
 const AGENT_TEMPLATES = [
   {
@@ -1483,34 +1605,83 @@ const CONNECTOR_CATALOG = [
 ];
 connectorCatalog = CONNECTOR_CATALOG;
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   initLandingGraph();
-  loadProjects();
+  await loadProjects();
+  await restoreAppRoute();
 });
+window.addEventListener('popstate', () => restoreAppRoute());
 
-function enterBase() {
+function setAppRoute(hash, replace = false) {
+  if (location.hash === hash) return;
+  const nextUrl = `${location.pathname}${location.search}${hash}`;
+  history[replace ? 'replaceState' : 'pushState']({baseRoute: hash}, '', nextUrl);
+}
+
+function projectRoute(projectId, view = 'dashboard') {
+  return `#/project/${encodeURIComponent(projectId)}/${encodeURIComponent(view)}`;
+}
+
+async function restoreAppRoute() {
+  const hash = location.hash;
+  if (hash === '#/projects') {
+    enterBase(false);
+    return;
+  }
+  const match = hash.match(/^#\/project\/([^/]+)\/([^/]+)$/);
+  if (match) {
+    const projectId = decodeURIComponent(match[1]);
+    const view = VALID_VIEWS.has(decodeURIComponent(match[2])) ? decodeURIComponent(match[2]) : 'dashboard';
+    let project = projects.find(item => item.project_id === projectId);
+    if (!project) {
+      try {
+        const response = await fetch(`${API_BASE}/api/projects/${encodeURIComponent(projectId)}`);
+        if (response.ok) {
+          project = await response.json();
+          projects = [project, ...projects.filter(item => item.project_id !== projectId)];
+        }
+      } catch {}
+    }
+    if (project) {
+      openProject(project, view, false);
+      return;
+    }
+    enterBase(false);
+    setAppRoute('#/projects', true);
+    showToast('That project is no longer available.', 'info');
+    return;
+  }
+  if (!hash || hash === '#landing-top' || hash === '#landing-system') {
+    showLanding(false);
+    if (hash) requestAnimationFrame(() => document.querySelector(hash)?.scrollIntoView());
+  }
+}
+
+function enterBase(updateRoute = true) {
   document.getElementById('landing').classList.remove('active');
   document.getElementById('landing').setAttribute('aria-hidden', 'true');
   document.getElementById('project-hub').classList.add('active');
   document.getElementById('project-hub').removeAttribute('aria-hidden');
+  document.getElementById('app').classList.remove('active');
+  if (updateRoute) setAppRoute('#/projects');
   stopLandingGraph();
   resetPageScroll();
 }
 
-function showLanding() {
+function showLanding(updateRoute = true) {
   currentProject = null;
   document.getElementById('app').classList.remove('active');
   document.getElementById('project-hub').classList.remove('active');
   document.getElementById('project-hub').setAttribute('aria-hidden', 'true');
   document.getElementById('landing').classList.add('active');
   document.getElementById('landing').removeAttribute('aria-hidden');
+  if (updateRoute) setAppRoute('');
   resetPageScroll();
   resizeLandingGraph();
   startLandingGraph();
 }
 
 function resetPageScroll() {
-  if (location.hash) history.replaceState(null, '', `${location.pathname}${location.search}`);
   document.body.scrollTop = 0;
   document.documentElement.scrollTop = 0;
   document.getElementById('landing').scrollTop = 0;
@@ -1734,7 +1905,10 @@ function renderProjects() {
       </div>
       <div class="project-card-actions">
         <span class="project-updated">${p.updated_at ? new Date(p.updated_at).toLocaleDateString() : 'New'}</span>
-        <button class="primary-btn" data-project-id="${attr(p.project_id)}" onclick="openProjectFromButton(this)">Open</button>
+        <div class="project-card-actions-right">
+          <button class="secondary-btn danger-btn" data-project-id="${attr(p.project_id)}" data-project-name="${attr(p.name)}" onclick="deleteProjectFromButton(this)">Delete</button>
+          <button class="primary-btn" data-project-id="${attr(p.project_id)}" onclick="openProjectFromButton(this)">Open</button>
+        </div>
       </div>
     </div>
   `).join('');
@@ -1776,7 +1950,29 @@ function openProjectFromButton(btn) {
   if (project) openProject(project);
 }
 
-function openProject(project) {
+async function deleteProjectFromButton(btn) {
+  const projectId = btn.dataset.projectId;
+  const projectName = btn.dataset.projectName || 'this project';
+  if (!confirm(`Delete “${projectName}” and all of its sources, vectors, connector settings, and history? This cannot be undone.`)) return;
+  btn.disabled = true;
+  btn.textContent = 'Deleting...';
+  try {
+    const response = await fetch(`${API_BASE}/api/projects/${encodeURIComponent(projectId)}`, {method:'DELETE'});
+    const data = await response.json();
+    if (!response.ok) throw new Error(data.detail || 'Project deletion failed');
+    removeProjectChatHistory(projectId);
+    projects = projects.filter(project => project.project_id !== projectId);
+    renderProjects();
+    if (currentProject?.project_id === projectId) backToProjects();
+    showToast(`${projectName} was deleted.`, 'success');
+  } catch (error) {
+    btn.disabled = false;
+    btn.textContent = 'Delete';
+    showToast(error.message || 'Project deletion failed', 'error');
+  }
+}
+
+function openProject(project, view = 'dashboard', updateRoute = true) {
   currentProject = project;
   messages = loadProjectChatHistory(project.project_id);
   documents = [];
@@ -1786,7 +1982,9 @@ function openProject(project) {
   connectorCatalog = CONNECTOR_CATALOG;
   connectorSyncing = {};
   document.getElementById('landing').classList.remove('active');
+  document.getElementById('landing').setAttribute('aria-hidden', 'true');
   document.getElementById('project-hub').classList.remove('active');
+  document.getElementById('project-hub').setAttribute('aria-hidden', 'true');
   document.getElementById('app').classList.add('active');
   resetPageScroll();
   stopLandingGraph();
@@ -1795,15 +1993,17 @@ function openProject(project) {
   document.getElementById('topbar-doc-count').textContent = 'Loading sources...';
   if (messages.length) renderMessages();
   else resetChat();
-  setView('dashboard');
+  setView(VALID_VIEWS.has(view) ? view : 'dashboard', false);
+  if (updateRoute) setAppRoute(projectRoute(project.project_id, activeViewName));
   refreshAll();
 }
 
-function backToProjects() {
+function backToProjects(updateRoute = true) {
   currentProject = null;
   document.getElementById('app').classList.remove('active');
   document.getElementById('project-hub').classList.add('active');
   document.getElementById('project-hub').removeAttribute('aria-hidden');
+  if (updateRoute) setAppRoute('#/projects');
   resetPageScroll();
   loadProjects();
 }
@@ -1812,7 +2012,9 @@ function projectHeaders(extra = {}) {
   return {...extra, 'x-tenant-id': currentProject?.project_id || 'default'};
 }
 
-function setView(v) {
+function setView(v, updateRoute = true) {
+  if (!VALID_VIEWS.has(v)) v = 'dashboard';
+  activeViewName = v;
   document.querySelectorAll('.view').forEach(el => el.classList.toggle('active', el.id === `view-${v}`));
   document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.view === v));
   const activeView = document.getElementById(`view-${v}`);
@@ -1821,6 +2023,7 @@ function setView(v) {
   const titles = {dashboard:'Project Dashboard', agents:'Agent Gallery', connectors:'Connector Hub', graph:'Knowledge Graph', chat:'Knowledge Chat', kt:'KT Brief', studio:'Study Studio', documents:'Sources', audit:'Activity Log'};
   const prefix = currentProject ? `${currentProject.name} ` : '';
   document.getElementById('topbar-title').textContent = v === 'dashboard' ? `${prefix}Dashboard` : (titles[v] || 'Project Intelligence');
+  if (updateRoute && currentProject) setAppRoute(projectRoute(currentProject.project_id, v));
   if (v === 'agents') renderAgentGallery();
   if (v === 'connectors') { renderConnectorHub(); loadConnectors(); }
   if (v === 'chat') messages.length ? renderMessages() : resetChat();
@@ -2409,6 +2612,12 @@ function writeChatStore(store) {
   } catch {
     showToast('Chat history could not be saved in this browser', 'error');
   }
+}
+
+function removeProjectChatHistory(projectId) {
+  const store = readChatStore();
+  delete store[chatStorageId(projectId)];
+  writeChatStore(store);
 }
 
 function cleanChatMessage(message) {
@@ -3248,11 +3457,22 @@ function renderReviewBoardSummary(message) {
 function renderSourceChip(source) {
   const isWeb = source.source_type === 'web' || source.url;
   const mode = source.retrieval_mode ? ` ${source.retrieval_mode}` : '';
-  const label = isWeb ? `${source.filename || 'Web source'} (web)` : `${source.filename} ${(source.relevance_score*100).toFixed(0)}%${mode}`;
-  if (source.url) {
-    return `<a class="source-chip" href="${attr(source.url)}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>`;
+  const label = isWeb ? `${source.filename || 'Web source'} (web)` : `${source.filename || 'Project source'} ${(Number(source.relevance_score || 0)*100).toFixed(0)}%${mode}`;
+  const url = safeExternalUrl(source.url);
+  if (url) {
+    return `<a class="source-chip" href="${attr(url)}" target="_blank" rel="noopener noreferrer">${esc(label)}</a>`;
   }
   return `<div class="source-chip">${esc(label)}</div>`;
+}
+
+function safeExternalUrl(value) {
+  if (!value) return '';
+  try {
+    const url = new URL(value, window.location.origin);
+    return ['http:', 'https:'].includes(url.protocol) ? url.href : '';
+  } catch {
+    return '';
+  }
 }
 
 function renderInlineMarkdown(text) {

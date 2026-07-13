@@ -8,7 +8,8 @@ from typing import Dict, List
 from app.core.config import get_settings
 from app.services.database import postgres_enabled
 from app.services.analytics import build_dashboard
-from app.services.storage import read_json, write_json
+from app.services.storage import delete_project_storage, read_json, write_json
+from app.services.vector_store import delete_project_index
 
 settings = get_settings()
 
@@ -110,6 +111,24 @@ def get_project(project_id: str) -> Dict:
         if project.get("project_id") == project_id:
             return {**project, **_project_summary(project_id)}
     raise KeyError(project_id)
+
+
+def delete_project(project_id: str) -> Dict:
+    projects = _read_projects()
+    project = next((item for item in projects if item.get("project_id") == project_id), None)
+    if not project:
+        raise KeyError(project_id)
+
+    vectors_deleted = delete_project_index(project_id)
+    storage_result = delete_project_storage(project_id)
+    _write_projects([item for item in projects if item.get("project_id") != project_id])
+    return {
+        "message": "Project deleted.",
+        "project_id": project_id,
+        "project_name": project.get("name", ""),
+        "vectors_deleted": vectors_deleted,
+        **storage_result,
+    }
 
 
 def touch_project(project_id: str) -> None:

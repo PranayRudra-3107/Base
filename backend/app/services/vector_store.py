@@ -2,7 +2,7 @@ import chromadb
 from openai import OpenAI
 from chromadb.utils import embedding_functions
 from app.core.config import get_settings
-from app.services.database import pgvector_enabled, vector_connection
+from app.services.database import delete_tenant_vectors, pgvector_enabled, vector_connection
 from app.services.ingestion import chunk_text, extract_text
 from app.services.storage import list_document_analyses, read_json, read_raw_document, write_json
 from typing import List, Dict, Any
@@ -42,6 +42,12 @@ def get_or_create_collection(tenant_id: str):
         api_key=settings.openai_api_key,
         model_name=settings.embedding_model
     )
+    collection_name = _collection_name(tenant_id)
+    return client.get_or_create_collection(
+        name=collection_name,
+        embedding_function=ef,
+        metadata={"hnsw:space": "cosine"}
+    )
 
 
 def _vector_literal(values: List[float]) -> str:
@@ -63,12 +69,6 @@ def _embed_texts(texts: List[str]) -> List[List[float]]:
         ordered = sorted(response.data, key=lambda item: item.index)
         embeddings.extend(item.embedding for item in ordered)
     return embeddings
-    collection_name = _collection_name(tenant_id)
-    return client.get_or_create_collection(
-        name=collection_name,
-        embedding_function=ef,
-        metadata={"hnsw:space": "cosine"}
-    )
 
 
 def _fallback_chunks(tenant_id: str) -> List[Dict[str, Any]]:
@@ -580,3 +580,23 @@ def delete_document(tenant_id: str, document_id: str):
         return deleted
     except Exception:
         return _delete_keyword_document(tenant_id, document_id)
+
+
+def delete_project_index(tenant_id: str) -> int:
+    """Delete every vector chunk associated with one project."""
+    if pgvector_enabled():
+        return delete_tenant_vectors(tenant_id)
+
+    fallback_count = len(_fallback_chunks(tenant_id))
+    client = get_chroma_client()
+    collection_name = _collection_name(tenant_id)
+    try:
+        collection = client.get_collection(collection_name)
+        deleted = collection.count()
+    except Exception:
+        deleted = 0
+    try:
+        client.delete_collection(collection_name)
+    except Exception:
+        pass
+    return deleted or fallback_count

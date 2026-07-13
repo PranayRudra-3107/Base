@@ -1,11 +1,12 @@
 import json
 import os
 import re
+import shutil
 from typing import Dict, List
 from urllib.parse import quote, urlparse
 
 from app.core.config import get_settings
-from app.services.database import postgres_enabled, read_json_record, write_json_record
+from app.services.database import delete_tenant_records, postgres_enabled, read_json_record, write_json_record
 
 settings = get_settings()
 
@@ -128,3 +129,44 @@ def delete_document_analysis(tenant_id: str, document_id: str) -> bool:
     kept = [item for item in analyses if item.get("document_id") != document_id]
     write_json(tenant_id, "analyses", kept)
     return len(kept) != len(analyses)
+
+
+def delete_project_storage(tenant_id: str) -> Dict[str, int]:
+    """Delete a project's raw files, metadata, connector state, and audit rows."""
+    safe_tenant = _safe_tenant(tenant_id)
+    analyses = list_document_analyses(tenant_id)
+    raw_documents_deleted = 0
+    for analysis in analyses:
+        try:
+            raw_documents_deleted += int(delete_raw_document(analysis.get("storage_path", "")))
+        except Exception:
+            # Continue removing the project even if an already-missing object cannot be deleted.
+            continue
+
+    metadata_result = {"metadata_records_deleted": 0, "audit_events_deleted": 0}
+    if postgres_enabled():
+        metadata_result = delete_tenant_records(safe_tenant)
+    else:
+        shutil.rmtree(os.path.join(settings.data_dir, safe_tenant), ignore_errors=True)
+        if os.path.exists(settings.audit_log_path):
+            with open(settings.audit_log_path, "r", encoding="utf-8") as source:
+                events = [line for line in source if line.strip()]
+            kept = []
+            audit_events_deleted = 0
+            for line in events:
+                try:
+                    if json.loads(line).get("tenant_id") == tenant_id:
+                        audit_events_deleted += 1
+                        continue
+                except json.JSONDecodeError:
+                    pass
+                kept.append(line)
+            with open(settings.audit_log_path, "w", encoding="utf-8") as target:
+                target.writelines(kept)
+            metadata_result["audit_events_deleted"] = audit_events_deleted
+
+    shutil.rmtree(os.path.join(settings.document_storage_dir, safe_tenant), ignore_errors=True)
+    return {
+        "raw_documents_deleted": raw_documents_deleted,
+        **metadata_result,
+    }

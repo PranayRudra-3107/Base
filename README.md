@@ -555,6 +555,7 @@ Because this is still the document-focused MVP, use project docs, tickets export
 | GET | `/api/projects/` | List project workspaces with dashboard summaries |
 | POST | `/api/projects/` | Create a project workspace |
 | GET | `/api/projects/{id}` | Return one project workspace summary |
+| DELETE | `/api/projects/{id}` | Permanently delete a project and its documents, vectors, connector state, and audit data |
 | POST | `/api/ingest/` | Upload and index a document |
 | POST | `/api/query/` | Ask a question over indexed documents with optional internet fallback |
 | POST | `/api/query/stream` | Ask a question with backend progress events, optional internet fallback, and final answer |
