@@ -2,6 +2,29 @@
 
 This folder contains the deploy-time scaffolding for running Base on AWS.
 
+## Current Four-Day Demo
+
+This environment was rebuilt on 2026-07-13 for a public recruiter demo and is scheduled for automatic deletion.
+
+```text
+Account:          626210706801
+Region:           eu-central-1
+Public URL:       https://d2llye5km5il24.cloudfront.net/
+CloudFront ID:    E2AVPU9QAGIB72
+ALB:              base-alb-1755646895.eu-central-1.elb.amazonaws.com
+ECS cluster:      base-cluster
+ECS service:      base-api-service
+RDS:              base / PostgreSQL 17.9 / db.t4g.micro / 20 GB gp3
+Frontend bucket:  base-frontend-pranay
+Documents bucket: base-documents-pranay
+Budget:           base-four-day-demo / USD 20
+Teardown:         2026-07-16T21:00:00Z (23:00 Europe/Berlin)
+```
+
+The primary AWS Scheduler job `base-demo-teardown-primary` invokes Lambda `base-demo-teardown`. Two one-time retries run at `21:35Z` and `22:15Z`; all three schedules delete themselves after completion. The Lambda stops ECS first, deletes the ALB and RDS without a final snapshot, disables/deletes CloudFront, empties S3, removes ECR and secrets, and retries dependency cleanup safely.
+
+The public UI has no login for this time-limited demo. `/mcp` is still bearer-key protected. The MCP key and all other secret values are stored only in Secrets Manager.
+
 For the exact resource/container names to create and reuse in future conversations, see:
 
 ```text
@@ -33,6 +56,7 @@ ECS Fargate backend
   - `base/openai-api-key` with JSON key `OPENAI_API_KEY`
   - `base/database-url` with JSON key `DATABASE_URL`
   - `base/s3-bucket` with JSON key `DOCUMENTS_BUCKET`
+  - `base/mcp-api-key` with JSON key `MCP_API_KEY`
 - IAM OIDC role for GitHub Actions deployment.
 
 ## Production Environment Variables
@@ -48,14 +72,16 @@ S3_PREFIX=base
 AWS_REGION=eu-central-1
 CORS_ORIGINS=https://yourdomain.com
 OPENAI_API_KEY=sk-...
+MCP_API_KEY=generated-secret
 ```
 
 Current live endpoints:
 
 ```text
-Frontend:        https://d13xa0pqwvaoqw.cloudfront.net/
-Backend health:  http://base-alb-2085702204.eu-central-1.elb.amazonaws.com/health
-CloudFront API:  https://d13xa0pqwvaoqw.cloudfront.net/api/projects/
+Frontend:        https://d2llye5km5il24.cloudfront.net/
+Backend API:     https://d2llye5km5il24.cloudfront.net/api/projects/
+MCP status:      https://d2llye5km5il24.cloudfront.net/api/mcp/status
+MCP transport:   https://d2llye5km5il24.cloudfront.net/mcp
 ```
 
 ## GitHub Actions Variables
@@ -79,6 +105,8 @@ AWS_DEPLOY_ROLE_ARN
 
 ## ECS Task Definition
 
-`ecs-task-definition.json` is a deployable template and has been filled with the current AWS account ID, role ARNs, secret ARNs, region, ECR image URI, and CloudFront/ALB CORS origins.
+`ecs-task-definition.json` is a deployable template and has been filled with the current AWS account ID, role ARNs, secret ARNs, region, ECR image URI, and CloudFront CORS origin.
+
+`demo_teardown.py` is deployed as Lambda `base-demo-teardown`. Do not invoke it while the demo should remain online. The manual backup workflow is `.github/workflows/teardown-aws.yml`.
 
 The GitHub deploy workflow updates only the container image field. Infrastructure should be created first with Terraform, CDK, CloudFormation, or the AWS console.

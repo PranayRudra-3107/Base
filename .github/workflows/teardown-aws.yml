@@ -1,0 +1,32 @@
+name: Teardown AWS Demo
+
+on:
+  workflow_dispatch:
+
+permissions:
+  id-token: write
+  contents: read
+
+env:
+  AWS_REGION: ${{ vars.AWS_REGION }}
+  TEARDOWN_FUNCTION: base-demo-teardown
+
+jobs:
+  teardown:
+    runs-on: ubuntu-latest
+    environment: prod
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_DEPLOY_ROLE_ARN }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Invoke idempotent teardown
+        run: |
+          aws lambda invoke \
+            --function-name "$TEARDOWN_FUNCTION" \
+            --cli-binary-format raw-in-base64-out \
+            --payload '{"source":"github-manual-backup"}' \
+            teardown-result.json
+          cat teardown-result.json

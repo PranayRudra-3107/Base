@@ -1,8 +1,30 @@
 # Base Production Teardown And Rebuild Notes
 
-Last updated: 2026-05-31
+Last updated: 2026-07-13
 
 This file records the AWS production architecture before deletion so the project can be rebuilt later without keeping billable resources alive.
+
+## Current Temporary Rebuild
+
+The architecture was rebuilt for a four-day public demo using the same account and Frankfurt region. Unlike the historical deployment below, both S3 buckets now live in `eu-central-1` to avoid cross-region document traffic.
+
+| Resource | Current value |
+|---|---|
+| Public URL | `https://d2llye5km5il24.cloudfront.net/` |
+| CloudFront | `E2AVPU9QAGIB72` |
+| CloudFront OAC | `EQTEMDO3H6TD1` |
+| ALB | `base-alb`, DNS `base-alb-1755646895.eu-central-1.elb.amazonaws.com` |
+| Target group | `base-api-tg` |
+| ECS | cluster `base-cluster`, service `base-api-service`, task family `base-api` |
+| RDS | `base`, PostgreSQL `17.9`, `db.t4g.micro`, 20 GB gp3, private |
+| S3 | `base-frontend-pranay`, `base-documents-pranay` in `eu-central-1` |
+| Budget | `base-four-day-demo`, USD 20 |
+| Teardown Lambda | `base-demo-teardown` |
+| Deadline | `2026-07-16T21:00:00Z` / 23:00 Europe/Berlin |
+
+Scheduler jobs `base-demo-teardown-primary`, `base-demo-teardown-finalizer`, and `base-demo-teardown-last-pass` run at `21:00Z`, `21:35Z`, and `22:15Z`. The later runs finish resources whose deletion is asynchronous. The source is `infra/aws/demo_teardown.py`, and `.github/workflows/teardown-aws.yml` is the manual backup.
+
+No final RDS snapshot is retained. The public UI has no login for the temporary demo, while `/mcp` remains protected with a generated key in `base/mcp-api-key`.
 
 No secret values are stored here. Recreate `OPENAI_API_KEY`, `DATABASE_URL`, and bucket secrets manually in AWS Secrets Manager when rebuilding.
 

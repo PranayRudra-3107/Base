@@ -64,8 +64,10 @@ The current app can:
 - Run a LangGraph-based multi-agent Project Review Board that coordinates planner, source retriever, risk, incident, release, metrics, KT, verifier, and synthesizer agents into one source-grounded project review, with optional Langfuse tracing.
 - Connect and sync project data from live APIs or credential-based connectors, then index the fetched records through the same RAG path as uploaded files.
 - Track connector coverage for Jira, Linear, Azure Boards, Slack, Teams, email, GitHub, GitLab, Bitbucket, product analytics, observability, database health, incidents, docs, support, and BI sources.
+- Expose project catalogs, source lists, hybrid search, dashboards, knowledge graphs, RAG answers, and multi-agent reviews through a project-scoped MCP server.
+- Discover tools and resources on configured external MCP servers, call them through the Base API, and import their output into a selected project's RAG index.
 - Export project intelligence analytics as CSV, Tableau-style JSON, and PowerBI-style JSON.
-- Keep a local JSONL activity trail of uploads, queries, KT briefs, deletes, dashboard views, and exports.
+- Keep a local JSONL activity trail of uploads, queries, KT briefs, deletes, dashboard views, exports, and MCP activity.
 
 Important note: live connectors are demo-grade. They support manual credential/OAuth setup and on-demand sync, but production use should move secrets to AWS Secrets Manager, add permission-aware retrieval, scheduled refresh, and background ingestion workers.
 
@@ -167,12 +169,144 @@ The response is returned as:
 
 The streaming endpoint emits progress events that the frontend renders as the animated "agent thinking" card.
 
+## MCP Interoperability
+
+Base uses the official [Model Context Protocol Python SDK](https://github.com/modelcontextprotocol/python-sdk) in both directions:
+
+- **Base as an MCP server:** MCP clients can access approved Base project data and actions through Streamable HTTP at `/mcp` or through a local stdio process.
+- **Base as an MCP client bridge:** the FastAPI application can discover configured external MCP servers, call their tools, read their resources, and optionally index the returned text into a Base project.
+
+MCP follows a client/server model. An AI application, IDE, or another service that implements an MCP client can connect to Base. A standalone MCP server does not automatically call another MCP server unless it also contains client behavior like the bridge implemented here.
+
+### Base MCP Server
+
+The HTTP MCP endpoint is mounted inside the existing FastAPI process:
+
+```text
+http://localhost:8000/mcp
+```
+
+It uses stateless Streamable HTTP with JSON responses so the same container can serve both REST and MCP traffic. Configure these values in `backend/.env` or the deployment environment:
+
+```bash
+# Required outside trusted local development.
+MCP_API_KEY=replace-with-a-long-random-secret
+
+# Optional comma-separated allowlist. Empty means every Base project is exposed.
+MCP_EXPOSED_PROJECT_IDS=project-atlas-a1b2c3d4,payments-e5f6a7b8
+
+# DNS-rebinding protection. Add the backend origin host and public origin in production.
+MCP_ALLOWED_HOSTS=127.0.0.1:*,localhost:*,[::1]:*
+MCP_ALLOWED_ORIGINS=http://127.0.0.1:*,http://localhost:*,http://[::1]:*
+```
+
+HTTP clients can send the secret as either `Authorization: Bearer <key>` or `X-MCP-API-Key: <key>`. `MCP_API_KEY` may be empty for local-only testing, but do not expose an unauthenticated `/mcp` endpoint to the internet.
+
+Base fails closed in production: when `ENVIRONMENT=production` and `MCP_API_KEY` is empty, `/mcp` returns `503` instead of exposing project data. Create the secret in your deployment secret manager and inject it into the backend container before enabling remote MCP access.
+
+The server exposes these MCP tools:
+
+| Tool | Purpose |
+|------|---------|
+| `base_list_projects` | List project workspaces allowed by `MCP_EXPOSED_PROJECT_IDS` |
+| `base_list_sources` | List indexed sources for one project |
+| `base_search_project` | Run semantic plus keyword/BM25 search and return matching source chunks |
+| `base_get_dashboard` | Return project KPIs, trends, risks, anomalies, and validation issues |
+| `base_get_knowledge_graph` | Return project graph nodes, edges, and evidence metadata |
+| `base_ask_project` | Run source-grounded RAG; web search is off unless explicitly enabled |
+| `base_run_project_review` | Run the LangGraph multi-agent Project Review Board |
+
+It also exposes these resources and resource templates:
+
+| Resource URI | Purpose |
+|--------------|---------|
+| `base://projects` | Catalog of exposed Base projects |
+| `base://projects/{project_id}/summary` | One project summary |
+| `base://projects/{project_id}/sources` | Indexed source catalog |
+| `base://projects/{project_id}/knowledge-graph` | Knowledge graph JSON |
+
+To inspect the HTTP server, start Base and then run the official MCP Inspector:
+
+```bash
+npx -y @modelcontextprotocol/inspector
+```
+
+Connect the Inspector to `http://localhost:8000/mcp` and add `Authorization: Bearer <MCP_API_KEY>` when authentication is enabled.
+
+For a local stdio client, run Base from the backend directory:
+
+```bash
+cd backend
+source venv/bin/activate
+python -m app.mcp_server
+```
+
+The stdio transport does not pass through the HTTP API-key middleware, but `MCP_EXPOSED_PROJECT_IDS` still applies. Only launch it from a trusted local client process.
+
+### External MCP Servers
+
+External MCP URLs are deployment configuration, not arbitrary request parameters. This prevents the REST API from becoming an unrestricted server-side request endpoint. Configure a JSON array in `MCP_EXTERNAL_SERVERS_JSON`:
+
+```bash
+export ENGINEERING_MCP_TOKEN=replace-with-external-server-token
+
+MCP_EXTERNAL_SERVERS_JSON=[{"name":"engineering","url":"https://mcp.example.com/mcp","description":"Engineering docs and release data","bearer_token_env":"ENGINEERING_MCP_TOKEN","project_ids":["project-atlas-a1b2c3d4"]}]
+MCP_REQUEST_TIMEOUT_SECONDS=30
+MCP_MAX_IMPORT_CHARS=200000
+```
+
+Each external-server object supports:
+
+- `name`: unique letters/numbers/underscore/hyphen identifier used in API routes.
+- `url`: absolute `http://` or `https://` Streamable HTTP MCP URL.
+- `description`: optional display text.
+- `project_ids`: optional Base project allowlist; omit or use an empty list for every project.
+- `bearer_token_env`: optional process environment variable containing a bearer token.
+- `api_key_env` and `api_key_header`: optional process environment variable and header name for API-key authentication.
+
+Secret values are never returned by the Base API. Variables named by `bearer_token_env` or `api_key_env` must exist in the process environment, such as an exported shell variable, container secret, or AWS Secrets Manager injected environment variable. Restart Base after changing the server catalog.
+
+Discover one configured server:
+
+```bash
+curl http://localhost:8000/api/mcp/servers/engineering/capabilities \
+  -H "x-tenant-id: project-atlas-a1b2c3d4"
+```
+
+Call an external tool without importing its result:
+
+```bash
+curl -X POST http://localhost:8000/api/mcp/servers/engineering/tools/search_docs \
+  -H "Content-Type: application/json" \
+  -H "x-tenant-id: project-atlas-a1b2c3d4" \
+  -d '{"arguments":{"query":"checkout rollback procedure"}}'
+```
+
+Import a resource into the selected Base project's normal ingestion and RAG path:
+
+```bash
+curl -X POST http://localhost:8000/api/mcp/servers/engineering/import \
+  -H "Content-Type: application/json" \
+  -H "x-tenant-id: project-atlas-a1b2c3d4" \
+  -d '{"source_type":"resource","resource_uri":"docs://runbooks/checkout"}'
+```
+
+For a tool import, use `source_type: "tool"`, provide `tool_name`, and place the tool arguments in `arguments`. Imported MCP responses are saved as Markdown sources, analyzed, chunked, added to semantic and keyword indexes, connected into the knowledge graph, and recorded in the audit log.
+
 ## Current Architecture
 
 ```mermaid
 graph TD
   User[User] --> Frontend[Static HTML Frontend]
   Frontend --> API[FastAPI Backend]
+  MCPClient[MCP Clients and Agent Hosts] -->|Streamable HTTP| BaseMCP[Base MCP Server]
+  BaseMCP --> RAG
+  BaseMCP --> Analytics
+  BaseMCP --> ReviewBoard
+  API --> MCPBridge[External MCP Client Bridge]
+  MCPBridge --> ExternalMCP[Configured External MCP Servers]
+  ExternalMCP --> MCPBridge
+  MCPBridge --> Ingest
   API --> Ingest[Project Source Ingestion]
   Ingest --> Storage[Local File and JSON Storage]
   Ingest --> Chunks[Text Chunking]
@@ -205,6 +339,21 @@ The MVP is intentionally simple:
 
 The app now supports production-oriented storage backends through environment flags while keeping the local MVP defaults.
 
+### Temporary Recruiter Demo
+
+The current four-day AWS deployment is intentionally temporary:
+
+```text
+Public URL:       https://d2llye5km5il24.cloudfront.net/
+AWS Region:      eu-central-1
+AWS budget:      USD 20 for July 2026
+Teardown starts: 2026-07-16 23:00 Europe/Berlin (2026-07-16T21:00:00Z)
+```
+
+AWS EventBridge Scheduler invokes the idempotent `base-demo-teardown` Lambda at the deadline, then repeats at `21:35Z` and `22:15Z` to finish asynchronous CloudFront, RDS, networking, and IAM cleanup. Each one-time schedule uses `ActionAfterCompletion=DELETE`. The manual backup is `.github/workflows/teardown-aws.yml`.
+
+The public application intentionally has no user login for this short recruiter demo. The machine-facing `/mcp` endpoint remains protected by an independently generated `MCP_API_KEY` stored in AWS Secrets Manager. OpenAI-backed public actions can consume separate OpenAI API credit, so the AWS budget does not cap model-provider spending.
+
 Recommended AWS deployment:
 
 ```mermaid
@@ -212,11 +361,13 @@ graph TD
   User[User] --> CloudFront[CloudFront]
   CloudFront --> S3Frontend[S3 Static Frontend]
   CloudFront --> ALB[Application Load Balancer]
+  MCPClients[MCP Clients] --> ALB
   ALB --> ECS[ECS Fargate FastAPI Backend]
   ECS --> RDS[(RDS/Aurora PostgreSQL + pgvector)]
   ECS --> S3Docs[S3 Uploaded Source Files]
   ECS --> Secrets[Secrets Manager]
   ECS --> Logs[CloudWatch Logs]
+  ECS --> ExternalMCP[Approved External MCP Servers]
 ```
 
 Production backend settings:
@@ -232,7 +383,14 @@ S3_PREFIX=base
 AWS_REGION=us-east-1
 CORS_ORIGINS=https://yourdomain.com
 OPENAI_API_KEY=sk-...
+MCP_API_KEY=long-random-production-secret
+MCP_EXPOSED_PROJECT_IDS=approved-project-id
+MCP_ALLOWED_HOSTS=your-alb.example.com,yourdomain.com
+MCP_ALLOWED_ORIGINS=https://yourdomain.com
+MCP_EXTERNAL_SERVERS_JSON=[]
 ```
+
+Store `MCP_API_KEY` in AWS Secrets Manager and inject it through the ECS task definition in the same way as `OPENAI_API_KEY`; do not place the actual value in the task-definition JSON or source control. Until that secret is injected, the production `/mcp` endpoint deliberately remains unavailable.
 
 With those settings:
 
@@ -246,7 +404,9 @@ Deployment scaffolding:
 - `Dockerfile` builds the production backend container.
 - `.github/workflows/ci.yml` runs backend compile checks and container build.
 - `.github/workflows/deploy-aws.yml` builds/pushes to ECR, deploys ECS, syncs the frontend to S3, and invalidates CloudFront.
+- `.github/workflows/teardown-aws.yml` manually invokes the same idempotent teardown Lambda used by the deadline scheduler.
 - `infra/aws/ecs-task-definition.json` is the ECS task definition template.
+- `infra/aws/demo_teardown.py` contains the repeat-safe AWS cleanup function for temporary demos.
 - `infra/aws/README.md` lists required AWS resources and repository variables.
 
 ---
@@ -258,6 +418,7 @@ base-platform/
 +-- backend/
 |   +-- app/
 |   |   +-- main.py              # FastAPI app
+|   |   +-- mcp_server.py        # Base resources/tools over stdio or Streamable HTTP MCP
 |   |   +-- core/config.py       # Settings from .env
 |   |   +-- api/
 |   |   |   +-- ingest.py        # POST /api/ingest/
@@ -265,6 +426,7 @@ base-platform/
 |   |   |   +-- documents.py     # GET/DELETE /api/documents/
 |   |   |   +-- analytics.py     # Project dashboard, activity log, exports
 |   |   |   +-- connectors.py    # Connector catalog, credentials, OAuth, and sync
+|   |   |   +-- mcp_bridge.py    # External MCP discovery, call, read, and import REST endpoints
 |   |   +-- services/
 |   |       +-- ingestion.py     # File parsing and chunking
 |   |       +-- vector_store.py  # ChromaDB and hybrid retrieval operations
@@ -274,6 +436,7 @@ base-platform/
 |   |       +-- analytics.py     # Current project-health metrics
 |   |       +-- connectors.py    # Live connector adapters and state management
 |   |       +-- connector_ingestion.py # Index connector output like uploaded sources
+|   |       +-- mcp_client.py    # Streamable HTTP client for configured external MCP servers
 |   |       +-- storage.py       # Local document/JSON storage
 |   |       +-- database.py      # Optional PostgreSQL metadata and pgvector schema
 |   |       +-- audit_log.py     # JSONL audit trail
@@ -310,6 +473,11 @@ Open `backend/.env` and set:
 ```bash
 OPENAI_API_KEY=sk-your-key-here
 ANTHROPIC_API_KEY=optional-placeholder
+MCP_API_KEY=local-mcp-secret
+MCP_EXPOSED_PROJECT_IDS=
+MCP_ALLOWED_HOSTS=127.0.0.1:*,localhost:*,[::1]:*
+MCP_ALLOWED_ORIGINS=http://127.0.0.1:*,http://localhost:*,http://[::1]:*
+MCP_EXTERNAL_SERVERS_JSON=[]
 ```
 
 `OPENAI_API_KEY` is required for the current app. `ANTHROPIC_API_KEY` is present as a placeholder only; the current code does not call Anthropic.
@@ -341,6 +509,8 @@ Useful URLs:
 - Backend: http://localhost:8000
 - Swagger docs: http://localhost:8000/docs
 - Health check: http://localhost:8000/health
+- MCP status: http://localhost:8000/api/mcp/status
+- MCP Streamable HTTP endpoint: http://localhost:8000/mcp
 
 ### 3. Start The Frontend
 
@@ -365,11 +535,12 @@ You can also open `frontend/index.html` directly in a browser. When served on po
 4. Review the extracted dashboard metrics for the selected project.
 5. Open Agents to run the multi-agent Project Review Board or focused project workflows such as risk review, incident review, release notes, or source gap analysis.
 6. Open Connectors to inspect which project data sources are indexed and which uploads are still missing.
-7. Open the Knowledge Graph view to inspect source, ticket, PR, incident, risk, blocker, decision, and metric connections. Click nodes for topic details or edges for connection evidence.
-8. Ask questions in the AI chat.
-9. Generate a KT brief for onboarding, handoff, or operations review.
-10. Go back to the project dashboard to switch projects.
-11. Export extracted analytics with `Export CSV`, `Tableau JSON`, or `PowerBI JSON`.
+7. Connect an MCP client to `/mcp`, or discover/import an approved external MCP server through `/api/mcp`.
+8. Open the Knowledge Graph view to inspect source, ticket, PR, incident, risk, blocker, decision, and metric connections. Click nodes for topic details or edges for connection evidence.
+9. Ask questions in the AI chat.
+10. Generate a KT brief for onboarding, handoff, or operations review.
+11. Go back to the project dashboard to switch projects.
+12. Export extracted analytics with `Export CSV`, `Tableau JSON`, or `PowerBI JSON`.
 
 Because this is still the document-focused MVP, use project docs, tickets exported as CSV, meeting notes, incident summaries, architecture docs, runbooks, or chat exports as input files.
 
@@ -402,6 +573,13 @@ Because this is still the document-focused MVP, use project docs, tickets export
 | GET | `/api/analytics/export.csv` | Export extracted analytics as CSV |
 | GET | `/api/analytics/export.tableau.json` | Export Tableau-friendly JSON |
 | GET | `/api/analytics/export.powerbi.json` | Export PowerBI-friendly JSON |
+| MCP | `/mcp` | Stateless Streamable HTTP MCP endpoint for Base resources and tools |
+| GET | `/api/mcp/status` | Show inbound MCP settings and configured external servers without secrets |
+| GET | `/api/mcp/servers` | List external MCP servers available to a selected project |
+| GET | `/api/mcp/servers/{name}/capabilities` | Discover an external server's tools, resources, templates, and prompts |
+| POST | `/api/mcp/servers/{name}/tools/{tool}` | Call a tool on a configured external MCP server |
+| POST | `/api/mcp/servers/{name}/resources/read` | Read a resource URI from a configured external MCP server |
+| POST | `/api/mcp/servers/{name}/import` | Import external MCP tool/resource output into project RAG |
 | GET | `/api/connectors/` | List supported connectors and project connection state |
 | POST | `/api/connectors/{id}/credentials` | Save API-token or endpoint credentials for a connector |
 | POST | `/api/connectors/{id}/authorize` | Start OAuth for Microsoft Graph or Atlassian connectors |
@@ -409,7 +587,7 @@ Because this is still the document-focused MVP, use project docs, tickets export
 | POST | `/api/connectors/{id}/sync` | Fetch connector data and index it as a source |
 | DELETE | `/api/connectors/{id}` | Disconnect a project connector |
 
-Project-scoped endpoints such as ingestion, query, documents, analytics, and connectors accept the `x-tenant-id` header. The frontend sets it to the selected `project_id`.
+Project-scoped endpoints such as ingestion, query, documents, analytics, connectors, and the external MCP bridge accept the `x-tenant-id` header. The frontend sets it to the selected `project_id`. Native MCP tools receive `project_id` as a tool argument instead of an HTTP tenant header.
 
 Example multi-agent review request:
 
@@ -487,6 +665,13 @@ AUDIT_LOG_PATH=./data/audit_log.jsonl
 CHUNK_SIZE=500
 CHUNK_OVERLAP=50
 RETRIEVAL_K=5
+MCP_API_KEY=
+MCP_EXPOSED_PROJECT_IDS=
+MCP_ALLOWED_HOSTS=127.0.0.1:*,localhost:*,[::1]:*
+MCP_ALLOWED_ORIGINS=http://127.0.0.1:*,http://localhost:*,http://[::1]:*
+MCP_EXTERNAL_SERVERS_JSON=[]
+MCP_REQUEST_TIMEOUT_SECONDS=30
+MCP_MAX_IMPORT_CHARS=200000
 ```
 
 ---
@@ -505,6 +690,8 @@ Still not production-grade:
 - OCR for scanned documents or images.
 - Enterprise-grade tenant isolation.
 - Production secrets management for connector credentials.
+- User-scoped OAuth/RBAC for MCP. The current HTTP MCP boundary uses one deployment API key plus an optional project allowlist.
+- Automatic LLM routing across arbitrary external MCP tools. External calls and imports are explicit because MCP tool semantics and side effects vary by server.
 - Real Tableau/PowerBI push integration.
 - Deep role-specific KT templates beyond the initial KT brief generator.
 
@@ -526,6 +713,7 @@ The current analytics are still heuristic and text-based after connector data is
 - Add refresh tokens, token rotation, and AWS Secrets Manager backed connector storage.
 - Add scheduled sync jobs and background workers for larger tenants.
 - Add permission-aware retrieval so users only see source chunks they are allowed to access.
+- Add scheduled external MCP resource imports and per-server retry/backoff policies.
 - Normalize structured metrics from analytics, observability, and database connectors into queryable tables.
 - Add connector-specific tests and mocked API fixtures.
 
@@ -540,6 +728,7 @@ The current analytics are still heuristic and text-based after connector data is
 
 - Authentication and SSO.
 - RBAC and tenant isolation.
+- OAuth 2.1 protected-resource metadata and user-scoped authorization for remote MCP clients.
 - Background sync workers.
 - Secure secrets storage.
 - Audit-ready logs.

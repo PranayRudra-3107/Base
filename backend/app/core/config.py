@@ -36,6 +36,13 @@ class Settings(BaseSettings):
     public_app_url: str = ""
     connector_sync_limit: int = 50
     connector_timeout_seconds: float = 25
+    mcp_api_key: str = ""
+    mcp_exposed_project_ids: str = ""
+    mcp_allowed_hosts: str = "127.0.0.1:*,localhost:*,[::1]:*"
+    mcp_allowed_origins: str = "http://127.0.0.1:*,http://localhost:*,http://[::1]:*"
+    mcp_external_servers_json: str = "[]"
+    mcp_request_timeout_seconds: float = 30
+    mcp_max_import_chars: int = 200000
     microsoft_client_id: str = ""
     microsoft_client_secret: str = ""
     microsoft_tenant_id: str = "organizations"

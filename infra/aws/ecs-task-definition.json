@@ -9,7 +9,7 @@
   "containerDefinitions": [
     {
       "name": "base-api",
-      "image": "626210706801.dkr.ecr.eu-central-1.amazonaws.com/base-api:latest",
+      "image": "626210706801.dkr.ecr.eu-central-1.amazonaws.com/base-api:bootstrap-20260713",
       "essential": true,
       "portMappings": [
         {
@@ -26,20 +26,31 @@
         {"name": "VECTOR_BACKEND", "value": "pgvector"},
         {"name": "S3_PREFIX", "value": "base"},
         {"name": "AWS_REGION", "value": "eu-central-1"},
-        {"name": "CORS_ORIGINS", "value": "https://d13xa0pqwvaoqw.cloudfront.net,http://base-alb-2085702204.eu-central-1.elb.amazonaws.com"}
+        {"name": "CORS_ORIGINS", "value": "https://d2llye5km5il24.cloudfront.net"},
+        {"name": "PUBLIC_APP_URL", "value": "https://d2llye5km5il24.cloudfront.net"},
+        {"name": "MCP_EXPOSED_PROJECT_IDS", "value": ""},
+        {"name": "MCP_ALLOWED_HOSTS", "value": "base-alb-1755646895.eu-central-1.elb.amazonaws.com,d2llye5km5il24.cloudfront.net"},
+        {"name": "MCP_ALLOWED_ORIGINS", "value": "https://d2llye5km5il24.cloudfront.net"},
+        {"name": "MCP_EXTERNAL_SERVERS_JSON", "value": "[]"},
+        {"name": "MCP_REQUEST_TIMEOUT_SECONDS", "value": "30"},
+        {"name": "MCP_MAX_IMPORT_CHARS", "value": "200000"}
       ],
       "secrets": [
         {
           "name": "OPENAI_API_KEY",
-          "valueFrom": "arn:aws:secretsmanager:eu-central-1:626210706801:secret:base/openai-api-key-auaT6u:OPENAI_API_KEY::"
+          "valueFrom": "arn:aws:secretsmanager:eu-central-1:626210706801:secret:base/openai-api-key-MWJbUs:OPENAI_API_KEY::"
         },
         {
           "name": "DATABASE_URL",
-          "valueFrom": "arn:aws:secretsmanager:eu-central-1:626210706801:secret:base/database-url-cHCnfR:DATABASE_URL::"
+          "valueFrom": "arn:aws:secretsmanager:eu-central-1:626210706801:secret:base/database-url-QoQJ1G:DATABASE_URL::"
         },
         {
           "name": "S3_BUCKET",
-          "valueFrom": "arn:aws:secretsmanager:eu-central-1:626210706801:secret:base/s3-bucket-sDSH6J:DOCUMENTS_BUCKET::"
+          "valueFrom": "arn:aws:secretsmanager:eu-central-1:626210706801:secret:base/s3-bucket-s2WZGu:DOCUMENTS_BUCKET::"
+        },
+        {
+          "name": "MCP_API_KEY",
+          "valueFrom": "arn:aws:secretsmanager:eu-central-1:626210706801:secret:base/mcp-api-key-8xFHuW:MCP_API_KEY::"
         }
       ],
       "logConfiguration": {

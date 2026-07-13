@@ -1,5 +1,26 @@
 # Base AWS Container Creation And Resource Names
 
+## July 2026 Temporary Deployment
+
+The previous resources documented later in this file were deleted in May and rebuilt on 2026-07-13 with new generated identifiers.
+
+```text
+Public URL:       https://d2llye5km5il24.cloudfront.net/
+CloudFront ID:    E2AVPU9QAGIB72
+CloudFront OAC:   EQTEMDO3H6TD1
+ALB DNS:          base-alb-1755646895.eu-central-1.elb.amazonaws.com
+ECS cluster:      base-cluster
+ECS service:      base-api-service
+RDS:              base / PostgreSQL 17.9 / db.t4g.micro / 20 GB gp3
+S3 region:        eu-central-1 for both buckets
+Budget:           base-four-day-demo / USD 20
+Automatic delete: 2026-07-16 23:00 Europe/Berlin / 21:00 UTC
+```
+
+AWS Scheduler invokes `base-demo-teardown` at the deadline, with cleanup retries at `21:35Z` and `22:15Z`. The function source is `infra/aws/demo_teardown.py`; `.github/workflows/teardown-aws.yml` is the manual backup. The generated MCP key is stored in Secrets Manager as `base/mcp-api-key` and is not recorded in this file.
+
+Treat resource IDs in the historical sections below as a command log, not the current live identifiers. The current ECS task definition and the table above are authoritative for this temporary deployment.
+
 Use this file as the naming reference for deploying Base on AWS. When you talk with Codex later, you can say things like:
 
 ```text
