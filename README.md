@@ -66,6 +66,8 @@ The current app can:
 - Track connector coverage for Jira, Linear, Azure Boards, Slack, Teams, email, GitHub, GitLab, Bitbucket, product analytics, observability, database health, incidents, docs, support, and BI sources.
 - Expose project catalogs, source lists, hybrid search, dashboards, knowledge graphs, RAG answers, and multi-agent reviews through a project-scoped MCP server.
 - Discover tools and resources on configured external MCP servers, call them through the Base API, and import their output into a selected project's RAG index.
+- Browse every GitHub repository visible to an authorized token, inspect its recursive source tree, and selectively index up to 40 files into project RAG through the official GitHub MCP server.
+- Let independent MCP clients such as MCP Inspector, Goose, or LibreChat discover and query approved Base project data through authenticated Streamable HTTP.
 - Export project intelligence analytics as CSV, Tableau-style JSON, and PowerBI-style JSON.
 - Keep a local JSONL activity trail of uploads, queries, KT briefs, deletes, dashboard views, exports, and MCP activity.
 
@@ -188,6 +190,12 @@ The HTTP MCP endpoint is mounted inside the existing FastAPI process:
 http://localhost:8000/mcp
 ```
 
+The deployed interview environment exposes the same transport at:
+
+```text
+https://d2llye5km5il24.cloudfront.net/mcp
+```
+
 It uses stateless Streamable HTTP with JSON responses so the same container can serve both REST and MCP traffic. Configure these values in `backend/.env` or the deployment environment:
 
 ```bash
@@ -235,6 +243,35 @@ npx -y @modelcontextprotocol/inspector
 
 Connect the Inspector to `http://localhost:8000/mcp` and add `Authorization: Bearer <MCP_API_KEY>` when authentication is enabled.
 
+### Production MCP Demo
+
+The AWS deployment stores the Base MCP key in Secrets Manager as `base/mcp-api-key` and injects it into the ECS container as `MCP_API_KEY`. Retrieve the key locally without committing or printing it in application logs:
+
+```bash
+export BASE_MCP_API_KEY="$(aws secretsmanager get-secret-value \
+  --profile base-admin \
+  --region eu-central-1 \
+  --secret-id base/mcp-api-key \
+  --query SecretString \
+  --output text | jq -r '.MCP_API_KEY')"
+```
+
+Start the official open-source MCP Inspector:
+
+```bash
+npx -y @modelcontextprotocol/inspector
+```
+
+Use `Streamable HTTP`, enter `https://d2llye5km5il24.cloudfront.net/mcp`, and add this request header:
+
+```text
+Authorization: Bearer <value of BASE_MCP_API_KEY>
+```
+
+Run `base_list_projects`, copy an exposed `project_id`, and then demonstrate `base_list_sources`, `base_search_project`, `base_get_knowledge_graph`, `base_ask_project`, or `base_run_project_review`. The production endpoint fails closed: a request without the key returns `401`, while a missing server-side `MCP_API_KEY` returns `503`.
+
+For an agent-driven demonstration, configure the same URL and authorization header as a remote Streamable HTTP extension in [Goose](https://block.github.io/goose/) or as a Streamable HTTP MCP server in [LibreChat](https://www.librechat.ai/docs/features/mcp). In this flow the external application is the MCP client and Base is the data-providing MCP server.
+
 For a local stdio client, run Base from the backend directory:
 
 ```bash
@@ -254,7 +291,7 @@ The Connector Hub includes a project-scoped registry for two official remote pro
 
 Both providers support token registration. The registry can register, authorize, test, discover capabilities, import results into RAG, and disconnect a provider. Its reusable OAuth authorization-code implementation includes state validation and PKCE. Enable OAuth with provider application credentials:
 
-For GitHub, **Browse Repositories** queries every repository visible to the token. Select a repository, inspect its recursive source tree, choose recommended files or up to 40 custom files, and index the selection through one official GitHub MCP session. Each RAG document retains repository and source-path metadata. Calling the sync endpoint without `paths` still uses the Base architecture file set for backwards compatibility.
+For GitHub, **Browse Repositories** queries every repository visible to the token rather than assuming access is limited to Base. Select a repository, inspect its recursive source tree, choose recommended files or up to 40 custom files, and index the selection through the official GitHub MCP server. Each RAG document retains repository, branch, and source-path metadata. Calling the sync endpoint without `paths` still uses the Base architecture file set for backwards compatibility.
 
 ```bash
 GITHUB_OAUTH_CLIENT_ID=
@@ -610,7 +647,7 @@ Because this is still the document-focused MVP, use project docs, tickets export
 | POST | `/api/mcp/servers/{name}/tools/{tool}` | Call a tool on a configured external MCP server |
 | POST | `/api/mcp/servers/{name}/resources/read` | Read a resource URI from a configured external MCP server |
 | POST | `/api/mcp/servers/{name}/import` | Import external MCP tool/resource output into project RAG |
-| POST | `/api/mcp/servers/github/sync-repository` | Index the Base repository's architecture and source files through GitHub MCP |
+| POST | `/api/mcp/servers/github/sync-repository` | Index up to 40 selected files from any token-visible GitHub repository; omitted paths use the legacy Base architecture set |
 | GET | `/api/connectors/` | List supported connectors and project connection state |
 | POST | `/api/connectors/{id}/credentials` | Save API-token or endpoint credentials for a connector |
 | POST | `/api/connectors/{id}/authorize` | Start OAuth for Microsoft Graph or Atlassian connectors |
